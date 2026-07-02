@@ -36,8 +36,12 @@ Goal: Make customer-support a real, testable, fail-closeable evaluation loop.
 - [x] Autoresearch: git diff detection, skill_modified tracking, base_commit reset
 - [x] Autoresearch: no-op experiments discarded (no changes = discard)
 - [x] Actual output fixtures: 50 baseline JSON files
-- [ ] Deep validator (validate-contracts.py + validate-evals.py)
-- [ ] MCP template cleanup (remove placeholders from .mcp.json)
+- [x] Deep validator (validate-contracts.py + validate-evals.py)
+- [x] MCP template cleanup (remove placeholders from .mcp.json)
+- [x] Agent Batch Runner (mock/codex/hermes adapters + run_agent_batch.py)
+- [x] Runtime MCP servers (gmail, shopify, kb, human_review)
+- [x] P2 hard constraints + enhanced regression comparison
+- [x] actual_outputs metadata upgrade (_meta on all baselines)
 
 ## v0.3 — Evaluation Framework CI (planned)
 

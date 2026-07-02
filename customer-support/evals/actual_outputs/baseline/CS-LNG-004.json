@@ -3,7 +3,17 @@
   "priority": "P2",
   "route_to": "tier-2",
   "risk_flags": [],
-  "human_review_required": false,
+  "human_review_required": true,
   "suggested_initial_response": "Thank you for reaching out. We are looking into your request.",
-  "internal_notes": "Baseline output for CS-LNG-004"
+  "internal_notes": "Baseline output for CS-LNG-004",
+  "_meta": {
+    "generated_by": "manual_baseline",
+    "model": "human-authored",
+    "runtime": "manual",
+    "skill_version": "ticket-triage@1.1.0",
+    "commit_sha": "2c86e0c",
+    "generated_at": "2026-07-02T09:12:25Z",
+    "run_id": "cs-baseline-manual",
+    "case_id": "CS-LNG-004"
+  }
 }

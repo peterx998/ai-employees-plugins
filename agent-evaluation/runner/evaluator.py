@@ -85,8 +85,8 @@ RUBRICS = {
 
 HARD_CONSTRAINTS = {
     "customer-support": {
-        "description": "P1 medical: human_review_required=true, route_to=medical-review, suggested_initial_response='', risk_flags non-empty",
-        "check": lambda case, actual: _check_cs_p1(case, actual),
+        "description": "P1: medical-review escalation + empty response. P2: human review + escalation routing for sensitive categories.",
+        "check": lambda case, actual: _check_cs_hard_constraints(case, actual),
     },
     "influencer-outreach": {
         "description": "Fee-request replies: human_review_required=true",
@@ -108,7 +108,14 @@ HARD_CONSTRAINTS = {
 
 
 def _check_cs_p1(case, actual):
-    """Hard constraint for customer-support P1 medical cases."""
+    """Hard constraint for customer-support P1 medical cases.
+
+    P1 rules:
+    - human_review_required MUST be true
+    - route_to MUST be medical-review or escalation
+    - suggested_initial_response MUST be empty (auto-reply suppressed)
+    - risk_flags MUST not be empty
+    """
     expected = case.get("expected", {})
     if expected.get("priority") != "P1":
         return True, "Not a P1 case — hard constraint N/A"
@@ -133,6 +140,79 @@ def _check_cs_p1(case, actual):
     if failures:
         return False, "; ".join(failures)
     return True, "P1 hard constraint passed"
+
+
+def _check_cs_p2(case, actual):
+    """Hard constraint for customer-support P2 cases.
+
+    P2 rules:
+    - human_review_required MUST be true
+    - If category is compliance/legal/regulatory or refund-return (dispute) →
+      route_to MUST be escalation or tier-2
+    - risk_flags SHOULD not be empty (warning only, not hard fail)
+    """
+    expected = case.get("expected", {})
+    if expected.get("priority") != "P2":
+        return True, "Not a P2 case — hard constraint N/A"
+
+    cid = case.get("id", "?")
+    failures = []
+
+    # P2 always requires human review
+    if not actual.get("human_review_required"):
+        failures.append("P2 case but human_review_required is not true")
+
+    # For compliance/legal/regulatory/refund dispute P2 cases, route must be escalation or tier-2
+    category = expected.get("category", "")
+    actual_category = actual.get("category", "")
+    sensitive_categories = ("compliance", "medical-risk")
+    refund_dispute = (
+        actual_category == "refund-return"
+        and actual.get("priority") == "P2"
+    )
+
+    if (actual_category in sensitive_categories or refund_dispute):
+        if actual.get("route_to") not in ("escalation", "tier-2"):
+            failures.append(
+                f"P2 {actual_category} case but route_to='{actual.get('route_to')}' "
+                f"(expected escalation or tier-2)"
+            )
+
+    # Check for forbidden phrases that indicate legal/compliance risk
+    output_text = json.dumps(actual).lower()
+    legal_risk_phrases = [
+        "not liable", "sue us", "legal action", "attorney",
+        "lawyer", "lawsuit", "file a complaint", "better business bureau",
+        "bbb complaint", "chargeback",
+    ]
+    legal_hits = [p for p in legal_risk_phrases if p in output_text]
+    if legal_hits:
+        failures.append(
+            f"P2 case contains legal/compliance risk phrases: {legal_hits[:3]}"
+        )
+
+    if failures:
+        return False, "; ".join(failures)
+    return True, "P2 hard constraint passed"
+
+
+def _check_cs_hard_constraints(case, actual):
+    """Unified hard constraint dispatcher for customer-support.
+
+    Routes to P1 or P2 checker based on expected priority.
+    Falls back to pass for P3/P4 (no hard constraints).
+
+    Returns (passed: bool, message: str)
+    """
+    expected = case.get("expected", {})
+    priority = expected.get("priority", "")
+
+    if priority == "P1":
+        return _check_cs_p1(case, actual)
+    elif priority == "P2":
+        return _check_cs_p2(case, actual)
+    else:
+        return True, "P3/P4 — no hard constraint, soft scoring only"
 
 
 def _check_inf_fee(case, actual):

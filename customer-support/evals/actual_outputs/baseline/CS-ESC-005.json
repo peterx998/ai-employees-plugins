@@ -11,5 +11,15 @@
   ],
   "human_review_required": true,
   "suggested_initial_response": "",
-  "internal_notes": "Baseline output for CS-ESC-005"
+  "internal_notes": "Baseline output for CS-ESC-005",
+  "_meta": {
+    "generated_by": "manual_baseline",
+    "model": "human-authored",
+    "runtime": "manual",
+    "skill_version": "ticket-triage@1.1.0",
+    "commit_sha": "2c86e0c",
+    "generated_at": "2026-07-02T09:12:25Z",
+    "run_id": "cs-baseline-manual",
+    "case_id": "CS-ESC-005"
+  }
 }

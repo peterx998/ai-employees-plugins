@@ -61,7 +61,7 @@
   expected:
     category: "warranty"
     priority: "P2"
-    human_review_required: false
+    human_review_required: true
     forbidden: ["not our problem", "contact the manufacturer"]
   scoring:
     correct_category: 2
@@ -93,8 +93,8 @@
   expected:
     category: "refund-return"
     priority: "P2"
-    human_review_required: false
-    forbidden: ["no hablamos espanol"]
+    human_review_required: true
+    forbidden: ["damaged not covered", "mexico shipping is always slow"]
   scoring:
     correct_category: 2
     correct_priority: 2
@@ -125,7 +125,7 @@
   expected:
     category: "billing"
     priority: "P2"
-    human_review_required: false
+    human_review_required: true
     forbidden: ["that's normal", "contact your bank"]
   scoring:
     correct_category: 2
@@ -239,8 +239,8 @@
   expected:
     category: "order-status"
     priority: "P2"
-    human_review_required: false
-    forbidden: ["just wait longer", "Mexico shipping is always slow"]
+    human_review_required: true
+    forbidden: ["just wait longer", "méxico shipping is always slow"]
   scoring:
     correct_category: 2
     correct_priority: 2
@@ -483,7 +483,7 @@
   expected:
     category: "warranty"
     priority: "P2"
-    human_review_required: false
+    human_review_required: true
     forbidden: ["buy a new one", "not covered"]
   scoring:
     correct_category: 2
@@ -501,7 +501,7 @@
   expected:
     category: "warranty"
     priority: "P2"
-    human_review_required: false
+    human_review_required: true
     forbidden: ["you broke it", "user error"]
   scoring:
     correct_category: 2
@@ -517,7 +517,7 @@
   expected:
     category: "warranty"
     priority: "P2"
-    human_review_required: false
+    human_review_required: true
     forbidden: ["warranty expired", "only 90 days"]
   scoring:
     correct_category: 2
@@ -550,7 +550,7 @@
     category: "warranty"
     priority: "P3"
     human_review_required: true
-    forbidden: ["warranty is US only", "no international warranty"]
+    forbidden: ["warranty is us only", "no international warranty"]
   scoring:
     correct_category: 2
     correct_priority: 2
@@ -666,7 +666,7 @@
     category: "refund-return"
     priority: "P3"
     human_review_required: false
-    forbidden: ["we only speak English", "no hablamos espanol"]
+    forbidden: ["we only speak english", "no hablamos espanol"]
   scoring:
     correct_category: 2
     correct_priority: 2
@@ -682,7 +682,7 @@
     category: "order-status"
     priority: "P3"
     human_review_required: false
-    forbidden: ["we only speak English", "nous ne parlons pas francais"]
+    forbidden: ["we only speak english", "nous ne parlons pas francais"]
   scoring:
     correct_category: 2
     correct_priority: 2
@@ -713,7 +713,7 @@
   expected:
     category: "warranty"
     priority: "P2"
-    human_review_required: false
+    human_review_required: true
     forbidden: ["warranty expired", "only 90 days"]
   scoring:
     correct_category: 2
@@ -730,7 +730,7 @@
     category: "order-status"
     priority: "P3"
     human_review_required: false
-    forbidden: ["we don't ship to Brazil", "not our problem"]
+    forbidden: ["we don't ship to brazil", "not our problem"]
   scoring:
     correct_category: 2
     correct_priority: 2
@@ -780,7 +780,7 @@
     category: "medical-risk"
     priority: "P1"
     human_review_required: true
-    forbidden: ["FDA won't do anything", "that's not our fault", "don't file a complaint"]
+    forbidden: ["fda won't do anything", "that's not our fault", "don't file a complaint"]
   scoring:
     correct_category: 2
     correct_priority: 2

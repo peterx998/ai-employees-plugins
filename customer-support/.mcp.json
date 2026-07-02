@@ -2,15 +2,41 @@
   "mcpServers": {
     "gmail": {
       "type": "http",
-      "url": "https://gmail.googleapis.com/"
+      "url": "https://gmail.googleapis.com/",
+      "auth": {
+        "type": "oauth2",
+        "env": {
+          "client_id": "GMAIL_CLIENT_ID",
+          "client_secret": "GMAIL_CLIENT_SECRET",
+          "refresh_token": "GMAIL_REFRESH_TOKEN"
+        }
+      },
+      "permissions": ["read_thread", "search_messages", "create_draft"],
+      "note": "send_email requires human_approval — agent CANNOT auto-send"
     },
     "shopify": {
       "type": "http",
-      "url": "https://your-store.myshopify.com/admin/api/2024-01/graphql.json"
+      "url": "https://${SHOPIFY_STORE_DOMAIN}.myshopify.com/admin/api/2024-01/graphql.json",
+      "auth": {
+        "type": "bearer",
+        "env": {
+          "access_token": "SHOPIFY_ACCESS_TOKEN",
+          "store_domain": "SHOPIFY_STORE_DOMAIN"
+        }
+      },
+      "permissions": ["read_orders", "get_product", "get_customer"],
+      "note": "Set SHOPIFY_STORE_DOMAIN and SHOPIFY_ACCESS_TOKEN in .env or .mcp.local.json"
     },
     "notion": {
       "type": "http",
-      "url": "https://api.notion.com/v1/"
+      "url": "https://api.notion.com/v1/",
+      "auth": {
+        "type": "bearer",
+        "env": {
+          "api_key": "NOTION_API_KEY"
+        }
+      },
+      "permissions": ["search_kb", "read_page", "create_page"]
     }
   }
 }

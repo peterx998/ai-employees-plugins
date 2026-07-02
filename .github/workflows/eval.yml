@@ -25,6 +25,12 @@ jobs:
           chmod +x install/validate-plugin.sh
           bash install/validate-plugin.sh
 
+      - name: Deep contract validation
+        run: python install/validate-contracts.py --plugin customer-support
+
+      - name: Validate evaluation data
+        run: python install/validate-evals.py --agent customer-support --check-actuals
+
       - name: Validate schema consistency
         run: |
           python -c "
@@ -108,6 +114,18 @@ jobs:
             --golden-set customer-support/evals/golden_set_v1.yaml \
             --agent customer-support \
             --actual-dir customer-support/evals/actual_outputs/baseline
+
+      - name: Run Agent Batch Runner (mock — proves pipeline integrity)
+        run: |
+          # Full pipeline: golden set → mock agent → eval → regression
+          # Uses mock adapter to prove the pipeline works end-to-end
+          # without requiring live AI agent credentials in CI
+          python agent-evaluation/runner/run_agent_batch.py \
+            --agent customer-support \
+            --adapter mock \
+            --max-cases 10 \
+            --output-dir customer-support/evals/actual_outputs/current \
+            --eval-output customer-support/reports/eval_results_agent.json
 
       - name: Check CI gate verdict
         run: |

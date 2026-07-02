@@ -64,7 +64,17 @@ def find_scorecards(agent_name):
 
 
 def compare_scorecards(baseline, candidate):
-    """Compare two scorecards case by case."""
+    """Compare two scorecards case by case.
+
+    Checks:
+    1. Case-level degradation (passed before, failed now)
+    2. P1 hard constraint regression
+    3. Schema validation regression
+    4. Forbidden phrase new hits
+    5. Overall score change
+
+    Returns detailed comparison dict with enhanced regression dimensions.
+    """
     baseline_cases = {c["case_id"]: c for c in baseline.get("case_results", [])}
     candidate_cases = {c["case_id"]: c for c in candidate.get("case_results", [])}
 
@@ -72,23 +82,31 @@ def compare_scorecards(baseline, candidate):
     improved = []
     persistent_fail = []
     persistent_pass = []
-    new_failures = []
+
+    # Enhanced regression dimensions
+    p1_regressions = []
+    schema_regressions = []
+    forbidden_regressions = []
 
     all_case_ids = set(baseline_cases.keys()) | set(candidate_cases.keys())
 
-    for case_id in all_case_ids:
+    for case_id in sorted(all_case_ids):
         b = baseline_cases.get(case_id, {})
         c = candidate_cases.get(case_id, {})
 
         b_passed = b.get("passed", False)
         c_passed = c.get("passed", False)
+        b_details = b.get("details", {})
+        c_details = c.get("details", {})
 
+        # ─── Case-level degradation ───
         if b_passed and not c_passed:
             degraded.append({
                 "case_id": case_id,
                 "baseline_score": b.get("score", 0),
                 "candidate_score": c.get("score", 0),
                 "details": c.get("details", {}),
+                "reasons": c.get("reasons", []),
             })
         elif not b_passed and c_passed:
             improved.append({
@@ -104,14 +122,45 @@ def compare_scorecards(baseline, candidate):
         else:
             persistent_pass.append(case_id)
 
+        # ─── P1 hard constraint regression ───
+        b_hc = b_details.get("hard_constraint_pass", 1.0)
+        c_hc = c_details.get("hard_constraint_pass", 1.0)
+        if b_hc == 1.0 and c_hc == 0.0:
+            p1_regressions.append({
+                "case_id": case_id,
+                "reason": "P1/P2 hard constraint previously passed, now failed",
+            })
+
+        # ─── Schema validation regression ───
+        b_schema = b_details.get("schema_valid", 1.0)
+        c_schema = c_details.get("schema_valid", 1.0)
+        if b_schema == 1.0 and c_schema == 0.0:
+            schema_regressions.append({
+                "case_id": case_id,
+                "reason": "Schema validation previously passed, now failed",
+            })
+
+        # ─── Forbidden phrase new hits ───
+        b_forbidden = b_details.get("forbidden_check", 1.0)
+        c_forbidden = c_details.get("forbidden_check", 1.0)
+        if b_forbidden == 1.0 and c_forbidden == 0.0:
+            forbidden_regressions.append({
+                "case_id": case_id,
+                "reason": "New forbidden phrase detected (was clean in baseline)",
+            })
+
     # New failures = cases in candidate that failed but weren't in baseline
     new_failures = [d for d in degraded if d["case_id"] not in baseline_cases]
 
-    # Determine verdict
+    # ─── Determine verdict ───
     has_degradation = len(degraded) > 0
+    has_p1_regression = len(p1_regressions) > 0
+    has_schema_regression = len(schema_regressions) > 0
+    has_forbidden_regression = len(forbidden_regressions) > 0
     has_improvement = len(improved) > 0
 
-    if has_degradation:
+    # Block merge for ANY regression type
+    if has_degradation or has_p1_regression or has_schema_regression or has_forbidden_regression:
         verdict = "BLOCK_MERGE"
     elif has_improvement:
         verdict = "IMPROVED"
@@ -127,13 +176,26 @@ def compare_scorecards(baseline, candidate):
         "candidate_score": candidate.get("overall_score", 0),
         "baseline_hard_constraint": baseline.get("hard_constraint_passed", False),
         "candidate_hard_constraint": candidate.get("hard_constraint_passed", False),
+        # Core degradation
         "degraded_count": len(degraded),
         "improved_count": len(improved),
         "persistent_fail_count": len(persistent_fail),
         "persistent_pass_count": len(persistent_pass),
         "new_failures_count": len(new_failures),
+        # Enhanced regression dimensions
+        "p1_regression_count": len(p1_regressions),
+        "schema_regression_count": len(schema_regressions),
+        "forbidden_regression_count": len(forbidden_regressions),
+        "hard_constraint_regression": has_p1_regression,
+        "schema_regression": has_schema_regression,
+        "forbidden_regression": has_forbidden_regression,
+        # Detail arrays
         "degraded_cases": degraded,
         "improved_cases": improved,
+        "p1_regressions": p1_regressions,
+        "schema_regressions": schema_regressions,
+        "forbidden_regressions": forbidden_regressions,
+        # Verdict
         "verdict": verdict,
         "timestamp": datetime.utcnow().isoformat() + "Z",
     }
@@ -157,6 +219,9 @@ def generate_report(comparison):
 | Improved cases | {comparison['improved_count']} |
 | Persistent failures | {comparison['persistent_fail_count']} |
 | New failures | {comparison['new_failures_count']} |
+| P1 hard constraint regressions | {comparison.get('p1_regression_count', 0)} |
+| Schema validation regressions | {comparison.get('schema_regression_count', 0)} |
+| Forbidden phrase regressions | {comparison.get('forbidden_regression_count', 0)} |
 | **Verdict** | **{comparison['verdict']}** |
 
 """
@@ -164,7 +229,29 @@ def generate_report(comparison):
     if comparison['degraded_count'] > 0:
         report += "## Degraded Cases (BLOCK MERGE)\n\n"
         for case in comparison['degraded_cases']:
-            report += f"- `{case['case_id']}`: {case['baseline_score']:.4f} → {case['candidate_score']:.4f}\n"
+            reasons = "; ".join(case.get('reasons', []))
+            report += f"- `{case['case_id']}`: {case['baseline_score']:.4f} → {case['candidate_score']:.4f}"
+            if reasons:
+                report += f" — {reasons}"
+            report += "\n"
+        report += "\n"
+
+    if comparison.get('p1_regression_count', 0) > 0:
+        report += "## P1/P2 Hard Constraint Regressions (BLOCK MERGE)\n\n"
+        for case in comparison.get('p1_regressions', []):
+            report += f"- `{case['case_id']}`: {case['reason']}\n"
+        report += "\n"
+
+    if comparison.get('schema_regression_count', 0) > 0:
+        report += "## Schema Validation Regressions (BLOCK MERGE)\n\n"
+        for case in comparison.get('schema_regressions', []):
+            report += f"- `{case['case_id']}`: {case['reason']}\n"
+        report += "\n"
+
+    if comparison.get('forbidden_regression_count', 0) > 0:
+        report += "## Forbidden Phrase Regressions (BLOCK MERGE)\n\n"
+        for case in comparison.get('forbidden_regressions', []):
+            report += f"- `{case['case_id']}`: {case['reason']}\n"
         report += "\n"
 
     if comparison['improved_count'] > 0:
@@ -175,15 +262,23 @@ def generate_report(comparison):
 
     if comparison['persistent_fail_count'] > 0:
         report += "## Persistent Failures (need attention)\n\n"
-        for case in comparison.get('degraded_cases', []):
-            pass  # Already listed above
         report += f"{comparison['persistent_fail_count']} cases still failing from baseline.\n\n"
 
     if comparison['verdict'] == 'BLOCK_MERGE':
         report += "## Action Required\n\n"
-        report += "⚠️  **Merge blocked** due to degraded cases.\n"
-        report += "Fix the degraded cases before merging.\n"
-        report += "Run `python scripts/run_eval.py --agent " + comparison['agent'] + "` to re-evaluate.\n"
+        report += "⚠️  **Merge blocked** due to degradation.\n\n"
+        reasons = []
+        if comparison['degraded_count'] > 0:
+            reasons.append(f"{comparison['degraded_count']} degraded case(s)")
+        if comparison.get('p1_regression_count', 0) > 0:
+            reasons.append(f"{comparison['p1_regression_count']} P1 hard constraint regression(s)")
+        if comparison.get('schema_regression_count', 0) > 0:
+            reasons.append(f"{comparison['schema_regression_count']} schema regression(s)")
+        if comparison.get('forbidden_regression_count', 0) > 0:
+            reasons.append(f"{comparison['forbidden_regression_count']} forbidden phrase regression(s)")
+        report += "Block reasons: " + ", ".join(reasons) + ".\n"
+        report += "Fix the regressions before merging.\n"
+        report += f"Run `python scripts/run_eval.py --agent {comparison['agent']}` to re-evaluate.\n"
 
     return report
 
