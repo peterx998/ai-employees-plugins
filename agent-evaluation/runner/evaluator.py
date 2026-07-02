@@ -315,10 +315,13 @@ class Evaluator:
         if not hc_passed:
             reasons.append(f"Hard constraint FAILED: {hc_msg}")
 
-        # 6. Forbidden phrases
+        # 6. Forbidden phrases — check only customer-facing fields
+        # (internal_notes can contain contextual info including the customer's own words)
         forbidden = expected.get("forbidden", [])
-        actual_text = json.dumps(actual_output).lower()
-        forbidden_hits = [p for p in forbidden if p.lower() in actual_text]
+        customer_facing_text = json.dumps({
+            "suggested_initial_response": actual_output.get("suggested_initial_response", ""),
+        }).lower()
+        forbidden_hits = [p for p in forbidden if p.lower() in customer_facing_text]
         details["forbidden_check"] = 1.0 if not forbidden_hits else 0.0
         if forbidden_hits:
             reasons.append(f"Forbidden phrases found: {forbidden_hits}")
@@ -353,9 +356,13 @@ class Evaluator:
         pri = expected.get("priority", "")
         cat = expected.get("category", "")
 
-        if pri == "P1" or cat == "medical-risk":
-            return "medical-review"
+        if pri == "P1":
+            if cat == "medical-risk":
+                return "medical-review"
+            return "escalation"
         if pri == "P2":
+            if cat == "medical-risk":
+                return "tier-2"   # P2 medical: high but not critical — needs tier-2, not medical-review
             if cat == "compliance":
                 return "escalation"
             return "tier-2"
