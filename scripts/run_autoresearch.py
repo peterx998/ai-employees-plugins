@@ -104,25 +104,70 @@ def log_result(agent_name, commit, skill_modified, score, hard_pass, cost, statu
     print(f"  Logged: {row.strip()}")
 
 
-def compare_scores(baseline_score, new_score, baseline_hard, new_hard):
-    """Decide whether to keep or discard the change."""
-    # Hard constraint is a binary gate
+def get_changed_files(base_commit):
+    """Get list of files changed since base_commit."""
+    out, _, rc = git_cmd(["diff", "--name-only", base_commit])
+    if rc != 0:
+        return []
+    return [f.strip() for f in out.split("\n") if f.strip()]
+
+
+def get_diff_stats(base_commit):
+    """Get diff stats (insertions, deletions) since base_commit."""
+    out, _, rc = git_cmd(["diff", "--stat", base_commit])
+    if rc != 0:
+        return 0, 0
+    # Parse last line like "3 files changed, 10 insertions(+), 5 deletions(-)"
+    lines = out.strip().split("\n")
+    if not lines or not lines[-1]:
+        return 0, 0
+    last = lines[-1]
+    insertions = 0
+    deletions = 0
+    if "insertion" in last:
+        parts = last.split("insertion")
+        insertions = int(parts[0].strip().split()[-1]) if parts[0].strip().split() else 0
+    if "deletion" in last:
+        parts = last.split("deletion")
+        deletions = int(parts[0].strip().split()[-1]) if parts[0].strip().split() else 0
+    return insertions, deletions
+
+
+def compare_scores(baseline_score, new_score, baseline_hard, new_hard, has_changes, insertions, deletions):
+    """Decide whether to keep or discard the change.
+
+    Rules:
+    1. No file changes → discard (no-op experiment)
+    2. Hard constraint failed → discard
+    3. Score improved + hard constraint passed → keep
+    4. Score equal + complexity decreased (more deletions than insertions) → keep (simplification win)
+    5. Score equal + no complexity decrease → discard (no-op)
+    6. Score worse → discard
+    """
+    # Rule 1: No changes made
+    if not has_changes:
+        return "discard", "No file changes detected — no-op experiment"
+
+    # Rule 2: Hard constraint failed
     if not new_hard:
         return "discard", "Hard constraint failed — auto-discard"
 
-    # If hard constraint was passing before and now fails, definitely discard
     if baseline_hard and not new_hard:
         return "discard", "Hard constraint regression — auto-discard"
 
-    # Score improvement
+    # Rule 3: Score improved
     if new_score > baseline_score:
         return "keep", f"Score improved: {baseline_score:.4f} → {new_score:.4f}"
 
-    # Score equal but check simplicity (simplified: just keep if equal)
-    if new_score == baseline_score:
-        return "keep", "Score equal — keeping for potential simplification"
+    # Rule 4: Score equal + simplification (more deletions than insertions)
+    if new_score == baseline_score and deletions > insertions:
+        return "keep", f"Score equal, complexity decreased (-{insertions}+{deletions}) — simplification win"
 
-    # Score worse
+    # Rule 5: Score equal, no simplification
+    if new_score == baseline_score:
+        return "discard", "Score equal, no simplification — no-op"
+
+    # Rule 6: Score worse
     return "discard", f"Score regressed: {baseline_score:.4f} → {new_score:.4f}"
 
 
@@ -227,6 +272,10 @@ def main():
     branch = create_experiment_branch(tag)
     print(f"Branch: {branch}")
 
+    # Record base commit for safe reset
+    base_commit, _, _ = git_cmd(["rev-parse", "HEAD"])
+    print(f"Base commit: {base_commit[:7]}")
+
     # Baseline
     baseline = run_baseline(args.agent)
     baseline_score = baseline["overall_score"]
@@ -273,13 +322,25 @@ def main():
         # This script provides the EVALUATION harness.
         # The Agent loop is orchestrated by the program.md instructions.
 
-        # For now, we just run evaluation against the current state
-        # (the Agent should have made changes before calling this script)
+        # Detect what changed since base_commit
+        changed_files = get_changed_files(base_commit)
+        insertions, deletions = get_diff_stats(base_commit)
+        has_changes = len(changed_files) > 0
+
+        if has_changes:
+            # Identify skill_modified from changed files
+            skill_modified = ", ".join(changed_files)
+            print(f"  Changed files: {skill_modified}")
+            print(f"  Diff: +{insertions} -{deletions}")
+        else:
+            print(f"  No file changes detected since base commit")
+            skill_modified = "none"
 
         try:
             scorecard = run_evaluation(
                 agent_name=args.agent,
                 output_path=f"experiments/scorecards/{args.agent}/exp-{i+1}.json",
+                fail_on_no_output=False,  # Autoresearch uses expected as baseline
             )
 
             new_score = scorecard["overall_score"]
@@ -287,21 +348,27 @@ def main():
             commit = get_short_hash()
             cost = 0.15  # Estimated cost per experiment (placeholder)
 
-            decision, reason = compare_scores(baseline_score, new_score, baseline_hard, new_hard)
+            decision, reason = compare_scores(
+                baseline_score, new_score, baseline_hard, new_hard,
+                has_changes, insertions, deletions
+            )
 
             if decision == "keep":
-                log_result(args.agent, commit, "unknown", new_score, new_hard, cost, "keep", reason)
-                experiments.append({"commit": commit, "agent": args.agent, "skill_modified": "unknown",
+                log_result(args.agent, commit, skill_modified, new_score, new_hard, cost, "keep", reason)
+                experiments.append({"commit": commit, "agent": args.agent, "skill_modified": skill_modified,
                                    "score": new_score, "hard_pass": new_hard, "cost": cost,
                                    "status": "keep", "description": reason})
                 baseline_score = new_score  # Update baseline for next comparison
+                # Update base_commit to current HEAD so next experiment compares against this
+                base_commit, _, _ = git_cmd(["rev-parse", "HEAD"])
                 crash_count = 0
             else:
-                log_result(args.agent, commit, "unknown", new_score, new_hard, cost, "discard", reason)
-                experiments.append({"commit": commit, "agent": args.agent, "skill_modified": "unknown",
+                log_result(args.agent, commit, skill_modified, new_score, new_hard, cost, "discard", reason)
+                experiments.append({"commit": commit, "agent": args.agent, "skill_modified": skill_modified,
                                    "score": new_score, "hard_pass": new_hard, "cost": cost,
                                    "status": "discard", "description": reason})
-                git_cmd(["reset", "--hard", "HEAD~1"])  # Revert the change
+                # Reset to known base_commit, not HEAD~1 (which could be wrong)
+                git_cmd(["reset", "--hard", base_commit])
                 crash_count = 0
 
             total_cost += cost
@@ -309,8 +376,8 @@ def main():
         except Exception as e:
             print(f"  ❌ CRASH: {e}")
             crash_count += 1
-            log_result(args.agent, "0000000", "unknown", 0.0, False, 0.0, "crash", str(e)[:100])
-            experiments.append({"commit": "0000000", "agent": args.agent, "skill_modified": "unknown",
+            log_result(args.agent, "0000000", skill_modified, 0.0, False, 0.0, "crash", str(e)[:100])
+            experiments.append({"commit": "0000000", "agent": args.agent, "skill_modified": skill_modified,
                                "score": 0.0, "hard_pass": False, "cost": 0.0,
                                "status": "crash", "description": str(e)[:100]})
 

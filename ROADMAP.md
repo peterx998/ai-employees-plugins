@@ -9,20 +9,35 @@
 - [x] Dual-runtime install scripts
 - [x] README (Chinese + English bilingual)
 
-## v0.2 — Customer Support Production Sample (in progress)
+## v0.2-alpha — Architecture Sample (2026-07-02) ✅
 
-Goal: prove one plugin can run, be evaluated, have human review, and be rolled back.
+- [x] 6 plugin directories created
+- [x] 33 SKILL.md files with `user_invocable: true`
+- [x] 33 namespaced commands (plugin:command format)
+- [x] `.mcp.json` + `CONNECTORS.md` per plugin
+- [x] Dual-runtime install scripts (4 scripts in install/)
+- [x] README (Chinese + English bilingual)
+- [x] Apache-2.0 license + NOTICE
+- [x] ARCHITECTURE.md + ROADMAP.md + CHANGELOG.md
+- [x] 18 JSON Schemas + 5 global policies + 7 connector contracts
+- [x] 50-case golden set for customer-support
+- [x] Autoresearch Loop layer (programs/ + scripts/ + experiments/)
+- [x] CI workflow with schema consistency check
 
-- [ ] Upgrade all customer-support SKILL.md to 10-section standard
-- [ ] Add command contracts with input/output schema references
-- [ ] Add `schemas/` for support_ticket, triage_result, draft_response, escalation_package
-- [ ] Add `evals/golden_set_v1.yaml` with 50 test cases
-- [ ] Add `examples/` with 3 real-world scenarios (P1 medical, P2 refund, P3 tracking)
-- [ ] Add `policies/medical-compliance.md` as global policy
-- [ ] Add `connectors/gmail.connector.md` with permission levels
-- [ ] Enhanced `plugin.json` with runtime, risk_level, permissions
+## v0.2-beta — Contract Alignment + Real Eval (current)
 
-**Completion criteria**: 50 golden set cases, every command has I/O schema, P1/P2 must human review, email only create_draft, regression runnable.
+Goal: Make customer-support a real, testable, fail-closeable evaluation loop.
+
+- [x] Unified taxonomy (schemas/enums/customer_support_taxonomy.yaml)
+- [x] Schema priority enum: P1/P2/P3/P4 (was low/medium/high/urgent)
+- [x] SKILL.md output contract: route_to/risk_flags (was routing/flags)
+- [x] CI gate: removed `|| true`, PENDING = FAIL, schema validation added
+- [x] Eval runner: no actual output = FAIL (was using expected as baseline)
+- [x] Autoresearch: git diff detection, skill_modified tracking, base_commit reset
+- [x] Autoresearch: no-op experiments discarded (no changes = discard)
+- [x] Actual output fixtures: 50 baseline JSON files
+- [ ] Deep validator (validate-contracts.py + validate-evals.py)
+- [ ] MCP template cleanup (remove placeholders from .mcp.json)
 
 ## v0.3 — Evaluation Framework CI (planned)
 

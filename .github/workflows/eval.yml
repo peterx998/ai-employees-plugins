@@ -18,48 +18,86 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install pyyaml jsonschema
 
       - name: Validate plugin structure
         run: |
           chmod +x install/validate-plugin.sh
           bash install/validate-plugin.sh
 
-      - name: Run customer-support Golden Set
+      - name: Validate schema consistency
         run: |
-          python agent-evaluation/runner/run_eval.py \
-            --golden-set customer-support/evals/golden_set_v1.yaml \
-            --agent customer-support || true
+          python -c "
+          import json, yaml, sys, os
 
-      - name: Generate regression report
-        if: always()
+          errors = []
+
+          # Load taxonomy
+          with open('schemas/enums/customer_support_taxonomy.yaml') as f:
+              taxonomy = yaml.safe_load(f)
+
+          # Validate triage_result.schema.json enums match taxonomy
+          with open('schemas/customer-support/triage_result.schema.json') as f:
+              schema = json.load(f)
+
+          schema_priority = set(schema['properties']['priority']['enum'])
+          taxonomy_priority = set(taxonomy['priority'])
+          if schema_priority != taxonomy_priority:
+              errors.append(f'priority enum mismatch: schema={schema_priority} taxonomy={taxonomy_priority}')
+
+          schema_category = set(schema['properties']['category']['enum'])
+          taxonomy_category = set(taxonomy['category'])
+          if schema_category != taxonomy_category:
+              errors.append(f'category enum mismatch: schema={schema_category} taxonomy={taxonomy_category}')
+
+          schema_route = set(schema['properties']['route_to']['enum'])
+          taxonomy_route = set(taxonomy['route_to'])
+          if schema_route != taxonomy_route:
+              errors.append(f'route_to enum mismatch: schema={schema_route} taxonomy={taxonomy_route}')
+
+          # Validate golden set uses same enums
+          with open('customer-support/evals/golden_set_v1.yaml') as f:
+              cases = yaml.safe_load(f)
+
+          for case in cases:
+              cid = case.get('id', '?')
+              exp = case.get('expected', {})
+              cat = exp.get('category', '')
+              pri = exp.get('priority', '')
+              if cat and cat not in taxonomy_category:
+                  errors.append(f'{cid}: category \"{cat}\" not in taxonomy')
+              if pri and pri not in taxonomy_priority:
+                  errors.append(f'{cid}: priority \"{pri}\" not in taxonomy')
+
+          if errors:
+              for e in errors:
+                  print(f'::error::{e}')
+              sys.exit(1)
+          print(f'✅ Schema consistency check passed ({len(cases)} cases, {len(taxonomy_category)} categories, {len(taxonomy_priority)} priorities)')
+          "
+
+      - name: Check SKILL.md output contract field names
         run: |
-          mkdir -p reports
-          echo "## Regression Report" > reports/regression_report.md
-          echo "- Date: $(date -u)" >> reports/regression_report.md
-          echo "- Trigger: ${{ github.event_name }}" >> reports/regression_report.md
-          echo "- Commit: ${{ github.sha }}" >> reports/regression_report.md
-          if [ -f customer-support/evals/eval_results.json ]; then
-            echo "" >> reports/regression_report.md
-            echo "### Customer Support Results" >> reports/regression_report.md
-            python -c "
-          import json
-          with open('customer-support/evals/eval_results.json') as f:
-              d = json.load(f)
-          print(f'- Total cases: {d[\"total_cases\"]}')
-          print(f'- Passed: {d[\"passed\"]}')
-          print(f'- Failed: {d[\"failed\"]}')
-          print(f'- Pass rate: {d[\"pass_rate\"]:.1%}')
-          print(f'- Verdict: {d[\"verdict\"]}')
-          " >> reports/regression_report.md
+          ERRORS=0
+          # Check that ticket-triage SKILL.md does NOT use old field names
+          SKILL_FILE="customer-support/skills/ticket-triage/SKILL.md"
+          if grep -q '"routing"' "$SKILL_FILE" 2>/dev/null; then
+            echo "::error file=$SKILL_FILE::Uses old field 'routing' — should be 'route_to'"
+            ERRORS=$((ERRORS + 1))
           fi
-
-      - name: Upload regression report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: regression-report
-          path: reports/
+          if grep -q '"flags"' "$SKILL_FILE" 2>/dev/null; then
+            echo "::error file=$SKILL_FILE::Uses old field 'flags' — should be 'risk_flags'"
+            ERRORS=$((ERRORS + 1))
+          fi
+          if grep -q '"routing":' "$SKILL_FILE" 2>/dev/null; then
+            echo "::error file=$SKILL_FILE::Uses old field 'routing:' — should be 'route_to:'"
+            ERRORS=$((ERRORS + 1))
+          fi
+          if [ $ERRORS -gt 0 ]; then
+            echo "::error::$ERRORS field name consistency errors in SKILL.md"
+            exit 1
+          fi
+          echo "✅ SKILL.md field names are consistent with schema"
 
       - name: Check SKILL.md frontmatter
         run: |
@@ -89,6 +127,63 @@ jobs:
           for f in $(find . -path "*/commands/*.md" -not -path "./.git/*"); do
             CMD_NAME=$(grep -oP '^name: \K.*' "$f" 2>/dev/null || echo "")
             if [ -n "$CMD_NAME" ] && ! echo "$CMD_NAME" | grep -q ":"; then
-              echo "::warning file=$f::Command '$CMD_NAME' missing namespace prefix (should be like 'plugin:command')"
+              echo "::warning file=$f::Command '$CMD_NAME' missing namespace prefix"
             fi
           done
+
+      - name: Run customer-support Golden Set evaluation
+        run: |
+          # Run evaluation — if actual outputs exist, score them; if not, FAIL
+          python agent-evaluation/runner/run_eval.py \
+            --golden-set customer-support/evals/golden_set_v1.yaml \
+            --agent customer-support \
+            --actual-dir customer-support/evals/actual_outputs/baseline
+
+      - name: Check CI gate — no soft failures allowed
+        run: |
+          # Verify eval_results.json exists and verdict is not PENDING
+          RESULT_FILE="customer-support/reports/eval_results.json"
+          if [ ! -f "$RESULT_FILE" ]; then
+            echo "::error::Eval results not found at $RESULT_FILE — evaluation did not complete"
+            exit 1
+          fi
+          VERDICT=$(python -c "import json; d=json.load(open('$RESULT_FILE')); print(d.get('verdict','UNKNOWN'))")
+          if [ "$VERDICT" = "PENDING" ]; then
+            echo "::error::Eval verdict is PENDING — no actual outputs were evaluated. CI gate requires real evaluation."
+            exit 1
+          fi
+          if [ "$VERDICT" = "FAIL" ]; then
+            echo "::error::Eval verdict is FAIL — golden set cases failed. Fix before merge."
+            exit 1
+          fi
+          echo "✅ CI Gate: $VERDICT"
+
+      - name: Generate regression report
+        if: always()
+        run: |
+          mkdir -p reports
+          echo "## Regression Report" > reports/regression_report.md
+          echo "- Date: $(date -u)" >> reports/regression_report.md
+          echo "- Trigger: ${{ github.event_name }}" >> reports/regression_report.md
+          echo "- Commit: ${{ github.sha }}" >> reports/regression_report.md
+          RESULT_FILE="customer-support/reports/eval_results.json"
+          if [ -f "$RESULT_FILE" ]; then
+            echo "" >> reports/regression_report.md
+            echo "### Customer Support Results" >> reports/regression_report.md
+            python -c "
+          import json
+          with open('$RESULT_FILE') as f:
+              d = json.load(f)
+          print(f'- Total cases: {d.get(\"total_cases\", \"?\")}')
+          print(f'- Passed: {d.get(\"passed\", \"?\")}')
+          print(f'- Failed: {d.get(\"failed\", \"?\")}')
+          print(f'- Verdict: {d.get(\"verdict\", \"?\")}')
+          " >> reports/regression_report.md
+          fi
+
+      - name: Upload regression report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-report
+          path: reports/

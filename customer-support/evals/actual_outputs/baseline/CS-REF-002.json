@@ -1,0 +1,9 @@
+{
+  "category": "refund-return",
+  "priority": "P3",
+  "route_to": "tier-1",
+  "risk_flags": [],
+  "human_review_required": false,
+  "suggested_initial_response": "Thank you for reaching out. We are looking into your request.",
+  "internal_notes": "Baseline output for CS-REF-002"
+}

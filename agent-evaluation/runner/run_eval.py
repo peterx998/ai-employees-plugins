@@ -175,17 +175,31 @@ def run_evaluation(golden_set_path, agent=None, case_id=None, actual=None, actua
     # Generate summary
     total = len(results)
     judged = [r for r in results if "passed" in r]
+    pending = [r for r in results if r.get("status") in ("pending_actual_output", "no_actual_output")]
     pass_rate = (passed_count / len(judged)) if judged else 0
+
+    # PENDING = FAIL for CI gate integrity
+    # No actual outputs → cannot evaluate → must fail
+    if pending:
+        verdict = "FAIL"
+        failed_count = failed_count if judged else 0
+    elif failed_count > 0:
+        verdict = "FAIL"
+    elif pass_rate >= 0.9:
+        verdict = "PASS"
+    else:
+        verdict = "FAIL"
 
     summary = {
         "golden_set_path": golden_set_path,
         "agent_filter": agent,
         "total_cases": total,
         "judged": len(judged),
+        "pending": len(pending),
         "passed": passed_count,
         "failed": failed_count,
         "pass_rate": round(pass_rate, 4),
-        "verdict": "PASS" if failed_count == 0 and pass_rate >= 0.9 else ("FAIL" if failed_count > 0 else "PENDING"),
+        "verdict": verdict,
         "results": results,
     }
 
@@ -194,20 +208,27 @@ def run_evaluation(golden_set_path, agent=None, case_id=None, actual=None, actua
     print(f"{'='*60}")
     print(f"Total cases: {total}")
     print(f"Judged: {len(judged)}")
+    print(f"Pending (no output): {len(pending)}")
     print(f"Passed: {passed_count}")
     print(f"Failed: {failed_count}")
     print(f"Pass rate: {pass_rate:.1%}")
-    print(f"Verdict: {summary['verdict']}")
+    print(f"Verdict: {verdict}")
     print(f"{'='*60}")
 
     # Output full results as JSON
-    output_path = os.path.join(os.path.dirname(golden_set_path), "..", "reports", "eval_results.json")
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    # Path: {agent}/reports/eval_results.json (relative to golden set location)
+    golden_set_dir = Path(golden_set_path).parent  # e.g., customer-support/evals/
+    agent_root = golden_set_dir.parent  # e.g., customer-support/
+    output_path = agent_root / "reports" / "eval_results.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
     print(f"\nFull results saved to: {output_path}")
 
-    if failed_count > 0:
+    # Exit code: 0 only if verdict is PASS
+    if verdict != "PASS":
+        if pending:
+            print("FAIL: No actual outputs provided. CI gate requires real evaluation.", file=sys.stderr)
         sys.exit(1)
     sys.exit(0)
 

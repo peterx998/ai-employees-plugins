@@ -229,8 +229,13 @@ def check_hard_constraint(cases, outputs, agent_name):
     }
 
 
-def run_evaluation(agent_name, golden_set_path=None, output_path=None, agent_output_path=None):
-    """Run full evaluation for an agent."""
+def run_evaluation(agent_name, golden_set_path=None, output_path=None, agent_output_path=None, actual_dir=None, fail_on_no_output=True):
+    """Run full evaluation for an agent.
+
+    Args:
+        fail_on_no_output: If True (default), FAIL when no actual outputs are provided.
+                          This is required for CI gate integrity.
+    """
     rubric = SCORING_RUBRICS.get(agent_name)
     if not rubric:
         print(f"ERROR: No rubric found for agent: {agent_name}", file=sys.stderr)
@@ -240,15 +245,45 @@ def run_evaluation(agent_name, golden_set_path=None, output_path=None, agent_out
     cases = load_golden_set(agent_name, golden_set_path)
     print(f"Loaded {len(cases)} cases from golden set")
 
-    # Load agent output (if provided)
+    # Load agent output
     agent_outputs = []
-    if agent_output_path:
+
+    # Try actual_dir first (directory of per-case JSON files)
+    if actual_dir:
+        actual_path = Path(actual_dir)
+        if actual_path.exists():
+            for case in cases:
+                case_id = case.get("id", "")
+                case_file = actual_path / f"{case_id}.json"
+                if case_file.exists():
+                    with open(case_file, "r", encoding="utf-8") as f:
+                        agent_outputs.append(json.load(f))
+                else:
+                    agent_outputs.append({})
+            missing = sum(1 for o in agent_outputs if not o)
+            if missing > 0:
+                print(f"WARNING: {missing}/{len(cases)} cases have no actual output in {actual_dir}")
+        else:
+            if fail_on_no_output:
+                print(f"ERROR: actual-dir not found: {actual_dir}", file=sys.stderr)
+                print(f"CI GATE: Cannot evaluate without actual outputs. Create baseline outputs first.", file=sys.stderr)
+                sys.exit(1)
+            print(f"WARNING: actual-dir not found: {actual_dir}")
+
+    # Fall back to agent_output_path (JSONL)
+    if not agent_outputs and agent_output_path:
         agent_outputs = load_agent_output(agent_output_path)
 
-    # If no agent output, simulate (for baseline/testing)
+    # If still no agent output, FAIL (do NOT use expected as baseline)
     if not agent_outputs:
-        print("WARNING: No agent output provided. Using expected as baseline.")
-        agent_outputs = [case.get("expected", {}) for case in cases]
+        if fail_on_no_output:
+            print("ERROR: No actual agent outputs provided.", file=sys.stderr)
+            print("CI GATE: Evaluation requires actual agent outputs.", file=sys.stderr)
+            print("Provide --actual-dir or --agent-output argument.", file=sys.stderr)
+            sys.exit(1)
+        else:
+            print("WARNING: No agent output provided. Using expected as baseline (non-CI mode).")
+            agent_outputs = [case.get("expected", {}) for case in cases]
 
     # Score each case
     total_score = 0.0
@@ -315,6 +350,8 @@ def main():
     parser.add_argument("--golden-set", help="Path to golden set YAML (default: agent's standard)")
     parser.add_argument("--output", help="Output scorecard path (default: experiments/scorecards/<agent>/latest.json)")
     parser.add_argument("--agent-output", help="Path to agent output JSONL for scoring")
+    parser.add_argument("--actual-dir", help="Directory of per-case actual output JSON files")
+    parser.add_argument("--allow-no-output", action="store_true", help="Allow using expected as baseline (non-CI mode)")
     args = parser.parse_args()
 
     run_evaluation(
@@ -322,6 +359,8 @@ def main():
         golden_set_path=args.golden_set,
         output_path=args.output,
         agent_output_path=args.agent_output,
+        actual_dir=args.actual_dir,
+        fail_on_no_output=not args.allow_no_output,
     )
 
 

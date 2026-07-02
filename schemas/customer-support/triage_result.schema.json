@@ -2,13 +2,13 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://ai-employees-plugins.example/schemas/customer-support/triage_result.schema.json",
   "title": "Triage Result",
-  "description": "Output of triaging a customer support ticket",
+  "description": "Output of triaging a customer support ticket. Field names align to schemas/enums/customer_support_taxonomy.yaml.",
   "type": "object",
   "required": [
     "category",
     "priority",
-    "risk_flags",
     "route_to",
+    "risk_flags",
     "human_review_required",
     "suggested_initial_response",
     "internal_notes"
@@ -16,40 +16,91 @@
   "properties": {
     "category": {
       "type": "string",
-      "description": "Triaged category for the support ticket"
+      "description": "Triaged category. Must match taxonomy enum.",
+      "enum": [
+        "medical-risk",
+        "order-status",
+        "refund-return",
+        "product-usage",
+        "warranty",
+        "billing",
+        "compliance"
+      ]
     },
     "priority": {
       "type": "string",
+      "description": "Priority level P1-P4. P1=Critical (medical/legal/safety), P2=High, P3=Standard, P4=Low.",
       "enum": [
-        "low",
-        "medium",
-        "high",
-        "urgent"
-      ],
-      "description": "Triaged priority level"
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ]
+    },
+    "route_to": {
+      "type": "string",
+      "description": "Routing destination. Must match taxonomy enum.",
+      "enum": [
+        "medical-review",
+        "tier-1",
+        "tier-2",
+        "escalation"
+      ]
     },
     "risk_flags": {
       "type": "array",
       "description": "Risk flags identified during triage",
       "items": {
-        "$ref": "https://ai-employees-plugins.example/schemas/common/risk_flag.schema.json"
+        "type": "object",
+        "required": ["type", "severity", "description"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["medical", "legal", "social", "regulatory", "compliance", "repeat-contact"]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "description": {
+            "type": "string"
+          }
+        }
       }
-    },
-    "route_to": {
-      "type": "string",
-      "description": "Team or queue the ticket should be routed to"
     },
     "human_review_required": {
       "type": "boolean",
-      "description": "Whether human review is required before proceeding"
+      "description": "Whether human review is required. P1/P2 = always true."
     },
     "suggested_initial_response": {
       "type": "string",
-      "description": "Suggested initial response to the customer"
+      "description": "Acknowledgment-only response (not full resolution). Empty for P1 medical (auto-reply suppressed)."
     },
     "internal_notes": {
       "type": "string",
       "description": "Internal notes for the support team"
     }
-  }
+  },
+  "examples": [
+    {
+      "category": "medical-risk",
+      "priority": "P1",
+      "route_to": "medical-review",
+      "risk_flags": [
+        {"type": "medical", "severity": "critical", "description": "Customer reports bleeding after device use"}
+      ],
+      "human_review_required": true,
+      "suggested_initial_response": "",
+      "internal_notes": "P1 medical — auto-reply suppressed. Escalate immediately."
+    },
+    {
+      "category": "refund-return",
+      "priority": "P3",
+      "route_to": "tier-1",
+      "risk_flags": [],
+      "human_review_required": false,
+      "suggested_initial_response": "Thank you for reaching out. I've located your order and can help with the return process.",
+      "internal_notes": "Standard return within 30-day window. US region."
+    }
+  ]
 }

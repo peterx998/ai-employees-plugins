@@ -1,0 +1,15 @@
+{
+  "category": "medical-risk",
+  "priority": "P1",
+  "route_to": "medical-review",
+  "risk_flags": [
+    {
+      "type": "medical",
+      "severity": "high",
+      "description": "P1 medical case"
+    }
+  ],
+  "human_review_required": true,
+  "suggested_initial_response": "Thank you for reaching out. We are looking into your request.",
+  "internal_notes": "Baseline output for CS-MED-001"
+}

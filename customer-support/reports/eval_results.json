@@ -1,0 +1,413 @@
+{
+  "golden_set_path": "customer-support/evals/golden_set_v1.yaml",
+  "agent_filter": "customer-support",
+  "total_cases": 50,
+  "judged": 50,
+  "pending": 0,
+  "passed": 50,
+  "failed": 0,
+  "pass_rate": 1.0,
+  "verdict": "PASS",
+  "results": [
+    {
+      "case_id": "CS-REF-001",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-REF-002",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-REF-003",
+      "score": 9,
+      "max_score": 9,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-REF-004",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-REF-005",
+      "score": 7,
+      "max_score": 7,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-REF-006",
+      "score": 7,
+      "max_score": 7,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-REF-007",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-REF-008",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-REF-009",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-REF-010",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-SHP-001",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-SHP-002",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-SHP-003",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-SHP-004",
+      "score": 7,
+      "max_score": 7,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-SHP-005",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-SHP-006",
+      "score": 7,
+      "max_score": 7,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-SHP-007",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-SHP-008",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-SHP-009",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-SHP-010",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-MED-001",
+      "score": 10,
+      "max_score": 10,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-MED-002",
+      "score": 9,
+      "max_score": 9,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-MED-003",
+      "score": 9,
+      "max_score": 9,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-MED-004",
+      "score": 10,
+      "max_score": 10,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-MED-005",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-USG-001",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-USG-002",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-USG-003",
+      "score": 7,
+      "max_score": 7,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-USG-004",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-USG-005",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-WAR-001",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-WAR-002",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-WAR-003",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-WAR-004",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-WAR-005",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-POL-001",
+      "score": 7,
+      "max_score": 7,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-POL-002",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-POL-003",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-POL-004",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-POL-005",
+      "score": 7,
+      "max_score": 7,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-LNG-001",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-LNG-002",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-LNG-003",
+      "score": 9,
+      "max_score": 9,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-LNG-004",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-LNG-005",
+      "score": 8,
+      "max_score": 8,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-ESC-001",
+      "score": 9,
+      "max_score": 9,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-ESC-002",
+      "score": 9,
+      "max_score": 9,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-ESC-003",
+      "score": 9,
+      "max_score": 9,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-ESC-004",
+      "score": 9,
+      "max_score": 9,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    },
+    {
+      "case_id": "CS-ESC-005",
+      "score": 9,
+      "max_score": 9,
+      "passed": true,
+      "forbidden_hits": [],
+      "reasons": []
+    }
+  ]
+}

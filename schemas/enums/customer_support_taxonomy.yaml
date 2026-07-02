@@ -1,0 +1,48 @@
+# Customer Support Taxonomy — Single Source of Truth
+#
+# ALL files MUST align to these enums:
+#   - schemas/customer-support/triage_result.schema.json
+#   - customer-support/skills/ticket-triage/SKILL.md
+#   - customer-support/commands/triage.md
+#   - customer-support/evals/golden_set_v1.yaml
+#   - scripts/run_eval.py
+#   - agent-evaluation/runner/run_eval.py
+#   - programs/customer-support-autoresearch.md
+
+priority:
+  - P1   # Critical — medical, legal, safety. SLA: 1h. Auto-reply: suppressed
+  - P2   # High — disputes, safety defects, compliance. SLA: 4h. Auto-reply: suppressed if escalation
+  - P3   # Standard — routine support. SLA: 24h. Auto-reply: drafted, human-approved
+  - P4   # Low — informational, non-urgent. SLA: 48h. Auto-reply: drafted, human-approved
+
+category:
+  - medical-risk       # Adverse health effects, injury, skin irritation, allergic reaction
+  - order-status       # Shipping, tracking, delivery, logistics
+  - refund-return      # Refund, return, exchange, charge dispute
+  - product-usage      # How-to, cleaning, charging, troubleshooting
+  - warranty           # Defect, malfunction, warranty claim
+  - billing            # Charges, invoices, payment methods
+  - compliance         # Legal, regulatory, privacy (GDPR/CCPA), FDA
+
+route_to:
+  - medical-review     # P1 medical — immediate escalation
+  - tier-1             # P3/P4 routine — auto-draft allowed
+  - tier-2             # P2 disputes, safety defects
+  - escalation         # P2 compliance/legal — support lead
+
+risk_flag_types:
+  - medical            # Medical risk indicator
+  - legal              # Legal threat (sue, lawyer, attorney)
+  - social             # Social media threat (post, review, tweet)
+  - regulatory         # Regulatory inquiry (FDA, CE, GDPR)
+  - compliance         # Compliance boundary violation
+  - repeat-contact     # 3+ messages on same issue in 48h
+
+# Golden Set coverage (50 cases):
+#   refund-return:  14
+#   order-status:   12
+#   warranty:        8
+#   medical-risk:    7
+#   billing:         5
+#   product-usage:   4
+#   (compliance covered via escalation cases)

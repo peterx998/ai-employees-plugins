@@ -116,22 +116,19 @@ Incoming message
 
 ## 6. Output Contract
 
+> **Field names MUST match `schemas/customer-support/triage_result.schema.json` and `schemas/enums/customer_support_taxonomy.yaml`.**
+
 ```json
 {
-  "triage_id": "triage_<timestamp>_<message_id>",
-  "timestamp": "2026-07-02T14:30:00Z",
-  "message_id": "msg_abc123",
   "category": "medical-risk",
   "priority": "P1",
-  "routing": "medical-review",
-  "auto_reply_suppressed": true,
-  "region": "US",
-  "order_number": null,
-  "detected_keywords": ["bleeding", "skin irritation"],
-  "summary": "Customer reports skin irritation and bleeding after using the device. Potential adverse reaction requiring immediate medical review.",
-  "confidence": 0.95,
-  "flags": ["medical-risk", "auto-reply-suppressed"],
-  "suggested_skills": ["escalate-risk"]
+  "route_to": "medical-review",
+  "risk_flags": [
+    {"type": "medical", "severity": "critical", "description": "Customer reports bleeding after device use"}
+  ],
+  "human_review_required": true,
+  "suggested_initial_response": "",
+  "internal_notes": "P1 medical — auto-reply suppressed. Escalate immediately to medical-review queue."
 }
 ```
 
@@ -139,10 +136,19 @@ Incoming message
 |---|---|---|
 | `category` | enum | One of: medical-risk, order-status, refund-return, product-usage, warranty, billing, compliance |
 | `priority` | enum | One of: P1, P2, P3, P4 |
-| `routing` | enum | One of: medical-review, tier-1, tier-2, escalation |
-| `auto_reply_suppressed` | boolean | true for P1, true for P2 with escalation triggers |
+| `route_to` | enum | One of: medical-review, tier-1, tier-2, escalation |
+| `risk_flags` | array | Array of {type, severity, description}. Empty array if no risks. |
+| `human_review_required` | boolean | true for P1/P2 (always). false for P3/P4 unless confidence < 0.7. |
+| `suggested_initial_response` | string | Acknowledgment-only (not full resolution). Empty string for P1 medical (auto-reply suppressed). |
+| `internal_notes` | string | Summary for support team. Not customer-facing. |
+
+**Optional metadata** (not in schema required, but useful for downstream skills):
+
+| Field | Type | Description |
+|---|---|---|
+| `detected_keywords` | array | Keywords that triggered the classification |
 | `confidence` | float | 0.0–1.0. Below 0.7 triggers human review regardless of priority. |
-| `flags` | array | Additional labels for downstream consumption |
+| `order_number` | string\|null | Extracted order number if present |
 
 ---
 
@@ -172,16 +178,15 @@ customer_email: "jane.doe@example.com"
 **Output:**
 ```json
 {
-  "triage_id": "triage_20260702_001",
   "category": "medical-risk",
   "priority": "P1",
-  "routing": "medical-review",
-  "auto_reply_suppressed": true,
-  "detected_keywords": ["red", "burning", "bleeding"],
-  "summary": "Customer reports facial redness, burning sensation, and bleeding after one week of GlowSkin device use. Potential adverse skin reaction requiring immediate medical review.",
-  "confidence": 0.96,
-  "flags": ["medical-risk", "auto-reply-suppressed"],
-  "suggested_skills": ["escalate-risk"]
+  "route_to": "medical-review",
+  "risk_flags": [
+    {"type": "medical", "severity": "critical", "description": "Facial redness, burning, and bleeding after one week of device use"}
+  ],
+  "human_review_required": true,
+  "suggested_initial_response": "",
+  "internal_notes": "P1 medical — auto-reply suppressed. Detected keywords: red, burning, bleeding."
 }
 ```
 
@@ -197,17 +202,13 @@ order_number: "10245"
 **Output:**
 ```json
 {
-  "triage_id": "triage_20260702_002",
   "category": "refund-return",
   "priority": "P3",
-  "routing": "tier-1",
-  "auto_reply_suppressed": false,
-  "order_number": "10245",
-  "detected_keywords": ["return", "not for me"],
-  "summary": "Customer requests standard return of order #10245 within the 30-day US return window. Device is functional; reason is preference-based.",
-  "confidence": 0.92,
-  "flags": ["within-return-window"],
-  "suggested_skills": ["refund-policy", "draft-response"]
+  "route_to": "tier-1",
+  "risk_flags": [],
+  "human_review_required": false,
+  "suggested_initial_response": "Thank you for reaching out. I've located your order #10245 and can help with the return process.",
+  "internal_notes": "Standard return within 30-day US window. Device functional; preference-based return."
 }
 ```
 
@@ -223,17 +224,15 @@ order_number: "10246"
 **Output:**
 ```json
 {
-  "triage_id": "triage_20260702_003",
   "category": "refund-return",
   "priority": "P2",
-  "routing": "tier-2",
-  "auto_reply_suppressed": false,
-  "order_number": "10246",
-  "detected_keywords": ["chargeback", "full refund", "doesn't work as advertised"],
-  "summary": "Customer threatens chargeback and demands full refund for order #10246, citing product misrepresentation. Dispute language present; escalate to tier-2.",
-  "confidence": 0.89,
-  "flags": ["chargeback-threat", "dispute-language"],
-  "suggested_skills": ["refund-policy", "draft-response", "escalate-risk"]
+  "route_to": "tier-2",
+  "risk_flags": [
+    {"type": "legal", "severity": "high", "description": "Customer threatens chargeback"}
+  ],
+  "human_review_required": true,
+  "suggested_initial_response": "Thank you for your patience. I want to make this right — let me review your order and escalate this to our senior support team immediately.",
+  "internal_notes": "Dispute language: chargeback threat, misrepresentation claim. Escalate to tier-2. Order #10246."
 }
 ```
 
@@ -249,17 +248,13 @@ customer_email: "marc.levesque@example.ca"
 **Output:**
 ```json
 {
-  "triage_id": "triage_20260702_004",
   "category": "order-status",
   "priority": "P3",
-  "routing": "tier-1",
-  "auto_reply_suppressed": false,
-  "region": "CA",
-  "detected_keywords": ["where is my order", "tracking number"],
-  "summary": "CA customer requests order status and tracking information. No order number provided; will need Shopify lookup by email.",
-  "confidence": 0.88,
-  "flags": ["needs-shopify-lookup"],
-  "suggested_skills": ["shipping-policy", "draft-response"]
+  "route_to": "tier-1",
+  "risk_flags": [],
+  "human_review_required": false,
+  "suggested_initial_response": "Thank you for reaching out. Let me look up your order status right away.",
+  "internal_notes": "CA customer, no order number provided. Needs Shopify lookup by email."
 }
 ```
 
@@ -267,7 +262,7 @@ customer_email: "marc.levesque@example.ca"
 
 ## 9. Evaluation Cases
 
-| Case ID | Input Summary | Expected Category | Expected Priority | Expected Routing |
+| Case ID | Input Summary | Expected Category | Expected Priority | Expected route_to |
 |---|---|---|---|---|
 | TRI-001 | "My skin is peeling after using the device" | medical-risk | P1 | medical-review |
 | TRI-002 | "I want to return order #100 within 10 days" | refund-return | P3 | tier-1 |
@@ -288,8 +283,8 @@ customer_email: "marc.levesque@example.ca"
 |---|---|---|
 | **False negative on medical-risk** | Medical indicators are missed or dismissed. | Comprehensive keyword list; when in doubt, classify as medical-risk. Cost of false positive is low; cost of false negative is severe. |
 | **Over-classification to P1** | Every minor complaint is flagged P1, overwhelming the medical-review queue. | Require specific medical indicators, not just the word "pain" in a figurative sense. Use confidence scoring. |
-| **Category collision** | Message spans multiple categories (e.g., refund + medical). | Default to the higher-priority category. Set `flags` to include secondary categories. |
-| **Missing order context** | Customer references an order but no order number is in the message. | Use `customer_email` to query Shopify. If no match, flag `needs-shopify-lookup` and route to tier-1. |
-| **Language barrier** | Message is in a non-English language, causing keyword misses. | Use translation service before keyword matching. Flag `translated: true`. |
+| **Category collision** | Message spans multiple categories (e.g., refund + medical). | Default to the higher-priority category. Add secondary category to `risk_flags`. |
+| **Missing order context** | Customer references an order but no order number is in the message. | Use `customer_email` to query Shopify. If no match, note in `internal_notes` and route to tier-1. |
+| **Language barrier** | Message is in a non-English language, causing keyword misses. | Use translation service before keyword matching. Note `translated: true` in `internal_notes`. |
 | **Thread context ignored** | Triage treats each message independently, missing escalation in follow-ups. | Always include `thread_history`. If previous message was P1 and follow-up is ambiguous, maintain P1. |
-| **Confidence drift** | Model assigns high confidence to ambiguous messages. | Human review threshold at 0.7. Any ticket with `flags: ["ambiguous"]` gets human review regardless of confidence. |
+| **Confidence drift** | Model assigns high confidence to ambiguous messages. | Human review threshold at 0.7. Any ticket with ambiguous classification gets `human_review_required: true` regardless of confidence. |
