@@ -1,0 +1,24 @@
+{
+  "category": "refund-return",
+  "priority": "P1",
+  "route_to": "escalation",
+  "risk_flags": [
+    {
+      "type": "legal",
+      "severity": "critical",
+      "description": "P1 escalation — case CS-ESC-002"
+    }
+  ],
+  "human_review_required": true,
+  "suggested_initial_response": "",
+  "internal_notes": "Mock agent triaged CS-ESC-002: category=refund-return, priority=P1, route=escalation. Input preview: I'm going to post this on TikTok and Instagram and expose yo",
+  "_meta": {
+    "generated_by": "mock",
+    "model": "mock-adapter-v1",
+    "skill_version": "ticket-triage@1.1.0",
+    "commit_sha": "mock",
+    "generated_at": "2026-07-02T10:05:06.619818+00:00",
+    "case_id": "CS-ESC-002",
+    "variation_rate": 0.0
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "category": "order-status",
+  "priority": "P2",
+  "route_to": "tier-2",
+  "risk_flags": [
+    {
+      "type": "social",
+      "severity": "high",
+      "description": "P2 priority case — CS-SHP-005"
+    }
+  ],
+  "human_review_required": true,
+  "suggested_initial_response": "Thank you for contacting us. We have received your inquiry and will assist you shortly.",
+  "internal_notes": "Mock agent triaged CS-SHP-005: category=order-status, priority=P2, route=tier-2. Input preview: My order is 20 days late. I'm in Mexico and still no package",
+  "_meta": {
+    "generated_by": "mock",
+    "model": "mock-adapter-v1",
+    "skill_version": "ticket-triage@1.1.0",
+    "commit_sha": "mock",
+    "generated_at": "2026-07-02T10:05:06.598383+00:00",
+    "case_id": "CS-SHP-005",
+    "variation_rate": 0.0
+  }
+}

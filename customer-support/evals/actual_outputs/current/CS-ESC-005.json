@@ -1,0 +1,24 @@
+{
+  "category": "refund-return",
+  "priority": "P1",
+  "route_to": "escalation",
+  "risk_flags": [
+    {
+      "type": "legal",
+      "severity": "critical",
+      "description": "P1 escalation — case CS-ESC-005"
+    }
+  ],
+  "human_review_required": true,
+  "suggested_initial_response": "",
+  "internal_notes": "Mock agent triaged CS-ESC-005: category=refund-return, priority=P1, route=escalation. Input preview: I demand a full refund of $850 for my bulk order #DRP-6005. ",
+  "_meta": {
+    "generated_by": "mock",
+    "model": "mock-adapter-v1",
+    "skill_version": "ticket-triage@1.1.0",
+    "commit_sha": "mock",
+    "generated_at": "2026-07-02T10:05:06.621766+00:00",
+    "case_id": "CS-ESC-005",
+    "variation_rate": 0.0
+  }
+}

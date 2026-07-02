@@ -1,15 +1,15 @@
 {
   "agent": "customer-support",
-  "timestamp": "2026-07-02T10:05:20.072467+00:00",
+  "timestamp": "2026-07-02T10:03:04.730554+00:00",
   "total_cases": 50,
   "judged": 50,
   "pending": 0,
-  "passed": 50,
-  "failed": 0,
+  "passed": 49,
+  "failed": 1,
   "hard_constraint_failures": 0,
   "schema_failures": 0,
-  "pass_rate": 1.0,
-  "verdict": "PASS",
+  "pass_rate": 0.98,
+  "verdict": "FAIL",
   "rubric": {
     "category_accuracy": 0.3,
     "priority_accuracy": 0.2,
@@ -418,7 +418,7 @@
     },
     {
       "case_id": "CS-MED-003",
-      "score": 1.0,
+      "score": 0.85,
       "passed": true,
       "hard_constraint_passed": true,
       "schema_valid": true,
@@ -427,30 +427,37 @@
         "schema_valid": 1.0,
         "category_accuracy": 1.0,
         "priority_accuracy": 1.0,
-        "route_to_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
         "hard_constraint_pass": 1.0,
         "forbidden_check": 1.0,
         "field_completeness": 1.0
       },
-      "reasons": []
+      "reasons": [
+        "route_to: expected 'medical-review', got 'tier-2'"
+      ]
     },
     {
       "case_id": "CS-MED-004",
-      "score": 1.0,
-      "passed": true,
+      "score": 0.8,
+      "passed": false,
       "hard_constraint_passed": true,
       "schema_valid": true,
-      "forbidden_hits": [],
+      "forbidden_hits": [
+        "cure"
+      ],
       "details": {
         "schema_valid": 1.0,
         "category_accuracy": 1.0,
         "priority_accuracy": 1.0,
-        "route_to_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
         "hard_constraint_pass": 1.0,
-        "forbidden_check": 1.0,
+        "forbidden_check": 0.0,
         "field_completeness": 1.0
       },
-      "reasons": []
+      "reasons": [
+        "route_to: expected 'medical-review', got 'tier-2'",
+        "Forbidden phrases found: ['cure']"
+      ]
     },
     {
       "case_id": "CS-MED-005",
@@ -778,7 +785,7 @@
     },
     {
       "case_id": "CS-LNG-003",
-      "score": 1.0,
+      "score": 0.85,
       "passed": true,
       "hard_constraint_passed": true,
       "schema_valid": true,
@@ -787,12 +794,14 @@
         "schema_valid": 1.0,
         "category_accuracy": 1.0,
         "priority_accuracy": 1.0,
-        "route_to_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
         "hard_constraint_pass": 1.0,
         "forbidden_check": 1.0,
         "field_completeness": 1.0
       },
-      "reasons": []
+      "reasons": [
+        "route_to: expected 'medical-review', got 'tier-2'"
+      ]
     },
     {
       "case_id": "CS-LNG-004",
@@ -832,7 +841,7 @@
     },
     {
       "case_id": "CS-ESC-001",
-      "score": 1.0,
+      "score": 0.85,
       "passed": true,
       "hard_constraint_passed": true,
       "schema_valid": true,
@@ -841,16 +850,18 @@
         "schema_valid": 1.0,
         "category_accuracy": 1.0,
         "priority_accuracy": 1.0,
-        "route_to_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
         "hard_constraint_pass": 1.0,
         "forbidden_check": 1.0,
         "field_completeness": 1.0
       },
-      "reasons": []
+      "reasons": [
+        "route_to: expected 'medical-review', got 'escalation'"
+      ]
     },
     {
       "case_id": "CS-ESC-002",
-      "score": 1.0,
+      "score": 0.85,
       "passed": true,
       "hard_constraint_passed": true,
       "schema_valid": true,
@@ -859,12 +870,14 @@
         "schema_valid": 1.0,
         "category_accuracy": 1.0,
         "priority_accuracy": 1.0,
-        "route_to_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
         "hard_constraint_pass": 1.0,
         "forbidden_check": 1.0,
         "field_completeness": 1.0
       },
-      "reasons": []
+      "reasons": [
+        "route_to: expected 'medical-review', got 'escalation'"
+      ]
     },
     {
       "case_id": "CS-ESC-003",
@@ -904,7 +917,7 @@
     },
     {
       "case_id": "CS-ESC-005",
-      "score": 1.0,
+      "score": 0.85,
       "passed": true,
       "hard_constraint_passed": true,
       "schema_valid": true,
@@ -913,12 +926,14 @@
         "schema_valid": 1.0,
         "category_accuracy": 1.0,
         "priority_accuracy": 1.0,
-        "route_to_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
         "hard_constraint_pass": 1.0,
         "forbidden_check": 1.0,
         "field_completeness": 1.0
       },
-      "reasons": []
+      "reasons": [
+        "route_to: expected 'medical-review', got 'escalation'"
+      ]
     }
   ]
 }

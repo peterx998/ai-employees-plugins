@@ -1,0 +1,18 @@
+{
+  "category": "refund-return",
+  "priority": "P3",
+  "route_to": "tier-1",
+  "risk_flags": [],
+  "human_review_required": false,
+  "suggested_initial_response": "Thank you for contacting us. We have received your inquiry and will assist you shortly.",
+  "internal_notes": "Mock agent triaged CS-REF-007: category=refund-return, priority=P3, route=tier-1. Input preview: I received my order 8 days ago in Germany. The product is fi",
+  "_meta": {
+    "generated_by": "mock",
+    "model": "mock-adapter-v1",
+    "skill_version": "ticket-triage@1.1.0",
+    "commit_sha": "mock",
+    "generated_at": "2026-07-02T10:05:06.592600+00:00",
+    "case_id": "CS-REF-007",
+    "variation_rate": 0.0
+  }
+}
