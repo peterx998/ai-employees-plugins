@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "gmail": {
+      "type": "mock",
+      "data_source": "connectors/mock/mock-gmail.json",
+      "permissions": ["read_thread", "search_messages", "create_draft"]
+    },
+    "shopify": {
+      "type": "mock",
+      "data_source": "connectors/mock/mock-shopify-orders.json",
+      "permissions": ["read_orders", "get_product", "get_customer"]
+    },
+    "notion": {
+      "type": "mock",
+      "data_source": "connectors/mock/mock-kb.json",
+      "permissions": ["search_kb", "read_page", "create_page"]
+    }
+  }
+}

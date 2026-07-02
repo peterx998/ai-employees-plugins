@@ -1,7 +1,7 @@
 {
   "category": "refund-return",
   "priority": "P1",
-  "route_to": "medical-review",
+  "route_to": "escalation",
   "risk_flags": [
     {
       "type": "medical",
@@ -10,6 +10,6 @@
     }
   ],
   "human_review_required": true,
-  "suggested_initial_response": "Thank you for reaching out. We are looking into your request.",
+  "suggested_initial_response": "",
   "internal_notes": "Baseline output for CS-ESC-002"
 }

@@ -1,0 +1,12 @@
+{
+  "generated_by": "manual_baseline",
+  "agent": "customer-support",
+  "model": "human-authored",
+  "runtime": "manual",
+  "skill_version": "1.1.0",
+  "commit_sha": "2c86e0c",
+  "timestamp": "2026-07-02T09:12:25.781790+00:00",
+  "run_id": "cs-baseline-manual",
+  "description": "Manually authored baseline outputs for CI pipeline validation. NOT real Agent outputs.",
+  "note": "For real Agent evaluation, use run_agent_batch.py with --adapter codex or --adapter hermes"
+}

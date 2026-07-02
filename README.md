@@ -9,9 +9,25 @@
 
 ## 这是什么
 
-把 Anthropic 开源的 [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) 插件架构和 [karpathy/autoresearch](https://github.com/karpathy/autoresearch) 的自主实验闭环结合，适配为 **Codex CLI** 和 **Hermes Agent** 双运行时通用的企业 AI 员工系统。面向跨境电商场景，覆盖客服、达人营销、广告素材、Shopify 运营、B2B 销售和 Agent 评测 6 个真实岗位。包含 18 个 JSON Schema、5 个全局策略、7 个连接器契约、50 条 Golden Set 测试用例、自主实验循环（成本可控）、CI 回归测试门禁和灰度发布回滚手册。
+把 Anthropic 开源的 [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) 插件架构和 [karpathy/autoresearch](https://github.com/karpathy/autoresearch) 的自主实验闭环结合，适配为 **Codex CLI** 和 **Hermes Agent** 双运行时通用的企业 AI 员工系统。面向跨境电商场景，覆盖客服、达人营销、广告素材、Shopify 运营、B2B 销售和 Agent 评测 6 个真实岗位。
 
 > **Knowledge Work Plugins 让你把岗位流程封装成 Agent；Autoresearch 让这些 Agent 在安全边界内持续试错、评测、回滚和进化。**
+
+### 当前状态 (v0.2-beta)
+
+**已具备**:
+- customer-support 统一 taxonomy / schema / golden set (50 条) / CI 评测门禁
+- 统一 evaluator (JSON Schema 校验 + P1 hard constraint + weighted rubric)
+- Agent batch runner (mock / codex / hermes 可插拔 adapter)
+- 5 个全局策略 + 7 个连接器契约文档
+- Autoresearch 实验循环 harness (git diff 检测 / 成本控制 / 实验日志)
+- Apache-2.0 + NOTICE + ARCHITECTURE.md + ROADMAP.md
+
+**尚未完成**:
+- 真实 Agent runtime 调用 (batch runner 已就绪，但 CI 仍使用手写 baseline)
+- 真实 MCP server adapter (.mcp.example.json / .mcp.mock.json 已就绪，但无运行时实现)
+- 多插件生产深度 (仅 customer-support 达到样板级)
+- CI 回归对比门禁 (compare_regression.py 已就绪，但 CI 尚未强制 degraded=block)
 
 | 来源 | 贡献 |
 |------|------|
@@ -225,9 +241,25 @@ Apache License 2.0 — 详见 [LICENSE](LICENSE) 和 [NOTICE](NOTICE)
 
 ## What Is This
 
-An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) architecture combined with [karpathy/autoresearch](https://github.com/karpathy/autoresearch)'s autonomous experiment loop, into a **Codex CLI** and **Hermes Agent** dual-runtime enterprise AI employee system. Purpose-built for cross-border e-commerce, covering 6 real-world roles: customer support, influencer outreach, ad creative, Shopify growth, B2B sales, and agent evaluation. Includes 18 JSON Schemas, 5 global policies, 7 connector contracts, 50 Golden Set test cases, autonomous experiment loop (cost-controlled), CI regression gate, and grayscale rollback playbook.
+An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) architecture combined with [karpathy/autoresearch](https://github.com/karpathy/autoresearch)'s autonomous experiment loop, into a **Codex CLI** and **Hermes Agent** dual-runtime enterprise AI employee system. Purpose-built for cross-border e-commerce, covering 6 real-world roles: customer support, influencer outreach, ad creative, Shopify growth, B2B sales, and agent evaluation.
 
 > **Knowledge Work Plugins encapsulates role processes into Agents; Autoresearch lets those Agents continuously experiment, evaluate, roll back, and evolve within safe boundaries.**
+
+### Current Status (v0.2-beta)
+
+**Available**:
+- customer-support unified taxonomy / schema / golden set (50 cases) / CI eval gate
+- Unified evaluator (JSON Schema validation + P1 hard constraint + weighted rubric)
+- Agent batch runner (mock / codex / hermes pluggable adapter)
+- 5 global policies + 7 connector contract docs
+- Autoresearch experiment loop harness (git diff detection / cost control / experiment logs)
+- Apache-2.0 + NOTICE + ARCHITECTURE.md + ROADMAP.md
+
+**Not yet done**:
+- Real Agent runtime calls (batch runner ready, but CI still uses hand-authored baseline)
+- Real MCP server adapter (.mcp.example.json / .mcp.mock.json ready, no runtime impl)
+- Multi-plugin production depth (only customer-support at sample level)
+- CI regression comparison gate (compare_regression.py ready, but CI does not yet enforce degraded=block)
 
 | Source | Contribution |
 |--------|-------------|

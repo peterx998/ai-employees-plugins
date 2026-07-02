@@ -24,3 +24,8 @@ venv/
 experiments/*-results.tsv
 experiments/scorecards/*/exp-*.json
 run.log
+
+# Real MCP configs (contain credentials — never commit)
+**/.mcp.json
+!**/.mcp.example.json
+!**/.mcp.mock.json

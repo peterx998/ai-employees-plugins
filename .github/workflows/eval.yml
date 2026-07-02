@@ -28,58 +28,37 @@ jobs:
       - name: Validate schema consistency
         run: |
           python -c "
-          import json, yaml, sys, os
-
+          import json, yaml, sys
           errors = []
-
-          # Load taxonomy
           with open('schemas/enums/customer_support_taxonomy.yaml') as f:
               taxonomy = yaml.safe_load(f)
-
-          # Validate triage_result.schema.json enums match taxonomy
           with open('schemas/customer-support/triage_result.schema.json') as f:
               schema = json.load(f)
-
-          schema_priority = set(schema['properties']['priority']['enum'])
-          taxonomy_priority = set(taxonomy['priority'])
-          if schema_priority != taxonomy_priority:
-              errors.append(f'priority enum mismatch: schema={schema_priority} taxonomy={taxonomy_priority}')
-
-          schema_category = set(schema['properties']['category']['enum'])
-          taxonomy_category = set(taxonomy['category'])
-          if schema_category != taxonomy_category:
-              errors.append(f'category enum mismatch: schema={schema_category} taxonomy={taxonomy_category}')
-
-          schema_route = set(schema['properties']['route_to']['enum'])
-          taxonomy_route = set(taxonomy['route_to'])
-          if schema_route != taxonomy_route:
-              errors.append(f'route_to enum mismatch: schema={schema_route} taxonomy={taxonomy_route}')
-
-          # Validate golden set uses same enums
+          sp = set(schema['properties']['priority']['enum'])
+          tp = set(taxonomy['priority'])
+          sc = set(schema['properties']['category']['enum'])
+          tc = set(taxonomy['category'])
+          sr = set(schema['properties']['route_to']['enum'])
+          tr = set(taxonomy['route_to'])
+          if sp != tp: errors.append(f'priority mismatch: {sp} vs {tp}')
+          if sc != tc: errors.append(f'category mismatch: {sc} vs {tc}')
+          if sr != tr: errors.append(f'route_to mismatch: {sr} vs {tr}')
           with open('customer-support/evals/golden_set_v1.yaml') as f:
               cases = yaml.safe_load(f)
-
           for case in cases:
-              cid = case.get('id', '?')
-              exp = case.get('expected', {})
-              cat = exp.get('category', '')
-              pri = exp.get('priority', '')
-              if cat and cat not in taxonomy_category:
-                  errors.append(f'{cid}: category \"{cat}\" not in taxonomy')
-              if pri and pri not in taxonomy_priority:
-                  errors.append(f'{cid}: priority \"{pri}\" not in taxonomy')
-
+              cid = case.get('id','?')
+              exp = case.get('expected',{})
+              if exp.get('category','') and exp['category'] not in tc: errors.append(f'{cid}: category not in taxonomy')
+              if exp.get('priority','') and exp['priority'] not in tp: errors.append(f'{cid}: priority not in taxonomy')
           if errors:
-              for e in errors:
-                  print(f'::error::{e}')
+              for e in errors: print(f'::error::{e}')
               sys.exit(1)
-          print(f'✅ Schema consistency check passed ({len(cases)} cases, {len(taxonomy_category)} categories, {len(taxonomy_priority)} priorities)')
+          print(f'Schema consistency: {len(cases)} cases aligned')
           "
 
       - name: Check SKILL.md output contract field names
         run: |
           ERRORS=0
-          # Check that ticket-triage SKILL.md does NOT use old field names
           SKILL_FILE="customer-support/skills/ticket-triage/SKILL.md"
           if grep -q '"routing"' "$SKILL_FILE" 2>/dev/null; then
             echo "::error file=$SKILL_FILE::Uses old field 'routing' — should be 'route_to'"
@@ -89,87 +68,93 @@ jobs:
             echo "::error file=$SKILL_FILE::Uses old field 'flags' — should be 'risk_flags'"
             ERRORS=$((ERRORS + 1))
           fi
-          if grep -q '"routing":' "$SKILL_FILE" 2>/dev/null; then
-            echo "::error file=$SKILL_FILE::Uses old field 'routing:' — should be 'route_to:'"
-            ERRORS=$((ERRORS + 1))
-          fi
           if [ $ERRORS -gt 0 ]; then
-            echo "::error::$ERRORS field name consistency errors in SKILL.md"
             exit 1
           fi
-          echo "✅ SKILL.md field names are consistent with schema"
+          echo "SKILL.md field names consistent"
 
       - name: Check SKILL.md frontmatter
         run: |
           ERRORS=0
           for f in $(find . -name "SKILL.md" -not -path "./.git/*"); do
             if ! grep -q "user_invocable: true" "$f"; then
-              echo "::error file=$f::Missing 'user_invocable: true' in frontmatter"
+              echo "::error file=$f::Missing 'user_invocable: true'"
               ERRORS=$((ERRORS + 1))
             fi
             if ! grep -q "^name:" "$f"; then
-              echo "::error file=$f::Missing 'name' in frontmatter"
+              echo "::error file=$f::Missing 'name'"
               ERRORS=$((ERRORS + 1))
             fi
             if ! grep -q "^description:" "$f"; then
-              echo "::error file=$f::Missing 'description' in frontmatter"
+              echo "::error file=$f::Missing 'description'"
               ERRORS=$((ERRORS + 1))
             fi
           done
-          if [ $ERRORS -gt 0 ]; then
-            echo "::error::$ERRORS frontmatter validation errors"
-            exit 1
-          fi
+          if [ $ERRORS -gt 0 ]; then exit 1; fi
 
       - name: Check command namespacing
         run: |
-          ERRORS=0
           for f in $(find . -path "*/commands/*.md" -not -path "./.git/*"); do
             CMD_NAME=$(grep -oP '^name: \K.*' "$f" 2>/dev/null || echo "")
             if [ -n "$CMD_NAME" ] && ! echo "$CMD_NAME" | grep -q ":"; then
-              echo "::warning file=$f::Command '$CMD_NAME' missing namespace prefix"
+              echo "::warning file=$f::Command '$CMD_NAME' missing namespace"
             fi
           done
 
       - name: Run customer-support Golden Set evaluation
         run: |
-          # Run evaluation — if actual outputs exist, score them; if not, FAIL
+          # Use unified evaluator via the CLI wrapper
           python agent-evaluation/runner/run_eval.py \
             --golden-set customer-support/evals/golden_set_v1.yaml \
             --agent customer-support \
             --actual-dir customer-support/evals/actual_outputs/baseline
 
-      - name: Check CI gate — no soft failures allowed
+      - name: Check CI gate verdict
         run: |
-          # Verify eval_results.json exists and verdict is not PENDING
           RESULT_FILE="customer-support/reports/eval_results.json"
           if [ ! -f "$RESULT_FILE" ]; then
-            echo "::error::Eval results not found at $RESULT_FILE — evaluation did not complete"
+            echo "::error::Eval results not found at $RESULT_FILE"
             exit 1
           fi
-          VERDICT=$(python -c "import json; d=json.load(open('$RESULT_FILE')); print(d.get('verdict','UNKNOWN'))")
-          if [ "$VERDICT" = "PENDING" ]; then
-            echo "::error::Eval verdict is PENDING — no actual outputs were evaluated. CI gate requires real evaluation."
+          VERDICT=$(python -c "import json; print(json.load(open('$RESULT_FILE')).get('verdict','UNKNOWN'))")
+          PENDING=$(python -c "import json; print(json.load(open('$RESULT_FILE')).get('pending',0))")
+          HC_FAIL=$(python -c "import json; print(json.load(open('$RESULT_FILE')).get('hard_constraint_failures',0))")
+          SCHEMA_FAIL=$(python -c "import json; print(json.load(open('$RESULT_FILE')).get('schema_failures',0))")
+          echo "Verdict: $VERDICT | Pending: $PENDING | Hard constraint failures: $HC_FAIL | Schema failures: $SCHEMA_FAIL"
+          if [ "$VERDICT" != "PASS" ]; then
+            echo "::error::Eval verdict is $VERDICT — CI gate blocks merge"
             exit 1
           fi
-          if [ "$VERDICT" = "FAIL" ]; then
-            echo "::error::Eval verdict is FAIL — golden set cases failed. Fix before merge."
-            exit 1
+          echo "CI Gate: PASS"
+
+      - name: Run regression comparison
+        if: always()
+        run: |
+          # Compare current results against baseline scorecard
+          BASELINE="experiments/scorecards/customer-support/baseline.json"
+          CANDIDATE="customer-support/reports/eval_results.json"
+
+          if [ -f "$BASELINE" ] && [ -f "$CANDIDATE" ]; then
+            python scripts/compare_regression.py \
+              --agent customer-support \
+              --baseline "$BASELINE" \
+              --candidate "$CANDIDATE"
+            # compare_regression.py exits 1 if degraded cases found — this blocks merge
+          else
+            echo "Regression comparison skipped — baseline or candidate not found"
+            echo "Baseline: $BASELINE ($(test -f $BASELINE && echo 'exists' || echo 'missing'))"
+            echo "Candidate: $CANDIDATE ($(test -f $CANDIDATE && echo 'exists' || echo 'missing'))"
           fi
-          echo "✅ CI Gate: $VERDICT"
 
       - name: Generate regression report
         if: always()
         run: |
           mkdir -p reports
-          echo "## Regression Report" > reports/regression_report.md
+          echo "## Evaluation Report" > reports/regression_report.md
           echo "- Date: $(date -u)" >> reports/regression_report.md
-          echo "- Trigger: ${{ github.event_name }}" >> reports/regression_report.md
           echo "- Commit: ${{ github.sha }}" >> reports/regression_report.md
           RESULT_FILE="customer-support/reports/eval_results.json"
           if [ -f "$RESULT_FILE" ]; then
-            echo "" >> reports/regression_report.md
-            echo "### Customer Support Results" >> reports/regression_report.md
             python -c "
           import json
           with open('$RESULT_FILE') as f:
@@ -177,13 +162,16 @@ jobs:
           print(f'- Total cases: {d.get(\"total_cases\", \"?\")}')
           print(f'- Passed: {d.get(\"passed\", \"?\")}')
           print(f'- Failed: {d.get(\"failed\", \"?\")}')
+          print(f'- Pending: {d.get(\"pending\", 0)}')
+          print(f'- Hard constraint failures: {d.get(\"hard_constraint_failures\", 0)}')
+          print(f'- Schema failures: {d.get(\"schema_failures\", 0)}')
           print(f'- Verdict: {d.get(\"verdict\", \"?\")}')
           " >> reports/regression_report.md
           fi
 
-      - name: Upload regression report
+      - name: Upload evaluation report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: regression-report
+          name: evaluation-report
           path: reports/

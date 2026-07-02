@@ -1,413 +1,938 @@
 {
-  "golden_set_path": "customer-support/evals/golden_set_v1.yaml",
-  "agent_filter": "customer-support",
+  "agent": "customer-support",
+  "timestamp": "2026-07-02T09:15:24.582739+00:00",
   "total_cases": 50,
   "judged": 50,
   "pending": 0,
   "passed": 50,
   "failed": 0,
+  "hard_constraint_failures": 0,
+  "schema_failures": 0,
   "pass_rate": 1.0,
   "verdict": "PASS",
+  "rubric": {
+    "category_accuracy": 0.3,
+    "priority_accuracy": 0.2,
+    "route_to_accuracy": 0.15,
+    "hard_constraint_pass": 0.15,
+    "schema_valid": 0.1,
+    "forbidden_check": 0.05,
+    "field_completeness": 0.05
+  },
   "results": [
     {
       "case_id": "CS-REF-001",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-REF-002",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-REF-003",
-      "score": 9,
-      "max_score": 9,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-REF-004",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-REF-005",
-      "score": 7,
-      "max_score": 7,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-REF-006",
-      "score": 7,
-      "max_score": 7,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-REF-007",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-REF-008",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-REF-009",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-REF-010",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-SHP-001",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-SHP-002",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-SHP-003",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-SHP-004",
-      "score": 7,
-      "max_score": 7,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-SHP-005",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-SHP-006",
-      "score": 7,
-      "max_score": 7,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-SHP-007",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-SHP-008",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-SHP-009",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-SHP-010",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-MED-001",
-      "score": 10,
-      "max_score": 10,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-MED-002",
-      "score": 9,
-      "max_score": 9,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-MED-003",
-      "score": 9,
-      "max_score": 9,
+      "score": 0.85,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
-      "reasons": []
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
+      "reasons": [
+        "route_to: expected 'medical-review', got 'tier-2'"
+      ]
     },
     {
       "case_id": "CS-MED-004",
-      "score": 10,
-      "max_score": 10,
+      "score": 0.85,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
-      "reasons": []
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
+      "reasons": [
+        "route_to: expected 'medical-review', got 'tier-2'"
+      ]
     },
     {
       "case_id": "CS-MED-005",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-USG-001",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-USG-002",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-USG-003",
-      "score": 7,
-      "max_score": 7,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-USG-004",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-USG-005",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-WAR-001",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-WAR-002",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-WAR-003",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-WAR-004",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-WAR-005",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-POL-001",
-      "score": 7,
-      "max_score": 7,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-POL-002",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-POL-003",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-POL-004",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-POL-005",
-      "score": 7,
-      "max_score": 7,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-LNG-001",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-LNG-002",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-LNG-003",
-      "score": 9,
-      "max_score": 9,
+      "score": 0.85,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
-      "reasons": []
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
+      "reasons": [
+        "route_to: expected 'medical-review', got 'tier-2'"
+      ]
     },
     {
       "case_id": "CS-LNG-004",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-LNG-005",
-      "score": 8,
-      "max_score": 8,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-ESC-001",
-      "score": 9,
-      "max_score": 9,
+      "score": 0.85,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
-      "reasons": []
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
+      "reasons": [
+        "route_to: expected 'medical-review', got 'escalation'"
+      ]
     },
     {
       "case_id": "CS-ESC-002",
-      "score": 9,
-      "max_score": 9,
+      "score": 0.85,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
-      "reasons": []
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
+      "reasons": [
+        "route_to: expected 'medical-review', got 'escalation'"
+      ]
     },
     {
       "case_id": "CS-ESC-003",
-      "score": 9,
-      "max_score": 9,
+      "score": 0.85,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
-      "reasons": []
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
+      "reasons": [
+        "route_to: expected 'medical-review', got 'escalation'"
+      ]
     },
     {
       "case_id": "CS-ESC-004",
-      "score": 9,
-      "max_score": 9,
+      "score": 1.0,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 1.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
       "reasons": []
     },
     {
       "case_id": "CS-ESC-005",
-      "score": 9,
-      "max_score": 9,
+      "score": 0.85,
       "passed": true,
+      "hard_constraint_passed": true,
+      "schema_valid": true,
       "forbidden_hits": [],
-      "reasons": []
+      "details": {
+        "schema_valid": 1.0,
+        "category_accuracy": 1.0,
+        "priority_accuracy": 1.0,
+        "route_to_accuracy": 0.0,
+        "hard_constraint_pass": 1.0,
+        "forbidden_check": 1.0,
+        "field_completeness": 1.0
+      },
+      "reasons": [
+        "route_to: expected 'medical-review', got 'escalation'"
+      ]
     }
   ]
 }
