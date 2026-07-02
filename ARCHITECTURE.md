@@ -2,7 +2,12 @@
 
 ## Overview
 
-AI Employees Plugins is built on the [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) architecture, adapted for **Hermes Agent** and **Codex CLI** dual runtime. Each plugin bundles skills (domain knowledge + SOP), commands (executable workflow entry points), connectors (MCP tool connections), and evaluation suites (Golden Set + regression tests).
+AI Employees Plugins combines two architectural paradigms:
+
+1. **[knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins)** — Role capability encapsulation (plugin manifest → skills → commands → connectors)
+2. **[karpathy/autoresearch](https://github.com/karpathy/autoresearch)** — Autonomous experiment loop (modify → evaluate → keep/discard → log → repeat)
+
+Together they create a system where enterprise AI agents don't just execute SOPs — they **continuously improve SOPs within safe boundaries**.
 
 ## Layered Architecture
 
@@ -13,7 +18,7 @@ L1  Role Process Decomposition (6 roles: support, influencer, ad, shopify, b2b, 
         ↓
 L2  SOP / Knowledge / Templates / Rules / Tag Taxonomy
         ↓
-L3  Plugin Encapsulation (this repo — knowledge-work-plugins standard)
+L3  Plugin Encapsulation (knowledge-work-plugins standard)
     ├── .claude-plugin/plugin.json    → Plugin identity, version, permissions
     ├── .mcp.json                     → MCP server connections
     ├── CONNECTORS.md                 → Tool connector documentation
@@ -23,7 +28,22 @@ L3  Plugin Encapsulation (this repo — knowledge-work-plugins standard)
     ├── evals/                        → Golden Set test cases
     └── examples/                     → Real-world usage examples
         ↓
-L4  Shared Infrastructure
+L3.5  Autoresearch Loop (karpathy/autoresearch adapted)
+    ├── programs/                     → Experiment "constitution" per agent (human edits)
+    │   ├── customer-support-autoresearch.md
+    │   ├── influencer-outreach-autoresearch.md
+    │   └── ... (5 total)
+    ├── scripts/                      → Evaluation harness
+    │   ├── run_eval.py               → Golden Set scorer (deterministic)
+    │   ├── run_autoresearch.py       → Experiment loop runner
+    │   └── compare_regression.py     → Version comparison + regression report
+    └── experiments/                  → Experiment logs (knowledge compound interest)
+        ├── *-results.tsv             → Per-agent experiment log (untracked)
+        ├── scorecards/               → JSON scorecards per experiment
+        ├── reports/                  → Regression + session reports
+        └── sessions/                 → Human review summaries
+        ↓
+L4  Shared Infrastructure (READ-ONLY for agents)
     ├── schemas/                      → Cross-plugin business entity models
     ├── policies/                     → Global compliance + risk policies
     ├── connectors/                   → Connector contracts + mock data
@@ -40,6 +60,71 @@ L7  Human Review / Permissions / Grayscale / Rollback / Logs
 L8  Golden Set / Regression Test / Error Review (CI-enforced)
         ↓
 L9  Asset Accumulation / Component Reuse / Commercial Delivery
+```
+
+## Autoresearch Loop Design
+
+Adapted from karpathy/autoresearch's three-file pattern:
+
+| autoresearch | ai-employees-plugins | Who edits |
+|-------------|---------------------|-----------|
+| `prepare.py` (fixed eval) | `policies/` + `schemas/` + `connectors/` + `evals/` | **Nobody** (read-only) |
+| `train.py` (agent modifies) | `skills/*/SKILL.md` + `commands/*.md` | **Agent** (within boundaries) |
+| `program.md` (human sets org) | `programs/*-autoresearch.md` | **Human** (experiment constitution) |
+| `results.tsv` (experiment log) | `experiments/*-results.tsv` | **Agent** (auto-logged) |
+
+### Experiment Loop
+
+```text
+1. Human creates branch: autoresearch/<tag>
+2. Agent reads program.md → understands editable/read-only boundaries
+3. Agent runs baseline evaluation → records in results.tsv
+4. LOOP (max N experiments, max $M cost):
+   a. Agent identifies improvement hypothesis (from failed cases)
+   b. Agent modifies ONE skill/command file
+   c. Agent commits change
+   d. Agent runs evaluation: python scripts/run_eval.py --agent <name>
+   e. Agent compares score to baseline:
+      - If improved AND hard constraint passed → KEEP
+      - If worse OR hard constraint failed → DISCARD (git reset)
+   f. Agent logs result to results.tsv
+5. Agent generates session report + creates PR
+6. Human reviews PR → merge → grayscale release
+```
+
+### Hard Constraints (Binary Gates)
+
+Each agent has a hard constraint that auto-discards experiments if violated:
+
+| Agent | Hard Constraint | Auto-discard Trigger |
+|-------|----------------|---------------------|
+| customer-support | P1 medical cases must escalate | Any P1 case missed |
+| influencer-outreach | Fee-request replies need human review | Any fee-reply auto-answered |
+| ad-creative | Compliance-critical segments detected | Any medical claim missed |
+| shopify-growth | Medical claims on pages flagged | Any claim missed |
+| b2b-sales | High-value leads escalated | Any $10K+ lead missed |
+
+### Budget Control
+
+| Agent | Max Experiments | Max Cost | Timeout |
+|-------|----------------|----------|---------|
+| customer-support | 30 | $5.00 | 5 min |
+| influencer-outreach | 25 | $4.00 | 5 min |
+| ad-creative | 20 | $6.00 | 8 min |
+| shopify-growth | 20 | $4.00 | 5 min |
+| b2b-sales | 20 | $3.00 | 5 min |
+
+### Safety: What Agent CAN vs CANNOT Do
+
+```text
+Agent CAN autonomously:              Agent CANNOT autonomously:
+- Edit SKILL.md drafts               - Send emails (draft only)
+- Edit command .md files             - Issue refunds
+- Run golden set evaluation          - Modify Shopify pages
+- Generate scorecards                - Publish ads
+- Create git commits on branch       - Modify compliance policies
+- Create PR for human review         - Merge PR without human
+- Log experiments to results.tsv     - Exceed budget
 ```
 
 ## Plugin Anatomy

@@ -19,3 +19,8 @@ venv/
 
 # Build artifacts
 *.log
+
+# Autoresearch experiment logs (local only, not tracked)
+experiments/*-results.tsv
+experiments/scorecards/*/exp-*.json
+run.log

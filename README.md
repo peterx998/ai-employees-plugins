@@ -9,11 +9,14 @@
 
 ## 这是什么
 
-把 Anthropic 开源的 [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) 插件架构，适配为 **Codex CLI** 和 **Hermes Agent** 双运行时通用的企业 AI 员工插件库。面向跨境电商场景，覆盖客服、达人营销、广告素材、Shopify 运营、B2B 销售和 Agent 评测 6 个真实岗位。包含 18 个 JSON Schema、5 个全局策略、7 个连接器契约、50 条 Golden Set 测试用例、CI 回归测试门禁和灰度发布回滚手册。
+把 Anthropic 开源的 [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) 插件架构和 [karpathy/autoresearch](https://github.com/karpathy/autoresearch) 的自主实验闭环结合，适配为 **Codex CLI** 和 **Hermes Agent** 双运行时通用的企业 AI 员工系统。面向跨境电商场景，覆盖客服、达人营销、广告素材、Shopify 运营、B2B 销售和 Agent 评测 6 个真实岗位。包含 18 个 JSON Schema、5 个全局策略、7 个连接器契约、50 条 Golden Set 测试用例、自主实验循环（成本可控）、CI 回归测试门禁和灰度发布回滚手册。
+
+> **Knowledge Work Plugins 让你把岗位流程封装成 Agent；Autoresearch 让这些 Agent 在安全边界内持续试错、评测、回滚和进化。**
 
 | 来源 | 贡献 |
 |------|------|
 | `anthropics/knowledge-work-plugins` | 完整继承其四层架构：plugin manifest → skills → commands → connectors/MCP |
+| `karpathy/autoresearch` | 自主实验闭环范式：modify → evaluate → keep/discard → log → repeat |
 | Codex CLI | SKILL.md `user_invocable: true` 双工具兼容格式 |
 | Hermes Agent | `/skill <name>` 加载 + `~/.hermes/skills/` 自动发现 |
 | 跨境电商业务场景 | 6 大岗位的 SOP、策略、合规边界、升级规则实战沉淀 |
@@ -33,6 +36,8 @@
 | **agent-evaluation** | 评测框架 | 4 | 5 | 3 | Golden Set、回归测试、灰度发布、错误根因分析、CI 门禁 |
 
 **共享基础设施**: schemas/ (18 个 JSON Schema) · policies/ (5 个全局策略) · connectors/ (4 个连接器契约 + 3 个 mock 数据) · install/ (4 个安装/验证脚本) · .github/workflows/ (CI 评测门禁)
+
+**自主实验层 (Autoresearch Loop)**: programs/ (5 个岗位实验宪法) · scripts/ (3 个评测脚本) · experiments/ (实验日志 + scorecards + 报告) · 成本可控 (每岗位 $3-$6/会话)
 
 ---
 
@@ -192,6 +197,9 @@ Apache License 2.0 — 详见 [LICENSE](LICENSE) 和 [NOTICE](NOTICE)
 | [CONTRIBUTING.md](CONTRIBUTING.md) | 贡献指南 |
 | `policies/` | 5 个全局策略 (医疗合规、隐私PII、人审升级、工具权限、广告合规) |
 | `connectors/` | 4 个连接器契约 + 3 个 mock 数据 |
+| `programs/` | 5 个岗位 autoresearch 实验宪法 (可改/不可改/评测/预算/回滚) |
+| `scripts/` | 3 个评测脚本 (run_eval.py + run_autoresearch.py + compare_regression.py) |
+| `experiments/` | 实验日志 (results.tsv) + scorecards + 会话报告 |
 | `agent-evaluation/release/` | 灰度发布回滚手册 + 事故复盘模板 + 特性开关 |
 
 ---
@@ -200,6 +208,7 @@ Apache License 2.0 — 详见 [LICENSE](LICENSE) 和 [NOTICE](NOTICE)
 
 - **[agent-engineering-framework](https://github.com/peterx998/agent-engineering-framework)** — Agent 工程完整框架：Karpathy LLM Wiki 模式 + ADPS 33 模式 + 8 层治理栈 + FDE 交付机制，系统性理解 Agent 工程的入口
 - **[anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins)** — 本项目的上游架构来源，Anthropic 官方开源的岗位级 Claude 插件库
+- **[karpathy/autoresearch](https://github.com/karpathy/autoresearch)** — 自主实验闭环范式来源，Karpathy 的 Agent 自主研究项目，启发本项目的 Autoresearch Loop 层
 
 ---
 
@@ -216,11 +225,14 @@ Apache License 2.0 — 详见 [LICENSE](LICENSE) 和 [NOTICE](NOTICE)
 
 ## What Is This
 
-An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) architecture into a **Codex CLI** and **Hermes Agent** dual-runtime enterprise AI employee plugin pack. Purpose-built for cross-border e-commerce, covering 6 real-world roles: customer support, influencer outreach, ad creative, Shopify growth, B2B sales, and agent evaluation. Includes 18 JSON Schemas, 5 global policies, 7 connector contracts, 50 Golden Set test cases, CI regression gate, and grayscale rollback playbook.
+An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) architecture combined with [karpathy/autoresearch](https://github.com/karpathy/autoresearch)'s autonomous experiment loop, into a **Codex CLI** and **Hermes Agent** dual-runtime enterprise AI employee system. Purpose-built for cross-border e-commerce, covering 6 real-world roles: customer support, influencer outreach, ad creative, Shopify growth, B2B sales, and agent evaluation. Includes 18 JSON Schemas, 5 global policies, 7 connector contracts, 50 Golden Set test cases, autonomous experiment loop (cost-controlled), CI regression gate, and grayscale rollback playbook.
+
+> **Knowledge Work Plugins encapsulates role processes into Agents; Autoresearch lets those Agents continuously experiment, evaluate, roll back, and evolve within safe boundaries.**
 
 | Source | Contribution |
 |--------|-------------|
 | `anthropics/knowledge-work-plugins` | Full inheritance of its four-layer architecture: plugin manifest → skills → commands → connectors/MCP |
+| `karpathy/autoresearch` | Autonomous experiment loop paradigm: modify → evaluate → keep/discard → log → repeat |
 | Codex CLI | SKILL.md `user_invocable: true` dual-tool compatible format |
 | Hermes Agent | `/skill <name>` loading + `~/.hermes/skills/` auto-discovery |
 | Cross-border e-commerce | Hands-on SOPs, strategies, compliance boundaries, and escalation rules across 6 roles |
@@ -240,6 +252,8 @@ An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github
 | **agent-evaluation** | Evaluation Framework | 4 | 5 | 3 | Golden Set, regression testing, grayscale release, error RCA, CI gate |
 
 **Shared Infrastructure**: schemas/ (18 JSON Schemas) · policies/ (5 global policies) · connectors/ (4 connector contracts + 3 mock data) · install/ (4 install/validate scripts) · .github/workflows/ (CI eval gate)
+
+**Autoresearch Loop**: programs/ (5 agent experiment constitutions) · scripts/ (3 evaluation scripts) · experiments/ (logs + scorecards + reports) · cost-controlled ($3-$6/session per agent)
 
 ---
 
@@ -394,6 +408,9 @@ Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE)
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guide |
 | `policies/` | 5 global policies (medical compliance, privacy/PII, human review, tool permissions, advertising claims) |
 | `connectors/` | 4 connector contracts + 3 mock data files |
+| `programs/` | 5 agent autoresearch constitutions (editable/read-only/eval/budget/rollback) |
+| `scripts/` | 3 evaluation scripts (run_eval.py + run_autoresearch.py + compare_regression.py) |
+| `experiments/` | Experiment logs (results.tsv) + scorecards + session reports |
 | `agent-evaluation/release/` | Grayscale rollback playbook + incident review template + feature flags |
 
 ---
@@ -402,3 +419,4 @@ Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE)
 
 - **[agent-engineering-framework](https://github.com/peterx998/agent-engineering-framework)** — Complete Agent Engineering Framework: Karpathy LLM Wiki pattern + ADPS 33 patterns + 8-layer governance stack + FDE delivery mechanism. The entry point for systematically understanding Agent engineering.
 - **[anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins)** — The upstream architecture source for this project. Anthropic's official open-source role-level Claude plugin library.
+- **[karpathy/autoresearch](https://github.com/karpathy/autoresearch)** — The autonomous experiment loop paradigm source. Karpathy's agent self-research project that inspired this project's Autoresearch Loop layer.

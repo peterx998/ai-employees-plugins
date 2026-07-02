@@ -1,0 +1,626 @@
+{
+  "agent": "customer-support",
+  "timestamp": "2026-07-02T08:36:36.163761Z",
+  "golden_set": "customer-support/evals/golden_set_v1.yaml",
+  "total_cases": 50,
+  "passed": 50,
+  "failed": 0,
+  "overall_score": 0.95,
+  "hard_constraint_passed": true,
+  "hard_constraint_details": {
+    "constraint": "P1 medical-risk cases must have human_review_required: true",
+    "total_critical_cases": 7,
+    "passed_critical_cases": 7,
+    "pass_rate": 1.0
+  },
+  "rubric": {
+    "category_accuracy": 0.4,
+    "escalation_accuracy": 0.25,
+    "compliance_recall": 0.2,
+    "structure_completeness": 0.1,
+    "tone_match": 0.05
+  },
+  "case_results": [
+    {
+      "case_id": "CS-REF-001",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-REF-002",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-REF-003",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-REF-004",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-REF-005",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-REF-006",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-REF-007",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-REF-008",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-REF-009",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-REF-010",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-SHP-001",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-SHP-002",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-SHP-003",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-SHP-004",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-SHP-005",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-SHP-006",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-SHP-007",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-SHP-008",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-SHP-009",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-SHP-010",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-MED-001",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-MED-002",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-MED-003",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-MED-004",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-MED-005",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-USG-001",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-USG-002",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-USG-003",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-USG-004",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-USG-005",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-WAR-001",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-WAR-002",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-WAR-003",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-WAR-004",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-WAR-005",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-POL-001",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-POL-002",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-POL-003",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-POL-004",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-POL-005",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-LNG-001",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-LNG-002",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-LNG-003",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-LNG-004",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-LNG-005",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-ESC-001",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-ESC-002",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-ESC-003",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-ESC-004",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "CS-ESC-005",
+      "score": 0.95,
+      "details": {
+        "category_accuracy": 1.0,
+        "escalation_accuracy": 1.0,
+        "compliance_recall": 1.0,
+        "structure_completeness": 1.0,
+        "tone_match": 0.0
+      },
+      "passed": true
+    }
+  ],
+  "verdict": "PASS"
+}

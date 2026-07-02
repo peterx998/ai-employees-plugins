@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `programs/` directory with 5 agent autoresearch constitutions (customer-support, influencer-outreach, ad-creative, shopify-growth, b2b-sales)
+- `scripts/` directory with 3 evaluation scripts: `run_eval.py`, `run_autoresearch.py`, `compare_regression.py`
+- `experiments/` directory with 5 results.tsv templates, scorecards/, reports/, sessions/ structure
+- Autoresearch Loop layer (L3.5) in ARCHITECTURE.md — adapted from karpathy/autoresearch
+- Budget control per agent ($3-$6/session, 20-30 experiments max)
+- Hard constraints (binary gates) per agent — auto-discard on violation
+- Safety boundaries: agent can edit skills/commands but cannot send emails, issue refunds, modify policies, or exceed budget
 - `install/` directory with 4 scripts: `install-skills-only.sh`, `install-full-plugin.sh`, `validate-plugin.sh`, `sync-runtime-adapters.sh`
 - All commands namespaced: `/customer-support:triage`, `/influencer:creator-research`, `/eval:golden-set`, etc.
 - Command contracts with inputs, steps, output JSON, risk boundaries, failure modes
