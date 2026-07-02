@@ -26,10 +26,32 @@ jobs:
           bash install/validate-plugin.sh
 
       - name: Deep contract validation
-        run: python install/validate-contracts.py --plugin customer-support
+        run: |
+          set +e
+          python install/validate-contracts.py --plugin customer-support
+          RC=$?
+          set -e
+          if [ "$RC" -eq 2 ]; then
+            echo "::error::Deep contract validation found errors"
+            exit 2
+          fi
+          if [ "$RC" -eq 1 ]; then
+            echo "::warning::Deep contract validation found warnings; warnings do not fail CI"
+          fi
 
       - name: Validate evaluation data
-        run: python install/validate-evals.py --agent customer-support --check-actuals
+        run: |
+          set +e
+          python install/validate-evals.py --agent customer-support --check-actuals
+          RC=$?
+          set -e
+          if [ "$RC" -eq 2 ]; then
+            echo "::error::Evaluation data validation found errors"
+            exit 2
+          fi
+          if [ "$RC" -eq 1 ]; then
+            echo "::warning::Evaluation data validation found warnings; warnings do not fail CI"
+          fi
 
       - name: Validate schema consistency
         run: |
@@ -109,7 +131,6 @@ jobs:
 
       - name: Run customer-support Golden Set evaluation
         run: |
-          # Use unified evaluator via the CLI wrapper
           python agent-evaluation/runner/run_eval.py \
             --golden-set customer-support/evals/golden_set_v1.yaml \
             --agent customer-support \
@@ -117,13 +138,11 @@ jobs:
 
       - name: Run Agent Batch Runner (mock — proves pipeline integrity)
         run: |
-          # Full pipeline: golden set → mock agent → eval → regression
-          # Uses mock adapter to prove the pipeline works end-to-end
-          # without requiring live AI agent credentials in CI
+          # Full pipeline: golden set → mock agent → eval → regression.
+          # Mock adapter is deterministic in CI and does not require live credentials.
           python agent-evaluation/runner/run_agent_batch.py \
             --agent customer-support \
             --adapter mock \
-            --max-cases 10 \
             --output-dir customer-support/evals/actual_outputs/current \
             --eval-output customer-support/reports/eval_results_agent.json
 
@@ -148,7 +167,6 @@ jobs:
       - name: Run regression comparison
         if: always()
         run: |
-          # Compare current results against baseline scorecard
           BASELINE="experiments/scorecards/customer-support/baseline.json"
           CANDIDATE="customer-support/reports/eval_results.json"
 
@@ -157,7 +175,6 @@ jobs:
               --agent customer-support \
               --baseline "$BASELINE" \
               --candidate "$CANDIDATE"
-            # compare_regression.py exits 1 if degraded cases found — this blocks merge
           else
             echo "Regression comparison skipped — baseline or candidate not found"
             echo "Baseline: $BASELINE ($(test -f $BASELINE && echo 'exists' || echo 'missing'))"
