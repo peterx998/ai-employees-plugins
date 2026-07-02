@@ -1,0 +1,94 @@
+name: Agent Evaluation Gate
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+jobs:
+  validate-and-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Validate plugin structure
+        run: |
+          chmod +x install/validate-plugin.sh
+          bash install/validate-plugin.sh
+
+      - name: Run customer-support Golden Set
+        run: |
+          python agent-evaluation/runner/run_eval.py \
+            --golden-set customer-support/evals/golden_set_v1.yaml \
+            --agent customer-support || true
+
+      - name: Generate regression report
+        if: always()
+        run: |
+          mkdir -p reports
+          echo "## Regression Report" > reports/regression_report.md
+          echo "- Date: $(date -u)" >> reports/regression_report.md
+          echo "- Trigger: ${{ github.event_name }}" >> reports/regression_report.md
+          echo "- Commit: ${{ github.sha }}" >> reports/regression_report.md
+          if [ -f customer-support/evals/eval_results.json ]; then
+            echo "" >> reports/regression_report.md
+            echo "### Customer Support Results" >> reports/regression_report.md
+            python -c "
+          import json
+          with open('customer-support/evals/eval_results.json') as f:
+              d = json.load(f)
+          print(f'- Total cases: {d[\"total_cases\"]}')
+          print(f'- Passed: {d[\"passed\"]}')
+          print(f'- Failed: {d[\"failed\"]}')
+          print(f'- Pass rate: {d[\"pass_rate\"]:.1%}')
+          print(f'- Verdict: {d[\"verdict\"]}')
+          " >> reports/regression_report.md
+          fi
+
+      - name: Upload regression report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-report
+          path: reports/
+
+      - name: Check SKILL.md frontmatter
+        run: |
+          ERRORS=0
+          for f in $(find . -name "SKILL.md" -not -path "./.git/*"); do
+            if ! grep -q "user_invocable: true" "$f"; then
+              echo "::error file=$f::Missing 'user_invocable: true' in frontmatter"
+              ERRORS=$((ERRORS + 1))
+            fi
+            if ! grep -q "^name:" "$f"; then
+              echo "::error file=$f::Missing 'name' in frontmatter"
+              ERRORS=$((ERRORS + 1))
+            fi
+            if ! grep -q "^description:" "$f"; then
+              echo "::error file=$f::Missing 'description' in frontmatter"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+          if [ $ERRORS -gt 0 ]; then
+            echo "::error::$ERRORS frontmatter validation errors"
+            exit 1
+          fi
+
+      - name: Check command namespacing
+        run: |
+          ERRORS=0
+          for f in $(find . -path "*/commands/*.md" -not -path "./.git/*"); do
+            CMD_NAME=$(grep -oP '^name: \K.*' "$f" 2>/dev/null || echo "")
+            if [ -n "$CMD_NAME" ] && ! echo "$CMD_NAME" | grep -q ":"; then
+              echo "::warning file=$f::Command '$CMD_NAME' missing namespace prefix (should be like 'plugin:command')"
+            fi
+          done

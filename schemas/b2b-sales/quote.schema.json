@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/b2b-sales/quote.schema.json",
+  "title": "Quote",
+  "description": "A B2B sales quote",
+  "type": "object",
+  "required": [
+    "quote_id",
+    "lead_id",
+    "line_items",
+    "subtotal",
+    "discount",
+    "total",
+    "currency",
+    "valid_until",
+    "terms"
+  ],
+  "properties": {
+    "quote_id": {
+      "type": "string",
+      "description": "Unique identifier for the quote"
+    },
+    "lead_id": {
+      "type": "string",
+      "description": "Identifier of the associated lead"
+    },
+    "line_items": {
+      "type": "array",
+      "description": "Line items in the quote",
+      "items": {
+        "type": "object",
+        "required": [
+          "product_id",
+          "description",
+          "quantity",
+          "unit_price"
+        ],
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "unit_price": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "subtotal": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Subtotal amount before discount"
+    },
+    "discount": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Discount amount applied"
+    },
+    "total": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total amount after discount"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency code (ISO 4217)"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date until which the quote is valid"
+    },
+    "terms": {
+      "type": "string",
+      "description": "Terms and conditions of the quote"
+    }
+  }
+}

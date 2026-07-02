@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/evaluation/eval_case.schema.json",
+  "title": "Eval Case",
+  "description": "An evaluation test case for an AI agent",
+  "type": "object",
+  "required": [
+    "id",
+    "agent",
+    "skill",
+    "input",
+    "expected",
+    "scoring",
+    "forbidden"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the eval case"
+    },
+    "agent": {
+      "type": "string",
+      "description": "Name of the agent being evaluated"
+    },
+    "skill": {
+      "type": "string",
+      "description": "Skill being tested"
+    },
+    "input": {
+      "type": "object",
+      "description": "Input to provide to the agent",
+      "additionalProperties": true
+    },
+    "expected": {
+      "type": "object",
+      "description": "Expected output from the agent",
+      "additionalProperties": true
+    },
+    "scoring": {
+      "type": "object",
+      "description": "Scoring configuration for the eval case",
+      "required": [
+        "method",
+        "weight"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "exact_match",
+            "substring_match",
+            "semantic_similarity",
+            "llm_judge",
+            "custom"
+          ],
+          "description": "Scoring method to use"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Weight of this case in the overall score"
+        },
+        "threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Pass threshold for the scoring method"
+        },
+        "rubric": {
+          "type": "string",
+          "description": "Rubric for LLM judge scoring"
+        }
+      }
+    },
+    "forbidden": {
+      "type": "array",
+      "description": "Forbidden outputs that cause automatic failure",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

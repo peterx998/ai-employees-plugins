@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/customer-support/triage_result.schema.json",
+  "title": "Triage Result",
+  "description": "Output of triaging a customer support ticket",
+  "type": "object",
+  "required": [
+    "category",
+    "priority",
+    "risk_flags",
+    "route_to",
+    "human_review_required",
+    "suggested_initial_response",
+    "internal_notes"
+  ],
+  "properties": {
+    "category": {
+      "type": "string",
+      "description": "Triaged category for the support ticket"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "description": "Triaged priority level"
+    },
+    "risk_flags": {
+      "type": "array",
+      "description": "Risk flags identified during triage",
+      "items": {
+        "$ref": "https://ai-employees-plugins.example/schemas/common/risk_flag.schema.json"
+      }
+    },
+    "route_to": {
+      "type": "string",
+      "description": "Team or queue the ticket should be routed to"
+    },
+    "human_review_required": {
+      "type": "boolean",
+      "description": "Whether human review is required before proceeding"
+    },
+    "suggested_initial_response": {
+      "type": "string",
+      "description": "Suggested initial response to the customer"
+    },
+    "internal_notes": {
+      "type": "string",
+      "description": "Internal notes for the support team"
+    }
+  }
+}

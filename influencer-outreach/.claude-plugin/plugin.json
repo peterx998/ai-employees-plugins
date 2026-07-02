@@ -1,8 +1,17 @@
 {
   "name": "influencer-outreach",
-  "version": "1.0.0",
-  "description": "Influencer/KOL outreach AI employee \u2014 research creators, draft icebreakers, classify replies, negotiate rates, manage usage rights for beauty device marketing.",
-  "author": {
-    "name": "AI Employees"
-  }
+  "version": "1.1.0",
+  "description": "Influencer/KOL outreach AI employee — research creators, draft icebreakers, classify replies, negotiate rates, manage usage rights for beauty device marketing.",
+  "author": { "name": "AI Employees Plugins" },
+  "runtime": ["claude-cowork", "claude-code", "codex", "hermes"],
+  "risk_level": "medium",
+  "required_connectors": ["gmail", "tiktok", "instagram", "youtube", "kb"],
+  "permissions": {
+    "email": ["read", "draft"],
+    "send_email": "human_approval_required",
+    "social": ["read_only"]
+  },
+  "eval_suite": "evals/golden_set_v1.yaml",
+  "owner": "marketing-ops",
+  "human_escalation": "marketing_lead"
 }

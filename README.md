@@ -2,14 +2,14 @@
 
 > 从知识复利到企业级 Agent 系统 — Knowledge Work Plugins 架构 × 6 大岗位插件 × Codex + Hermes 双运行时适配 × FDE 交付机制
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 ---
 
 ## 这是什么
 
-把 Anthropic 开源的 [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) 插件架构，适配为 **Codex CLI** 和 **Hermes Agent** 双运行时通用的企业 AI 员工插件库。面向跨境电商场景，覆盖客服、达人营销、广告素材、Shopify 运营、B2B 销售和 Agent 评测 6 个真实岗位。
+把 Anthropic 开源的 [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) 插件架构，适配为 **Codex CLI** 和 **Hermes Agent** 双运行时通用的企业 AI 员工插件库。面向跨境电商场景，覆盖客服、达人营销、广告素材、Shopify 运营、B2B 销售和 Agent 评测 6 个真实岗位。包含 18 个 JSON Schema、5 个全局策略、7 个连接器契约、50 条 Golden Set 测试用例、CI 回归测试门禁和灰度发布回滚手册。
 
 | 来源 | 贡献 |
 |------|------|
@@ -23,14 +23,16 @@
 
 ## 插件矩阵
 
-| 插件 | 岗位 | skills | commands | 核心能力 |
-|------|------|--------|----------|---------|
-| **customer-support** | 客服 Agent | 5 | 5 | 工单分流(P1-P4)、回复草稿、医疗风险升级、知识库缺口 |
-| **influencer-outreach** | 达人营销 Agent | 6 | 6 | 达人背调打分、破冰草稿、回复分类、使用授权审查 |
-| **ad-creative** | 广告素材 Agent | 6 | 6 | 视频拆解、语义切片、合规筛查、Hook 评分、混剪简报 |
-| **shopify-growth** | Shopify 运营 Agent | 5 | 6 | 页面 CRO、SEO 审计、FAQ 生成、Clarity 分析、评价审查 |
-| **b2b-sales** | B2B 销售 Agent | 7 | 5 | 询盘资质判断、报价草稿、跟进节奏、大客户升级 |
-| **agent-evaluation** | 评测框架 | 4 | 4 | Golden Set、回归测试、灰度发布、错误根因分析 |
+| 插件 | 岗位 | skills | commands | schemas | 核心能力 |
+|------|------|--------|----------|---------|---------|
+| **customer-support** | 客服 Agent | 5 | 5 | 4 | 工单分流(P1-P4)、回复草稿、医疗风险升级、知识库缺口 |
+| **influencer-outreach** | 达人营销 Agent | 6 | 6 | 3 | 达人背调打分、破冰草稿、回复分类、使用授权审查 |
+| **ad-creative** | 广告素材 Agent | 6 | 6 | 2 | 视频拆解、语义切片、合规筛查、Hook 评分、混剪简报 |
+| **shopify-growth** | Shopify 运营 Agent | 5 | 6 | — | 页面 CRO、SEO 审计、FAQ 生成、Clarity 分析、评价审查 |
+| **b2b-sales** | B2B 销售 Agent | 7 | 5 | 2 | 询盘资质判断、报价草稿、跟进节奏、大客户升级 |
+| **agent-evaluation** | 评测框架 | 4 | 5 | 3 | Golden Set、回归测试、灰度发布、错误根因分析、CI 门禁 |
+
+**共享基础设施**: schemas/ (18 个 JSON Schema) · policies/ (5 个全局策略) · connectors/ (4 个连接器契约 + 3 个 mock 数据) · install/ (4 个安装/验证脚本) · .github/workflows/ (CI 评测门禁)
 
 ---
 
@@ -40,15 +42,20 @@
 
 ```
 {plugin}/
-├── .claude-plugin/plugin.json   # 插件清单
+├── .claude-plugin/plugin.json   # 插件清单 (name, version, runtime, risk_level, permissions)
 ├── .mcp.json                    # MCP 工具连接 (Gmail, Shopify, TikTok...)
 ├── CONNECTORS.md                # 工具连接器说明 (~~email, ~~store...)
-├── commands/                    # 显式命令入口
+├── .hermes.md                   # Hermes 运行时适配器
+├── AGENTS.md                    # Codex 运行时适配器
+├── commands/                    # 显式命令入口 (命名空间: plugin:command)
 │   ├── triage.md
 │   └── draft-response.md
-└── skills/                      # 岗位 SOP + 领域知识
-    ├── ticket-triage/SKILL.md
-    └── refund-policy/SKILL.md
+├── skills/                      # 岗位 SOP + 领域知识 (10段标准)
+│   ├── ticket-triage/SKILL.md
+│   └── refund-policy/SKILL.md
+├── schemas/                     # 输入/输出 JSON Schema (插件级)
+├── evals/                       # Golden Set 测试用例 (YAML)
+└── examples/                    # 真实业务场景示例
 ```
 
 ### 双工具适配关键点
@@ -71,7 +78,12 @@
 ```bash
 git clone https://github.com/peterx998/ai-employees-plugins.git
 cd ai-employees-plugins
-bash install-hermes.sh
+
+# 方式1: 仅安装 skills (轻量)
+bash install/install-skills-only.sh hermes
+
+# 方式2: 完整插件安装 (skills + commands + manifest + mcp + connectors)
+bash install/install-full-plugin.sh hermes
 ```
 
 安装后在 Hermes 中加载：
@@ -92,10 +104,30 @@ hermes -s ticket-triage,creator-research,golden-set
 
 ```bash
 cd ai-employees-plugins
-bash install-codex.sh
+
+# 方式1: 仅安装 skills
+bash install/install-skills-only.sh codex
+
+# 方式2: 完整插件安装
+bash install/install-full-plugin.sh codex
 ```
 
 Codex 自动发现 `~/.codex/skills/` 下的 SKILL.md，根据任务描述自动激活对应技能。
+
+### 验证安装
+
+```bash
+bash install/validate-plugin.sh
+```
+
+### 其他安装脚本
+
+| 脚本 | 用途 |
+|------|------|
+| `install/install-skills-only.sh` | 仅复制 SKILL.md (快速轻量) |
+| `install/install-full-plugin.sh` | 完整插件结构 (skills + commands + manifest + mcp) |
+| `install/validate-plugin.sh` | 验证插件结构完整性 |
+| `install/sync-runtime-adapters.sh` | 生成 .hermes.md + AGENTS.md |
 
 ---
 
@@ -146,7 +178,21 @@ Golden Set / 回归测试 / 错误复盘（agent-evaluation 插件）
 
 ## 许可证
 
-MIT — 详见 [LICENSE](LICENSE)
+Apache License 2.0 — 详见 [LICENSE](LICENSE) 和 [NOTICE](NOTICE)
+
+---
+
+## 项目文档
+
+| 文档 | 用途 |
+|------|------|
+| [ARCHITECTURE.md](ARCHITECTURE.md) | 完整分层架构文档 (L0-L9) |
+| [ROADMAP.md](ROADMAP.md) | v0.1 → v1.0 路线图 |
+| [CHANGELOG.md](CHANGELOG.md) | 版本变更记录 |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | 贡献指南 |
+| `policies/` | 5 个全局策略 (医疗合规、隐私PII、人审升级、工具权限、广告合规) |
+| `connectors/` | 4 个连接器契约 + 3 个 mock 数据 |
+| `agent-evaluation/release/` | 灰度发布回滚手册 + 事故复盘模板 + 特性开关 |
 
 ---
 
@@ -163,14 +209,14 @@ MIT — 详见 [LICENSE](LICENSE)
 
 > From Knowledge Compound Interest to Enterprise-Grade Agent Systems — Knowledge Work Plugins Architecture × 6 Role Plugins × Codex + Hermes Dual Runtime × FDE Delivery
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 ---
 
 ## What Is This
 
-An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) architecture into a **Codex CLI** and **Hermes Agent** dual-runtime enterprise AI employee plugin pack. Purpose-built for cross-border e-commerce, covering 6 real-world roles: customer support, influencer outreach, ad creative, Shopify growth, B2B sales, and agent evaluation.
+An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) architecture into a **Codex CLI** and **Hermes Agent** dual-runtime enterprise AI employee plugin pack. Purpose-built for cross-border e-commerce, covering 6 real-world roles: customer support, influencer outreach, ad creative, Shopify growth, B2B sales, and agent evaluation. Includes 18 JSON Schemas, 5 global policies, 7 connector contracts, 50 Golden Set test cases, CI regression gate, and grayscale rollback playbook.
 
 | Source | Contribution |
 |--------|-------------|
@@ -184,14 +230,16 @@ An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github
 
 ## Plugin Matrix
 
-| Plugin | Role | skills | commands | Core Capability |
-|--------|------|--------|----------|----------------|
-| **customer-support** | Support Agent | 5 | 5 | Ticket triage (P1-P4), response drafting, medical risk escalation, KB gap detection |
-| **influencer-outreach** | Influencer Agent | 6 | 6 | Creator scoring, icebreaker drafting, reply classification, usage rights review |
-| **ad-creative** | Ad Creative Agent | 6 | 6 | Video analysis, UGC segmentation, compliance screening, hook scoring, ad briefs |
-| **shopify-growth** | Shopify Agent | 5 | 6 | Page CRO, SEO audit, FAQ generation, Clarity analysis, review quality checks |
-| **b2b-sales** | B2B Sales Agent | 7 | 5 | Lead qualification, quote drafting, follow-up cadence, high-value escalation |
-| **agent-evaluation** | Evaluation Framework | 4 | 4 | Golden Set, regression testing, grayscale release, error root cause analysis |
+| Plugin | Role | skills | commands | schemas | Core Capability |
+|--------|------|--------|----------|---------|----------------|
+| **customer-support** | Support Agent | 5 | 5 | 4 | Ticket triage (P1-P4), response drafting, medical risk escalation, KB gap detection |
+| **influencer-outreach** | Influencer Agent | 6 | 6 | 3 | Creator scoring, icebreaker drafting, reply classification, usage rights review |
+| **ad-creative** | Ad Creative Agent | 6 | 6 | 2 | Video analysis, UGC segmentation, compliance screening, hook scoring, ad briefs |
+| **shopify-growth** | Shopify Agent | 5 | 6 | — | Page CRO, SEO audit, FAQ generation, Clarity analysis, review quality checks |
+| **b2b-sales** | B2B Sales Agent | 7 | 5 | 2 | Lead qualification, quote drafting, follow-up cadence, high-value escalation |
+| **agent-evaluation** | Evaluation Framework | 4 | 5 | 3 | Golden Set, regression testing, grayscale release, error RCA, CI gate |
+
+**Shared Infrastructure**: schemas/ (18 JSON Schemas) · policies/ (5 global policies) · connectors/ (4 connector contracts + 3 mock data) · install/ (4 install/validate scripts) · .github/workflows/ (CI eval gate)
 
 ---
 
@@ -232,7 +280,12 @@ Each plugin follows the knowledge-work-plugins standard while supporting Hermes 
 ```bash
 git clone https://github.com/peterx998/ai-employees-plugins.git
 cd ai-employees-plugins
-bash install-hermes.sh
+
+# Option 1: Skills only (lightweight)
+bash install/install-skills-only.sh hermes
+
+# Option 2: Full plugin install (skills + commands + manifest + mcp + connectors)
+bash install/install-full-plugin.sh hermes
 ```
 
 Load skills in Hermes:
@@ -253,10 +306,30 @@ hermes -s ticket-triage,creator-research,golden-set
 
 ```bash
 cd ai-employees-plugins
-bash install-codex.sh
+
+# Option 1: Skills only
+bash install/install-skills-only.sh codex
+
+# Option 2: Full plugin install
+bash install/install-full-plugin.sh codex
 ```
 
 Codex auto-discovers SKILL.md files under `~/.codex/skills/` and activates relevant skills based on task context.
+
+### Validate Installation
+
+```bash
+bash install/validate-plugin.sh
+```
+
+### Install Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `install/install-skills-only.sh` | Copy SKILL.md files only (fast, lightweight) |
+| `install/install-full-plugin.sh` | Complete plugin structure (skills + commands + manifest + mcp) |
+| `install/validate-plugin.sh` | Validate plugin structure integrity |
+| `install/sync-runtime-adapters.sh` | Generate .hermes.md + AGENTS.md |
 
 ---
 
@@ -307,7 +380,21 @@ Asset Accumulation / Component Reuse / Commercial Delivery
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE)
+
+---
+
+## Project Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Full layered architecture (L0-L9) |
+| [ROADMAP.md](ROADMAP.md) | v0.1 → v1.0 roadmap |
+| [CHANGELOG.md](CHANGELOG.md) | Version history |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guide |
+| `policies/` | 5 global policies (medical compliance, privacy/PII, human review, tool permissions, advertising claims) |
+| `connectors/` | 4 connector contracts + 3 mock data files |
+| `agent-evaluation/release/` | Grayscale rollback playbook + incident review template + feature flags |
 
 ---
 

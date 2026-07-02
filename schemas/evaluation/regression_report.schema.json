@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/evaluation/regression_report.schema.json",
+  "title": "Regression Report",
+  "description": "Regression report comparing agent performance across versions",
+  "type": "object",
+  "required": [
+    "agent",
+    "version_old",
+    "version_new",
+    "total_cases",
+    "passed",
+    "degraded",
+    "failed",
+    "verdict",
+    "degraded_cases",
+    "new_failures"
+  ],
+  "properties": {
+    "agent": {
+      "type": "string",
+      "description": "Name of the agent evaluated"
+    },
+    "version_old": {
+      "type": "string",
+      "description": "Previous version of the agent"
+    },
+    "version_new": {
+      "type": "string",
+      "description": "New version of the agent"
+    },
+    "total_cases": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of eval cases run"
+    },
+    "passed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of cases that passed"
+    },
+    "degraded": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of cases that degraded in performance"
+    },
+    "failed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of cases that failed"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "needs_review"
+      ],
+      "description": "Overall verdict for the regression test"
+    },
+    "degraded_cases": {
+      "type": "array",
+      "description": "List of case IDs that degraded",
+      "items": {
+        "type": "string"
+      }
+    },
+    "new_failures": {
+      "type": "array",
+      "description": "List of case IDs that newly failed",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

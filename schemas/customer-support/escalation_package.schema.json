@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/customer-support/escalation_package.schema.json",
+  "title": "Escalation Package",
+  "description": "An escalation package for escalating a support issue",
+  "type": "object",
+  "required": [
+    "escalation_id",
+    "priority",
+    "trigger",
+    "customer",
+    "issue_history",
+    "agent_actions_taken",
+    "recommended_action",
+    "auto_reply_suppressed"
+  ],
+  "properties": {
+    "escalation_id": {
+      "type": "string",
+      "description": "Unique identifier for the escalation"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "description": "Priority level of the escalation"
+    },
+    "trigger": {
+      "type": "string",
+      "description": "What triggered the escalation"
+    },
+    "customer": {
+      "type": "object",
+      "description": "Customer information related to the escalation",
+      "required": [
+        "id",
+        "name",
+        "email"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    },
+    "issue_history": {
+      "type": "array",
+      "description": "History of the issue being escalated",
+      "items": {
+        "type": "object",
+        "required": [
+          "timestamp",
+          "event"
+        ],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "event": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "agent_actions_taken": {
+      "type": "array",
+      "description": "Actions taken by the AI agent before escalation",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommended_action": {
+      "type": "string",
+      "description": "Recommended next action for the human agent"
+    },
+    "auto_reply_suppressed": {
+      "type": "boolean",
+      "description": "Whether auto-reply has been suppressed for this customer"
+    }
+  }
+}

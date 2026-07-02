@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/common/order.schema.json",
+  "title": "Order",
+  "description": "Order entity representing a customer order",
+  "type": "object",
+  "required": [
+    "id",
+    "customer_id",
+    "status",
+    "items",
+    "total",
+    "currency",
+    "shipping_address",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the order"
+    },
+    "customer_id": {
+      "type": "string",
+      "description": "Identifier of the customer who placed the order"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+        "refunded"
+      ],
+      "description": "Current status of the order"
+    },
+    "items": {
+      "type": "array",
+      "description": "List of items in the order",
+      "items": {
+        "type": "object",
+        "required": [
+          "product_id",
+          "quantity",
+          "price"
+        ],
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "description": "Identifier of the product"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Quantity ordered"
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Unit price of the product"
+          }
+        }
+      }
+    },
+    "total": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total monetary amount of the order"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency code (ISO 4217)"
+    },
+    "shipping_address": {
+      "type": "object",
+      "description": "Shipping address for the order",
+      "required": [
+        "line1",
+        "city",
+        "country"
+      ],
+      "properties": {
+        "line1": {
+          "type": "string"
+        },
+        "line2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the order was created"
+    }
+  }
+}

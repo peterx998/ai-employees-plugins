@@ -1,0 +1,215 @@
+{
+  "description": "Mock Shopify order data for testing AI agent workflows. All addresses, names, and data are fake — no real customer information.",
+  "version": "1.0.0",
+  "generated_at": "2026-07-02T00:00:00Z",
+  "orders": [
+    {
+      "order_id": "ORD-TEST-1001",
+      "order_number": "#1001",
+      "customer_id": "CUST-MOCK-US-001",
+      "customer_email": "test@example.com",
+      "customer_name": "[REDACTED]",
+      "status": "open",
+      "financial_status": "paid",
+      "fulfillment_status": "fulfilled",
+      "currency": "USD",
+      "total_price": "147.00",
+      "subtotal_price": "135.00",
+      "total_shipping": "12.00",
+      "total_tax": "0.00",
+      "created_at": "2026-06-20T12:00:00Z",
+      "updated_at": "2026-06-28T09:00:00Z",
+      "processed_at": "2026-06-20T12:05:00Z",
+      "line_items": [
+        {
+          "id": "LI-001",
+          "product_id": "PROD-HM-002",
+          "title": "Hydrating Moisturizer",
+          "variant_id": "VAR-HM-002-50ML",
+          "variant_title": "50ml",
+          "sku": "HM-002",
+          "quantity": 3,
+          "price": "45.00",
+          "total": "135.00",
+          "requires_shipping": true,
+          "taxable": false
+        }
+      ],
+      "shipping_address": {
+        "first_name": "[REDACTED]",
+        "last_name": "[REDACTED]",
+        "address1": "123 Fictional Street",
+        "address2": "Apt 4B",
+        "city": "Springfield",
+        "province_code": "IL",
+        "zip": "62704",
+        "country_code": "US",
+        "country": "United States",
+        "phone": "[REDACTED:PHONE]"
+      },
+      "billing_address": {
+        "first_name": "[REDACTED]",
+        "last_name": "[REDACTED]",
+        "address1": "123 Fictional Street",
+        "address2": "Apt 4B",
+        "city": "Springfield",
+        "province_code": "IL",
+        "zip": "62704",
+        "country_code": "US",
+        "country": "United States"
+      },
+      "fulfillments": [
+        {
+          "id": "FUL-001",
+          "status": "success",
+          "tracking_number": "1Z999AA10123456784",
+          "tracking_url": "https://www.ups.com/track?tracknum=1Z999AA10123456784",
+          "carrier": "UPS",
+          "created_at": "2026-06-21T08:00:00Z"
+        }
+      ],
+      "tags": ["US", "standard-shipping"],
+      "note": "Mock order for testing — US shipping"
+    },
+    {
+      "order_id": "ORD-TEST-2001",
+      "order_number": "#2001",
+      "customer_id": "CUST-MOCK-CA-001",
+      "customer_email": "test@example.com",
+      "customer_name": "[REDACTED]",
+      "status": "open",
+      "financial_status": "paid",
+      "fulfillment_status": "fulfilled",
+      "currency": "CAD",
+      "total_price": "189.50",
+      "subtotal_price": "175.00",
+      "total_shipping": "14.50",
+      "total_tax": "0.00",
+      "created_at": "2026-06-25T15:30:00Z",
+      "updated_at": "2026-07-01T10:00:00Z",
+      "processed_at": "2026-06-25T15:35:00Z",
+      "line_items": [
+        {
+          "id": "LI-002",
+          "product_id": "PROD-VC-001",
+          "title": "Vitamin C Serum",
+          "variant_id": "VAR-VC-001-30ML",
+          "variant_title": "30ml",
+          "sku": "VC-001",
+          "quantity": 1,
+          "price": "65.00",
+          "total": "65.00",
+          "requires_shipping": true,
+          "taxable": false
+        },
+        {
+          "id": "LI-003",
+          "product_id": "PROD-SP-003",
+          "title": "SPF 50 Sunscreen",
+          "variant_id": "VAR-SP-003-100ML",
+          "variant_title": "100ml",
+          "sku": "SP-003",
+          "quantity": 2,
+          "price": "55.00",
+          "total": "110.00",
+          "requires_shipping": true,
+          "taxable": false
+        }
+      ],
+      "shipping_address": {
+        "first_name": "[REDACTED]",
+        "last_name": "[REDACTED]",
+        "address1": "456 Maple Avenue",
+        "address2": "Unit 12",
+        "city": "Toronto",
+        "province_code": "ON",
+        "zip": "M5V 2T6",
+        "country_code": "CA",
+        "country": "Canada",
+        "phone": "[REDACTED:PHONE]"
+      },
+      "billing_address": {
+        "first_name": "[REDACTED]",
+        "last_name": "[REDACTED]",
+        "address1": "456 Maple Avenue",
+        "address2": "Unit 12",
+        "city": "Toronto",
+        "province_code": "ON",
+        "zip": "M5V 2T6",
+        "country_code": "CA",
+        "country": "Canada"
+      },
+      "fulfillments": [
+        {
+          "id": "FUL-002",
+          "status": "success",
+          "tracking_number": "123456789012",
+          "tracking_url": "https://www.canadapost.ca/trackweb/en#/details/123456789012",
+          "carrier": "Canada Post",
+          "created_at": "2026-06-26T09:00:00Z"
+        }
+      ],
+      "tags": ["CA", "international-shipping", "DELAYED"],
+      "note": "Mock order for testing — Canada shipping. Tracking shows delay at sorting facility."
+    },
+    {
+      "order_id": "ORD-TEST-3001",
+      "order_number": "#3001",
+      "customer_id": "CUST-MOCK-EU-001",
+      "customer_email": "test@example.com",
+      "customer_name": "[REDACTED]",
+      "status": "open",
+      "financial_status": "pending",
+      "fulfillment_status": "unfulfilled",
+      "currency": "EUR",
+      "total_price": "124.90",
+      "subtotal_price": "110.00",
+      "total_shipping": "14.90",
+      "total_tax": "0.00",
+      "created_at": "2026-06-28T18:45:00Z",
+      "updated_at": "2026-06-28T18:45:00Z",
+      "processed_at": "2026-06-28T18:50:00Z",
+      "line_items": [
+        {
+          "id": "LI-004",
+          "product_id": "PROD-CR-004",
+          "title": "Night Repair Cream",
+          "variant_id": "VAR-CR-004-50ML",
+          "variant_title": "50ml",
+          "sku": "CR-004",
+          "quantity": 2,
+          "price": "55.00",
+          "total": "110.00",
+          "requires_shipping": true,
+          "taxable": false
+        }
+      ],
+      "shipping_address": {
+        "first_name": "[REDACTED]",
+        "last_name": "[REDACTED]",
+        "address1": "Rue de la Paix 789",
+        "address2": "",
+        "city": "Paris",
+        "province_code": "",
+        "zip": "75002",
+        "country_code": "FR",
+        "country": "France",
+        "phone": "[REDACTED:PHONE]"
+      },
+      "billing_address": {
+        "first_name": "[REDACTED]",
+        "last_name": "[REDACTED]",
+        "address1": "Rue de la Paix 789",
+        "address2": "",
+        "city": "Paris",
+        "province_code": "",
+        "zip": "75002",
+        "country_code": "FR",
+        "country": "France"
+      },
+      "fulfillments": [],
+      "tags": ["EU", "international-shipping", "payment-pending", "GDPR"],
+      "note": "Mock order for testing — EU/France shipping. Payment pending, unfulfilled. GDPR applies."
+    }
+  ]
+}

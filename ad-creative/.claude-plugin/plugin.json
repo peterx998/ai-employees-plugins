@@ -1,8 +1,17 @@
 {
   "name": "ad-creative",
-  "version": "1.0.0",
-  "description": "Ad creative/UGC mixing AI employee \u2014 analyze videos, segment UGC, score hooks, review compliance, generate ad briefs for Meta/TikTok advertising.",
-  "author": {
-    "name": "AI Employees"
-  }
+  "version": "1.1.0",
+  "description": "Ad creative/UGC mixing AI employee — analyze videos, segment UGC, score hooks, review compliance, generate ad briefs for Meta/TikTok advertising.",
+  "author": { "name": "AI Employees Plugins" },
+  "runtime": ["claude-cowork", "claude-code", "codex", "hermes"],
+  "risk_level": "high",
+  "required_connectors": ["shotstack", "meta-ads", "tiktok-ads", "storage"],
+  "permissions": {
+    "render": ["create_draft"],
+    "publish_ad": "human_approval_required",
+    "storage": ["read", "write"]
+  },
+  "eval_suite": "evals/golden_set_v1.yaml",
+  "owner": "creative-ops",
+  "human_escalation": "creative_lead"
 }

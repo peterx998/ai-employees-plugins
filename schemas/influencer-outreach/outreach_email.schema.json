@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/influencer-outreach/outreach_email.schema.json",
+  "title": "Outreach Email",
+  "description": "An outreach email to a content creator",
+  "type": "object",
+  "required": [
+    "subject",
+    "body",
+    "personalization_hooks",
+    "anti_pattern_check",
+    "human_review_recommended"
+  ],
+  "properties": {
+    "subject": {
+      "type": "string",
+      "description": "Subject line of the outreach email"
+    },
+    "body": {
+      "type": "string",
+      "description": "Body text of the outreach email"
+    },
+    "personalization_hooks": {
+      "type": "array",
+      "description": "Personalization hooks used in the email",
+      "items": {
+        "type": "string"
+      }
+    },
+    "anti_pattern_check": {
+      "type": "object",
+      "description": "Results of anti-pattern checks on the email",
+      "required": [
+        "passed",
+        "violations"
+      ],
+      "properties": {
+        "passed": {
+          "type": "boolean",
+          "description": "Whether the email passed all anti-pattern checks"
+        },
+        "violations": {
+          "type": "array",
+          "description": "List of anti-pattern violations found",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "human_review_recommended": {
+      "type": "boolean",
+      "description": "Whether human review is recommended before sending"
+    }
+  }
+}

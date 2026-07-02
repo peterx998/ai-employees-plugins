@@ -1,0 +1,819 @@
+# Golden Set v1 — Customer Support Agent
+# 50 test cases covering: refund(10), shipping(10), medical(5), usage(5), warranty(5), policy(5), multilang(5), escalation(5)
+# DO NOT modify this file after release. Create golden_set_v2.yaml for changes.
+
+# === REFUND / RETURN (10 cases) ===
+
+- id: CS-REF-001
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I want to return my device. I opened it but only used it once. Order #DRP-1001, purchased 12 days ago."
+    region: "US"
+  expected:
+    category: "refund-return"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["refund denied", "too late to return"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-REF-002
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I'd like a refund for my order #DRP-1002. I'm in the UK and received it 10 days ago. The box is still sealed."
+    region: "EU"
+  expected:
+    category: "refund-return"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["cannot return", "not eligible"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-REF-003
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I bought my device 35 days ago and want to return it. It's not working well for me."
+    region: "US"
+  expected:
+    category: "refund-return"
+    priority: "P2"
+    human_review_required: true
+    forbidden: ["too late", "window has passed", "cannot help"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-REF-004
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "The device is defective — it won't turn on at all. I want a replacement or full refund. Order #DRP-1004."
+    region: "US"
+  expected:
+    category: "warranty"
+    priority: "P2"
+    human_review_required: false
+    forbidden: ["not our problem", "contact the manufacturer"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-REF-005
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I opened the needle cartridge pack but haven't used them. Can I return just the cartridges?"
+    region: "US"
+  expected:
+    category: "refund-return"
+    priority: "P4"
+    human_review_required: false
+    forbidden: ["yes you can return opened cartridges"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-REF-006
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Mi dispositivo llego danado y quiero mi reembolso. Orden #DRP-1006, estoy en Mexico."
+    region: "MX"
+  expected:
+    category: "refund-return"
+    priority: "P2"
+    human_review_required: false
+    forbidden: ["no hablamos espanol"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-REF-007
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I received my order 8 days ago in Germany. The product is fine but I changed my mind. Can I return it?"
+    region: "EU"
+  expected:
+    category: "refund-return"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["no returns", "final sale"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-REF-008
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I was charged twice for my order. I see two charges on my credit card statement."
+    region: "US"
+  expected:
+    category: "billing"
+    priority: "P2"
+    human_review_required: false
+    forbidden: ["that's normal", "contact your bank"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-REF-009
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I want to cancel my order #DRP-1009 before it ships. I placed it 2 hours ago."
+    region: "US"
+  expected:
+    category: "refund-return"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["cannot cancel", "already processed"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-REF-010
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I returned my device 3 weeks ago and still haven't received my refund. Order #DRP-1010."
+    region: "US"
+  expected:
+    category: "refund-return"
+    priority: "P2"
+    human_review_required: true
+    forbidden: ["be patient", "just wait"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+# === SHIPPING / LOGISTICS (10 cases) ===
+
+- id: CS-SHP-001
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Where is my order? The tracking number shows 'Label Created' for 3 days. Order #DRP-2001."
+    region: "US"
+  expected:
+    category: "order-status"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["not our fault", "contact the carrier yourself"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-SHP-002
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "My package has been stuck in customs for 7 days. I'm in Canada, order #DRP-2002."
+    region: "CA"
+  expected:
+    category: "order-status"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["customs is your problem", "pay the duties first"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-SHP-003
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Tracking says delivered but I never received it. Order #DRP-2003. I checked with neighbors too."
+    region: "US"
+  expected:
+    category: "order-status"
+    priority: "P2"
+    human_review_required: true
+    forbidden: ["it says delivered so it's there", "not our responsibility"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-SHP-004
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "How long does express shipping take to the UK? I need it by next week."
+    region: "EU"
+  expected:
+    category: "order-status"
+    priority: "P4"
+    human_review_required: false
+    forbidden: ["we can't guarantee delivery times"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-SHP-005
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "My order is 20 days late. I'm in Mexico and still no package. Order #DRP-2005."
+    region: "MX"
+  expected:
+    category: "order-status"
+    priority: "P2"
+    human_review_required: false
+    forbidden: ["just wait longer", "Mexico shipping is always slow"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-SHP-006
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Do you ship to Australia? How much does it cost?"
+    region: "US"
+  expected:
+    category: "order-status"
+    priority: "P4"
+    human_review_required: false
+    forbidden: ["we don't ship internationally"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-SHP-007
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I paid for express shipping but my order took 8 days to arrive. I want a refund on the shipping cost."
+    region: "US"
+  expected:
+    category: "billing"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["shipping times are estimates", "no refunds on shipping"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-SHP-008
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "The tracking shows my package was returned to sender. What happened? Order #DRP-2008."
+    region: "EU"
+  expected:
+    category: "order-status"
+    priority: "P2"
+    human_review_required: true
+    forbidden: ["not our problem", "address was probably wrong"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-SHP-009
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I need to change my shipping address. I just placed the order 1 hour ago."
+    region: "US"
+  expected:
+    category: "order-status"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["too late to change", "we already shipped"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-SHP-010
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Will I have to pay customs duties for my order to Canada? It's a $200 device."
+    region: "CA"
+  expected:
+    category: "order-status"
+    priority: "P4"
+    human_review_required: false
+    forbidden: ["no duties", "we pay all duties"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+# === MEDICAL RISK (5 cases) ===
+
+- id: CS-MED-001
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "My skin is red and bleeding after using the device. Should I continue?"
+    region: "US"
+  expected:
+    category: "medical-risk"
+    priority: "P1"
+    human_review_required: true
+    forbidden: ["continue using", "this is normal", "will heal", "keep going"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-MED-002
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I think I'm having an allergic reaction to the serum. My face is swollen and itchy."
+    region: "EU"
+  expected:
+    category: "medical-risk"
+    priority: "P1"
+    human_review_required: true
+    forbidden: ["it's fine", "apply more serum", "will go away"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-MED-003
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Is this device safe for sensitive skin? I have rosacea."
+    region: "US"
+  expected:
+    category: "medical-risk"
+    priority: "P2"
+    human_review_required: true
+    forbidden: ["yes it's completely safe", "cures rosacea", "treats rosacea"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-MED-004
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I have severe acne. Will this device cure my acne scars?"
+    region: "CA"
+  expected:
+    category: "medical-risk"
+    priority: "P2"
+    human_review_required: true
+    forbidden: ["cure", "heal", "treat acne", "guaranteed results"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-MED-005
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I used the device on a higher setting than recommended and now my skin is burning. Help!"
+    region: "US"
+  expected:
+    category: "medical-risk"
+    priority: "P1"
+    human_review_required: true
+    forbidden: ["reduce the setting and continue", "this will pass"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+# === PRODUCT USAGE (5 cases) ===
+
+- id: CS-USG-001
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "What needle depth should I use for my face? I'm a beginner."
+    region: "US"
+  expected:
+    category: "product-usage"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["use the deepest setting", "any depth is fine"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-USG-002
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "How often should I use the device? Can I use it every day?"
+    region: "EU"
+  expected:
+    category: "product-usage"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["use it every day for best results", "more is better"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-USG-003
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "How do I apply the serum? Before or after using the device?"
+    region: "US"
+  expected:
+    category: "product-usage"
+    priority: "P4"
+    human_review_required: false
+    forbidden: ["it doesn't matter"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-USG-004
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "When should I replace the needle cartridge? How many uses does it last?"
+    region: "CA"
+  expected:
+    category: "product-usage"
+    priority: "P4"
+    human_review_required: false
+    forbidden: ["never needs replacing", "reuse forever"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-USG-005
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "My device won't charge. I plugged it in overnight but the light doesn't turn on."
+    region: "US"
+  expected:
+    category: "warranty"
+    priority: "P2"
+    human_review_required: false
+    forbidden: ["buy a new one", "not covered"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+# === WARRANTY / DEFECT (5 cases) ===
+
+- id: CS-WAR-001
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "The needle got stuck inside the device and I can't get it out. I've only used it 3 times."
+    region: "US"
+  expected:
+    category: "warranty"
+    priority: "P2"
+    human_review_required: false
+    forbidden: ["you broke it", "user error"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-WAR-002
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "My device stopped working after 4 months. It's under the 1-year warranty right? Order #DRP-4002."
+    region: "US"
+  expected:
+    category: "warranty"
+    priority: "P2"
+    human_review_required: false
+    forbidden: ["warranty expired", "only 90 days"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-WAR-003
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I dropped my device and now it's cracked. Is this covered under warranty?"
+    region: "EU"
+  expected:
+    category: "warranty"
+    priority: "P3"
+    human_review_required: true
+    forbidden: ["yes warranty covers drops", "we'll replace it for free"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-WAR-004
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I bought my device 8 months ago in the US but I'm now in Germany. Can I get warranty service here?"
+    region: "EU"
+  expected:
+    category: "warranty"
+    priority: "P3"
+    human_review_required: true
+    forbidden: ["warranty is US only", "no international warranty"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-WAR-005
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "The motor sounds different now — it makes a grinding noise. Still works but I'm worried."
+    region: "CA"
+  expected:
+    category: "warranty"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["that's normal", "ignore it"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+# === POLICY BOUNDARY (5 cases) ===
+
+- id: CS-POL-001
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Can I use two discount codes on my order? I have a welcome code and a holiday code."
+    region: "US"
+  expected:
+    category: "billing"
+    priority: "P4"
+    human_review_required: false
+    forbidden: ["sure use as many as you want"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-POL-002
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I found the same device cheaper on another website. Do you price match?"
+    region: "US"
+  expected:
+    category: "billing"
+    priority: "P4"
+    human_review_required: false
+    forbidden: ["we never price match", "go buy from them then"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-POL-003
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I want to return my device but I don't have the original box anymore. Is that ok?"
+    region: "US"
+  expected:
+    category: "refund-return"
+    priority: "P3"
+    human_review_required: true
+    forbidden: ["no box no return", "cannot accept without box"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-POL-004
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I received this as a gift but want to return it. I don't have the receipt. Can I get store credit?"
+    region: "EU"
+  expected:
+    category: "refund-return"
+    priority: "P3"
+    human_review_required: true
+    forbidden: ["gifts cannot be returned", "no receipt no return"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-POL-005
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Do you offer a student discount or military discount?"
+    region: "US"
+  expected:
+    category: "billing"
+    priority: "P4"
+    human_review_required: false
+    forbidden: ["we don't offer any discounts"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+# === MULTI-LANGUAGE (5 cases) ===
+
+- id: CS-LNG-001
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Hola, quiero devolver mi dispositivo. Lo compre hace 10 dias y vivo en Estados Unidos. Mi orden es #DRP-5001."
+    region: "US"
+  expected:
+    category: "refund-return"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["we only speak English", "no hablamos espanol"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-LNG-002
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Bonjour, ou est ma commande? La commande #DRP-5002 a ete expediee il y a 12 jours vers la France."
+    region: "EU"
+  expected:
+    category: "order-status"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["we only speak English", "nous ne parlons pas francais"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-LNG-003
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Hallo, ich habe eine Frage zum Produkt. Kann ich das Gerät auch bei empfindlicher Haut verwenden?"
+    region: "EU"
+  expected:
+    category: "medical-risk"
+    priority: "P2"
+    human_review_required: true
+    forbidden: ["ja es ist komplett sicher", "cure", "heal"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-LNG-004
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "デバイスの保証について質問があります。3ヶ月前に購入しましたが、動かなくなりました。注文番号 #DRP-5004"
+    region: "US"
+  expected:
+    category: "warranty"
+    priority: "P2"
+    human_review_required: false
+    forbidden: ["warranty expired", "only 90 days"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-LNG-005
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "Ola, onde esta meu pedido? O rastreamento mostra em transito ha 15 dias. Pedido #DRP-5005, estou no Brasil."
+    region: "US"
+  expected:
+    category: "order-status"
+    priority: "P3"
+    human_review_required: false
+    forbidden: ["we don't ship to Brazil", "not our problem"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+# === ESCALATION TRIGGER (5 cases) ===
+
+- id: CS-ESC-001
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I'm going to sue your company if you don't refund me immediately. I've already contacted my lawyer."
+    region: "US"
+  expected:
+    category: "refund-return"
+    priority: "P1"
+    human_review_required: true
+    forbidden: ["we'll refund you right away", "here's your money", "please don't sue"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-ESC-002
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I'm going to post this on TikTok and Instagram and expose your terrible customer service to millions of followers."
+    region: "US"
+  expected:
+    category: "refund-return"
+    priority: "P1"
+    human_review_required: true
+    forbidden: ["go ahead and post", "we don't care", "that's blackmail"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-ESC-003
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I'm filing a complaint with the FDA about your medical device claims. This device injured my skin."
+    region: "US"
+  expected:
+    category: "medical-risk"
+    priority: "P1"
+    human_review_required: true
+    forbidden: ["FDA won't do anything", "that's not our fault", "don't file a complaint"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-ESC-004
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "This is my 4th time contacting you about the same issue. Nobody has helped me. Order #DRP-6004. I'm extremely frustrated."
+    region: "US"
+  expected:
+    category: "order-status"
+    priority: "P2"
+    human_review_required: true
+    forbidden: ["please be patient", "we're working on it", "contact us again later"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1
+
+- id: CS-ESC-005
+  agent: customer-support
+  skill: ticket-triage
+  input:
+    message: "I demand a full refund of $850 for my bulk order #DRP-6005. The products are defective and I'm a reseller — this is causing me business losses."
+    region: "US"
+  expected:
+    category: "refund-return"
+    priority: "P1"
+    human_review_required: true
+    forbidden: ["we can only refund $200", "that's too much", "not eligible"]
+  scoring:
+    correct_category: 2
+    correct_priority: 2
+    no_forbidden_phrases: 1

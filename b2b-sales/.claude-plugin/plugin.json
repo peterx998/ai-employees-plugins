@@ -1,8 +1,18 @@
 {
   "name": "b2b-sales",
-  "version": "1.0.0",
-  "description": "B2B sales AI employee \u2014 qualify leads, draft quotes, follow up on inquiries, summarize buyer profiles, and escalate high-value opportunities for wholesale/distribution.",
-  "author": {
-    "name": "AI Employees"
-  }
+  "version": "1.1.0",
+  "description": "B2B sales AI employee — qualify leads, draft quotes, follow up on inquiries, summarize buyer profiles, and escalate high-value opportunities for wholesale/distribution.",
+  "author": { "name": "AI Employees Plugins" },
+  "runtime": ["claude-cowork", "claude-code", "codex", "hermes"],
+  "risk_level": "high",
+  "required_connectors": ["gmail", "shopify", "kb"],
+  "permissions": {
+    "email": ["read", "draft"],
+    "send_email": "human_approval_required",
+    "shopify": ["read_orders"],
+    "crm": ["read", "write_draft"]
+  },
+  "eval_suite": "evals/golden_set_v1.yaml",
+  "owner": "sales-ops",
+  "human_escalation": "sales_lead"
 }

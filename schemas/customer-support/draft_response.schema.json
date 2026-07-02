@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/customer-support/draft_response.schema.json",
+  "title": "Draft Response",
+  "description": "A draft response to a customer support ticket",
+  "type": "object",
+  "required": [
+    "draft_text",
+    "subject",
+    "tone",
+    "language",
+    "compliance_checks",
+    "human_review_required",
+    "send_ready"
+  ],
+  "properties": {
+    "draft_text": {
+      "type": "string",
+      "description": "The draft response text"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Subject line for the response"
+    },
+    "tone": {
+      "type": "string",
+      "description": "Tone of the response"
+    },
+    "language": {
+      "type": "string",
+      "description": "Language of the response (ISO 639-1 code)"
+    },
+    "compliance_checks": {
+      "type": "object",
+      "description": "Results of compliance checks on the draft",
+      "required": [
+        "medical_claims",
+        "guaranteed_results",
+        "forbidden_phrases"
+      ],
+      "properties": {
+        "medical_claims": {
+          "type": "boolean",
+          "description": "Whether medical claims were detected"
+        },
+        "guaranteed_results": {
+          "type": "boolean",
+          "description": "Whether guaranteed results claims were detected"
+        },
+        "forbidden_phrases": {
+          "type": "array",
+          "description": "List of forbidden phrases found in the draft",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "human_review_required": {
+      "type": "boolean",
+      "description": "Whether human review is required before sending"
+    },
+    "send_ready": {
+      "type": "boolean",
+      "description": "Whether the draft is ready to be sent to the customer"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/ad-creative/video_segment.schema.json",
+  "title": "Video Segment",
+  "description": "A segment of video content analyzed for ad creative generation",
+  "type": "object",
+  "required": [
+    "segment_id",
+    "start_time",
+    "end_time",
+    "transcript",
+    "visual_description",
+    "ocr_text",
+    "semantic_role",
+    "creative_tags",
+    "risk_flags",
+    "score",
+    "recommended_use"
+  ],
+  "properties": {
+    "segment_id": {
+      "type": "string",
+      "description": "Unique identifier for the video segment"
+    },
+    "start_time": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Start time of the segment in seconds"
+    },
+    "end_time": {
+      "type": "number",
+      "minimum": 0,
+      "description": "End time of the segment in seconds"
+    },
+    "transcript": {
+      "type": "string",
+      "description": "Transcript of audio in the segment"
+    },
+    "visual_description": {
+      "type": "string",
+      "description": "Description of visual content in the segment"
+    },
+    "ocr_text": {
+      "type": "string",
+      "description": "Text extracted via OCR from the segment"
+    },
+    "semantic_role": {
+      "type": "string",
+      "enum": [
+        "hook",
+        "product_demo",
+        "social_proof",
+        "call_to_action",
+        "brand_reveal",
+        "problem_statement",
+        "solution",
+        "other"
+      ],
+      "description": "Semantic role of the segment in the ad structure"
+    },
+    "creative_tags": {
+      "type": "array",
+      "description": "Creative tags associated with the segment",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risk_flags": {
+      "type": "array",
+      "description": "Risk flags identified in the segment",
+      "items": {
+        "$ref": "https://ai-employees-plugins.example/schemas/common/risk_flag.schema.json"
+      }
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Quality/effectiveness score (0-100)"
+    },
+    "recommended_use": {
+      "type": "string",
+      "enum": [
+        "use_as_is",
+        "use_with_edit",
+        "use_as_reference",
+        "do_not_use"
+      ],
+      "description": "Recommended use of the segment"
+    }
+  }
+}

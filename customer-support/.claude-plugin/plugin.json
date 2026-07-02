@@ -1,8 +1,17 @@
 {
   "name": "customer-support",
-  "version": "1.0.0",
-  "description": "Customer support AI employee \u2014 triage tickets, draft responses, escalate risks, identify KB gaps for cross-border e-commerce.",
-  "author": {
-    "name": "AI Employees"
-  }
+  "version": "1.1.0",
+  "description": "Production-grade customer support plugin for triaging, drafting responses, escalating risks, and handling refund/shipping policy queries across US, CA, MX, and EU regions with medical-compliance guardrails.",
+  "author": "support-ops",
+  "runtime": ["claude-cowork", "claude-code", "codex", "hermes"],
+  "risk_level": "high",
+  "required_connectors": ["gmail", "shopify", "kb"],
+  "permissions": {
+    "email": ["read", "draft"],
+    "shopify": ["read_orders"],
+    "send_email": "human_approval_required"
+  },
+  "eval_suite": "evals/golden_set_v1.yaml",
+  "owner": "support-ops",
+  "human_escalation": "support_lead"
 }

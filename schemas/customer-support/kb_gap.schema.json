@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/customer-support/kb_gap.schema.json",
+  "title": "KB Gap",
+  "description": "A knowledge base gap identified during support interactions",
+  "type": "object",
+  "required": [
+    "gap_id",
+    "question",
+    "why_unanswered",
+    "suggested_answer",
+    "estimated_frequency",
+    "priority_for_kb_update"
+  ],
+  "properties": {
+    "gap_id": {
+      "type": "string",
+      "description": "Unique identifier for the knowledge base gap"
+    },
+    "question": {
+      "type": "string",
+      "description": "The customer question that could not be answered"
+    },
+    "why_unanswered": {
+      "type": "string",
+      "description": "Reason the question could not be answered from the knowledge base"
+    },
+    "suggested_answer": {
+      "type": "string",
+      "description": "Suggested answer to add to the knowledge base"
+    },
+    "estimated_frequency": {
+      "type": "string",
+      "enum": [
+        "rare",
+        "occasional",
+        "frequent",
+        "very_frequent"
+      ],
+      "description": "Estimated frequency of this question"
+    },
+    "priority_for_kb_update": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "description": "Priority for updating the knowledge base"
+    }
+  }
+}

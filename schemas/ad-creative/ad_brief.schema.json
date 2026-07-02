@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/ad-creative/ad_brief.schema.json",
+  "title": "Ad Brief",
+  "description": "A brief for generating ad creative content",
+  "type": "object",
+  "required": [
+    "brief_id",
+    "hook_options",
+    "segment_sequence",
+    "copy_variants",
+    "cta_recommendations",
+    "platform",
+    "compliance_status"
+  ],
+  "properties": {
+    "brief_id": {
+      "type": "string",
+      "description": "Unique identifier for the ad brief"
+    },
+    "hook_options": {
+      "type": "array",
+      "description": "Available hook options for the ad",
+      "items": {
+        "type": "string"
+      }
+    },
+    "segment_sequence": {
+      "type": "array",
+      "description": "Ordered sequence of video segments for the ad",
+      "items": {
+        "type": "string",
+        "description": "Segment ID reference"
+      }
+    },
+    "copy_variants": {
+      "type": "array",
+      "description": "Copy text variants for the ad",
+      "items": {
+        "type": "object",
+        "required": [
+          "variant_id",
+          "text"
+        ],
+        "properties": {
+          "variant_id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "cta_recommendations": {
+      "type": "array",
+      "description": "Call-to-action recommendations",
+      "items": {
+        "type": "string"
+      }
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "tiktok",
+        "youtube",
+        "facebook",
+        "google_ads",
+        "other"
+      ],
+      "description": "Target platform for the ad"
+    },
+    "compliance_status": {
+      "type": "string",
+      "enum": [
+        "compliant",
+        "needs_review",
+        "non_compliant"
+      ],
+      "description": "Compliance status of the ad brief"
+    }
+  }
+}

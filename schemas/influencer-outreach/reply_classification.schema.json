@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/influencer-outreach/reply_classification.schema.json",
+  "title": "Reply Classification",
+  "description": "Classification of a creator's reply to an outreach email",
+  "type": "object",
+  "required": [
+    "category",
+    "next_action",
+    "human_review_required",
+    "follow_up_timing"
+  ],
+  "properties": {
+    "category": {
+      "type": "string",
+      "enum": [
+        "interested",
+        "not_interested",
+        "needs_more_info",
+        "negotiation",
+        "out_of_office",
+        "no_response"
+      ],
+      "description": "Category of the reply"
+    },
+    "next_action": {
+      "type": "string",
+      "description": "Recommended next action to take"
+    },
+    "human_review_required": {
+      "type": "boolean",
+      "description": "Whether human review is required"
+    },
+    "follow_up_timing": {
+      "type": "string",
+      "enum": [
+        "immediate",
+        "within_24h",
+        "within_3_days",
+        "within_1_week",
+        "no_follow_up"
+      ],
+      "description": "Timing for follow-up action"
+    }
+  }
+}

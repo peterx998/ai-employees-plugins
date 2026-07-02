@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/influencer-outreach/creator_profile.schema.json",
+  "title": "Creator Profile",
+  "description": "Profile of a content creator for influencer outreach",
+  "type": "object",
+  "required": [
+    "handle",
+    "platform",
+    "followers",
+    "engagement_rate",
+    "fit_score",
+    "strengths",
+    "concerns",
+    "recommendation"
+  ],
+  "properties": {
+    "handle": {
+      "type": "string",
+      "description": "Social media handle of the creator"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "tiktok",
+        "youtube",
+        "twitter",
+        "twitch",
+        "other"
+      ],
+      "description": "Primary platform of the creator"
+    },
+    "followers": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of followers"
+    },
+    "engagement_rate": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Engagement rate as a percentage (0-100)"
+    },
+    "fit_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Fit score for the brand partnership (0-100)"
+    },
+    "strengths": {
+      "type": "array",
+      "description": "Strengths of the creator for the partnership",
+      "items": {
+        "type": "string"
+      }
+    },
+    "concerns": {
+      "type": "array",
+      "description": "Concerns or risks associated with the creator",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": [
+        "proceed",
+        "proceed_with_caution",
+        "do_not_proceed",
+        "needs_more_research"
+      ],
+      "description": "Recommendation for outreach"
+    }
+  }
+}

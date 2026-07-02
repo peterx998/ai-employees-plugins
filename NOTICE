@@ -1,0 +1,16 @@
+AI Employees Plugins
+Copyright 2026 AI Employees Plugins Contributors
+
+This product includes software and architectural patterns derived from:
+  - anthropics/knowledge-work-plugins (Apache License 2.0)
+    https://github.com/anthropics/knowledge-work-plugins
+    Copyright Anthropic, Inc.
+
+This project adapts the knowledge-work-plugins plugin architecture
+(plugin manifest → skills → commands → connectors/MCP) for dual-runtime
+compatibility with Hermes Agent and Codex CLI. No upstream source code
+is directly copied; the architectural pattern and file structure
+conventions are referenced under fair use of the Apache 2.0 license.
+
+======================================================================
+The Apache License 2.0 applies to this project. See LICENSE for details.

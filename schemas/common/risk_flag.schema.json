@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/common/risk_flag.schema.json",
+  "title": "Risk Flag",
+  "description": "A risk flag indicating a potential issue or concern",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "severity",
+    "description",
+    "source",
+    "timestamp"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the risk flag"
+    },
+    "type": {
+      "type": "string",
+      "description": "Category of the risk flag"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "description": "Severity level of the risk flag"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the risk flag"
+    },
+    "source": {
+      "type": "string",
+      "description": "Source that raised the risk flag"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the risk flag was raised"
+    }
+  }
+}

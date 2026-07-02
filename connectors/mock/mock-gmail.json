@@ -1,0 +1,80 @@
+{
+  "mock_threads": [
+    {
+      "thread_id": "mock-thread-001",
+      "label": "medical-risk",
+      "messages": [
+        {
+          "from": "customer@example.com",
+          "to": "support@example.com",
+          "subject": "URGENT: Skin burning after using device",
+          "date": "2026-07-01T10:30:00Z",
+          "body": "Hi, I used the micro-infusion device for the first time yesterday and now my skin is red, burning and there are small blood spots. Is this normal? Should I continue using it? I'm really worried."
+        }
+      ],
+      "expected_triage": {
+        "category": "medical-risk",
+        "priority": "P1",
+        "route_to": "medical-review",
+        "human_review_required": true,
+        "auto_reply_suppressed": true
+      }
+    },
+    {
+      "thread_id": "mock-thread-002",
+      "label": "refund-request",
+      "messages": [
+        {
+          "from": "buyer@example.com",
+          "to": "support@example.com",
+          "subject": "Return request - order #DRP-2026-1847",
+          "date": "2026-07-01T14:20:00Z",
+          "body": "Hello, I'd like to return my device. I opened it and tried it once but it's not what I expected. My order number is DRP-2026-1847 and I'm in the US. I purchased it 12 days ago. Can I get a full refund?"
+        }
+      ],
+      "expected_triage": {
+        "category": "refund-return",
+        "priority": "P3",
+        "route_to": "tier-1",
+        "human_review_required": false,
+        "key_facts": {
+          "region": "US",
+          "within_return_window": true,
+          "opened": true,
+          "restocking_fee": "15%"
+        }
+      }
+    },
+    {
+      "thread_id": "mock-thread-003",
+      "label": "shipping-inquiry",
+      "messages": [
+        {
+          "from": "customer@example.ca",
+          "to": "support@example.com",
+          "subject": "Where is my order? Tracking stuck",
+          "date": "2026-07-01T09:15:00Z",
+          "body": "Hi, my order #DRP-2026-2103 was shipped 15 days ago to Canada. The tracking says 'Customs Clearance' for the past 5 days. Is something wrong? When will I receive it?"
+        }
+      ],
+      "expected_triage": {
+        "category": "order-status",
+        "priority": "P3",
+        "route_to": "tier-1",
+        "human_review_required": false,
+        "key_facts": {
+          "region": "Canada",
+          "tracking_status": "Customs Clearance",
+          "expected_delay": "3-7 extra days",
+          "action": "reassure customer"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "description": "Mock Gmail threads for testing customer-support agent. All emails are synthetic — no real customer data.",
+    "created": "2026-07-02",
+    "version": "1.0.0",
+    "note": "Replace example.com domains with real addresses only in production. Never commit real customer emails to the repository."
+  }
+}

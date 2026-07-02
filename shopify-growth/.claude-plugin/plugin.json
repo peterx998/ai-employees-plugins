@@ -1,8 +1,17 @@
 {
   "name": "shopify-growth",
-  "version": "1.0.0",
-  "description": "Shopify growth AI employee \u2014 optimize product pages, audit SEO, analyze user behavior, generate FAQ content, and improve conversion rates.",
-  "author": {
-    "name": "AI Employees"
-  }
+  "version": "1.1.0",
+  "description": "Shopify growth AI employee — optimize product pages, audit SEO, analyze user behavior, generate FAQ content, and improve conversion rates.",
+  "author": { "name": "AI Employees Plugins" },
+  "runtime": ["claude-cowork", "claude-code", "codex", "hermes"],
+  "risk_level": "medium",
+  "required_connectors": ["shopify", "google-analytics", "google-search-console", "clarity"],
+  "permissions": {
+    "shopify": ["read_products", "read_orders"],
+    "shopify_write": "human_approval_required",
+    "analytics": ["read_only"]
+  },
+  "eval_suite": "evals/golden_set_v1.yaml",
+  "owner": "growth-ops",
+  "human_escalation": "growth_lead"
 }

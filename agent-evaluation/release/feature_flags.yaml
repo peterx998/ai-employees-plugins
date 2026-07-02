@@ -1,0 +1,119 @@
+# Feature Flags — Agent Grayscale Release Configuration
+#
+# This template defines feature flags that control the rollout of an AI agent
+# update. Copy this file, fill in the values, and use it with the grayscale
+# release system.
+#
+# Usage:
+#   cp feature_flags.yaml feature_flags_customer-support_v2.1.0.yaml
+#   # Edit values as needed
+#   # The deployment system reads this file to configure traffic routing,
+#   # category filtering, and automatic rollback monitoring.
+
+# ── Agent Identity ────────────────────────────────────────────────────────────
+agent: customer-support          # Agent slug (must match golden set agent field)
+version: "2.1.0"                 # Version being rolled out
+previous_version: "2.0.3"        # Version to roll back to if needed
+
+# ── Rollout Stage ─────────────────────────────────────────────────────────────
+# Current stage in the 7-stage grayscale process:
+#   0_internal     — Dev only, no real traffic
+#   1_shadow       — Log only, no user-visible output
+#   2_5_percent    — 5% of P3/P4 (low priority) traffic
+#   3_10_percent   — 10% of all traffic
+#   4_50_percent   — 50% of all traffic
+#   5_full_hr      — 100% traffic, P1/P2 with human review gate
+#   6_full_prod    — 100% traffic, no HR gate
+#   rollback       — Reverted to previous_version
+rollout_stage: "3_10_percent"
+traffic_percentage: 10           # Percentage of traffic routed to new version
+
+# ── Category Filtering ────────────────────────────────────────────────────────
+# Categories the new agent is allowed to handle at this stage.
+# All other categories are routed to the previous version.
+allowed_categories:
+  - refund
+  - shipping
+  - usage
+  - warranty
+  - general_inquiry
+
+# Categories explicitly blocked from the new agent at this stage.
+# Typically includes high-risk categories that are unblocked only at later stages.
+blocked_categories:
+  - medical_risk       # Unblock at stage 4 (50%)
+  - legal_threat       # Unblock at stage 5 (full with HR)
+  - vip_escalation     # Unblock at stage 5 (full with HR)
+
+# ── Rollback Conditions ───────────────────────────────────────────────────────
+# These conditions are monitored automatically. If any threshold is breached,
+# an automatic rollback is triggered.
+rollback:
+  # Complaint rate: if the rate of user complaints from the new agent version
+  # exceeds the baseline by this fraction, trigger rollback.
+  complaint_rate_increase:
+    threshold: 0.20           # 20% increase above baseline complaint rate
+    baseline: 0.02            # Baseline complaint rate (2% of responses)
+    window_minutes: 60        # Rolling window for measurement
+    min_sample_size: 50       # Minimum responses before evaluating
+    action: immediate_rollback
+
+  # P1 missed escalation: if the new agent fails to escalate ANY P1
+  # (critical) case, trigger rollback immediately.
+  p1_missed_escalation:
+    threshold: 1              # Any single miss triggers rollback (zero tolerance)
+    window_minutes: 1440      # 24-hour rolling window
+    action: immediate_rollback_and_page_oncall
+
+  # Human review pass rate: if the percentage of human-reviewed responses
+  # that are approved without edits drops below this threshold.
+  human_review_pass_rate:
+    threshold: 0.90           # Below 90% pass rate triggers rollback
+    baseline: 0.95            # Baseline pass rate (95%)
+    window_minutes: 120       # 2-hour rolling window
+    min_sample_size: 20       # Minimum reviews before evaluating
+    action: immediate_rollback
+
+  # Forbidden phrase detection: if any forbidden phrase is detected in
+  # the new agent's output.
+  forbidden_phrase_detection:
+    threshold: 1              # Any single occurrence triggers rollback
+    window_minutes: 60
+    action: immediate_rollback_and_security_review
+
+  # Response time degradation: if p95 latency increases beyond threshold.
+  response_time_p95:
+    threshold_multiplier: 2.0 # 2x baseline p95 latency
+    sustained_minutes: 30     # Must be sustained for 30 minutes
+    action: rollback_after_sustained
+
+  # Error rate: if the percentage of requests returning errors exceeds threshold.
+  error_rate:
+    threshold: 0.05           # 5% error rate
+    sustained_minutes: 15     # Must be sustained for 15 minutes
+    action: rollback_after_sustained
+
+# ── Monitoring Configuration ──────────────────────────────────────────────────
+monitoring:
+  metrics_enabled: true
+  alert_channel: "#releases"           # Slack channel for alerts
+  oncall_pagerduty_service: "ai-employees-oncall"
+  dashboard_url: "https://grafana.internal/ai-employees/customer-support"
+  log_retention_days: 90
+
+# ── Human Review Configuration ────────────────────────────────────────────────
+human_review:
+  enabled: true                         # HR gate is active
+  review_all_p1_p2: true                # Review all P1 and P2 cases
+  review_sample_p3_p4: 0.10             # Sample 10% of P3/P4 for spot-check
+  review_timeout_minutes: 30            # If no review in 30 min, escalate to old agent
+  reviewer_team: "customer-support-qa"
+
+# ── Metadata ──────────────────────────────────────────────────────────────────
+metadata:
+  created_by: "platform-eng"
+  created_date: "2025-07-02"
+  release_ticket: "REL-2025-007"
+  golden_set_version: "1.0"
+  approved_by: ""                       # Agent owner must approve before stage 4+
+  notes: ""

@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/customer-support/support_ticket.schema.json",
+  "title": "Support Ticket",
+  "description": "A customer support ticket",
+  "type": "object",
+  "required": [
+    "id",
+    "customer_id",
+    "order_id",
+    "message",
+    "category",
+    "priority",
+    "region",
+    "attachments",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the support ticket"
+    },
+    "customer_id": {
+      "type": "string",
+      "description": "Identifier of the customer who submitted the ticket"
+    },
+    "order_id": {
+      "type": "string",
+      "description": "Identifier of the related order"
+    },
+    "message": {
+      "type": "string",
+      "description": "The customer's message or issue description"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category of the support ticket"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "description": "Priority level of the support ticket"
+    },
+    "region": {
+      "type": "string",
+      "description": "Geographic region of the customer"
+    },
+    "attachments": {
+      "type": "array",
+      "description": "List of attachments included with the ticket",
+      "items": {
+        "type": "object",
+        "required": [
+          "filename",
+          "url"
+        ],
+        "properties": {
+          "filename": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "mime_type": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the ticket was created"
+    }
+  }
+}

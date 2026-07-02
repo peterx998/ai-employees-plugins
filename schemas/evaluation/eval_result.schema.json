@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/evaluation/eval_result.schema.json",
+  "title": "Eval Result",
+  "description": "Result of evaluating an AI agent against an eval case",
+  "type": "object",
+  "required": [
+    "case_id",
+    "agent",
+    "passed",
+    "score",
+    "actual_output",
+    "expected_output",
+    "diff",
+    "errors"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "description": "Identifier of the eval case"
+    },
+    "agent": {
+      "type": "string",
+      "description": "Name of the agent evaluated"
+    },
+    "passed": {
+      "type": "boolean",
+      "description": "Whether the agent passed the eval case"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Score achieved (0-100)"
+    },
+    "actual_output": {
+      "type": "string",
+      "description": "Actual output produced by the agent"
+    },
+    "expected_output": {
+      "type": "string",
+      "description": "Expected output for the eval case"
+    },
+    "diff": {
+      "type": "string",
+      "description": "Diff between expected and actual output"
+    },
+    "errors": {
+      "type": "array",
+      "description": "List of errors encountered during evaluation",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "message"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "description": "Mock knowledge base articles for testing AI agent workflows. All content is fictional and for testing purposes only.",
+  "version": "1.0.0",
+  "generated_at": "2026-07-02T00:00:00Z",
+  "database_id": "mock-kb-database-001",
+  "articles": [
+    {
+      "page_id": "kb-refund-policy-us",
+      "title": "Refund Policy (United States)",
+      "category": "Policies",
+      "tags": ["refund", "US", "policy", "returns"],
+      "status": "published",
+      "last_edited_time": "2026-06-15T10:00:00Z",
+      "url": "https://mock-notion-workspace.notion.site/kb-refund-policy-us",
+      "blocks": [
+        {
+          "type": "heading_1",
+          "content": "Refund Policy (United States)"
+        },
+        {
+          "type": "paragraph",
+          "content": "This policy applies to orders shipped within the United States."
+        },
+        {
+          "type": "heading_2",
+          "content": "Return Window"
+        },
+        {
+          "type": "paragraph",
+          "content": "Customers may request a refund within 30 days of the delivery date. The delivery date is confirmed via carrier tracking information."
+        },
+        {
+          "type": "heading_2",
+          "content": "Refund Tiers"
+        },
+        {
+          "type": "paragraph",
+          "content": "Refund amounts determine the escalation priority for AI agents handling refund requests:"
+        },
+        {
+          "type": "table",
+          "content": [
+            {"amount_range": "$0 - $99", "priority": "P3", "sla": "4 hours", "auto_reply": "Allowed"},
+            {"amount_range": "$100 - $499", "priority": "P2", "sla": "1 hour", "auto_reply": "Allowed (acknowledgment only)"},
+            {"amount_range": "$500+", "priority": "P1", "sla": "15 minutes", "auto_reply": "Suppressed"}
+          ]
+        },
+        {
+          "type": "heading_2",
+          "content": "Damaged Items"
+        },
+        {
+          "type": "paragraph",
+          "content": "If items arrive damaged, customers are eligible for a full refund including shipping costs. Photographic evidence of damage should be requested and attached to the escalation package. Agents should verify the order details in Shopify before processing."
+        },
+        {
+          "type": "heading_2",
+          "content": "Non-Refundable Items"
+        },
+        {
+          "type": "bulleted_list",
+          "content": [
+            "Items returned more than 30 days after delivery",
+            "Items that have been opened and used (unless damaged on arrival)",
+            "Gift cards and promotional items",
+            "Final sale items (clearly marked at purchase)"
+          ]
+        },
+        {
+          "type": "heading_2",
+          "content": "Refund Processing"
+        },
+        {
+          "type": "paragraph",
+          "content": "All refunds are processed by human reviewers. AI agents MUST NOT issue refunds automatically. Agents escalate refund requests to the human review queue with the appropriate priority based on the refund amount."
+        },
+        {
+          "type": "callout",
+          "content": "IMPORTANT: AI agents must never issue refunds through the Shopify API. The refund capability is not available through the Shopify connector. All refunds require human review and admin action."
+        }
+      ]
+    },
+    {
+      "page_id": "kb-shipping-policy",
+      "title": "Shipping Policy (Global)",
+      "category": "Policies",
+      "tags": ["shipping", "policy", "global", "tracking"],
+      "status": "published",
+      "last_edited_time": "2026-06-10T14:00:00Z",
+      "url": "https://mock-notion-workspace.notion.site/kb-shipping-policy",
+      "blocks": [
+        {
+          "type": "heading_1",
+          "content": "Shipping Policy (Global)"
+        },
+        {
+          "type": "heading_2",
+          "content": "Shipping Regions"
+        },
+        {
+          "type": "table",
+          "content": [
+            {"region": "United States", "carrier": "UPS / USPS", "estimated_delivery": "3-5 business days", "shipping_cost": "$8.00 - $15.00"},
+            {"region": "Canada", "carrier": "Canada Post", "estimated_delivery": "5-8 business days", "shipping_cost": "$12.00 - $18.00 CAD"},
+            {"region": "EU", "carrier": "DHL / Local Post", "estimated_delivery": "7-14 business days", "shipping_cost": "€12.00 - €20.00"},
+            {"region": "UK", "carrier": "Royal Mail / DHL", "estimated_delivery": "5-10 business days", "shipping_cost": "£10.00 - £16.00"}
+          ]
+        },
+        {
+          "type": "heading_2",
+          "content": "Tracking"
+        },
+        {
+          "type": "paragraph",
+          "content": "All shipments include tracking. Tracking numbers are added to Shopify orders upon fulfillment. Customers receive a shipping confirmation email with their tracking number and a link to the carrier's tracking page."
+        },
+        {
+          "type": "heading_2",
+          "content": "Shipping Delays"
+        },
+        {
+          "type": "paragraph",
+          "content": "If a customer reports a shipping delay:\n1. Verify the tracking number in Shopify (get_order)\n2. Check the carrier's tracking page for status updates\n3. If the package is stuck at a facility for more than 3 business days, escalate to the shipping team\n4. Draft a response to the customer with the current tracking status and estimated delivery\n5. If the package is confirmed lost, escalate for replacement or refund per customer preference"
+        },
+        {
+          "type": "heading_2",
+          "content": "Customs and Duties (International)"
+        },
+        {
+          "type": "paragraph",
+          "content": "International orders may be subject to customs fees, import duties, and taxes upon delivery. These charges are the responsibility of the customer and are not included in the order total. Agents should inform customers of this when handling international shipping inquiries."
+        },
+        {
+          "type": "callout",
+          "content": "NOTE: AI agents may NOT update tracking information without human approval. The update_tracking capability requires write-send (WS) permission with human approval."
+        }
+      ]
+    },
+    {
+      "page_id": "kb-warranty",
+      "title": "Warranty Policy",
+      "category": "Policies",
+      "tags": ["warranty", "policy", "defects", "replacement"],
+      "status": "published",
+      "last_edited_time": "2026-05-20T09:00:00Z",
+      "url": "https://mock-notion-workspace.notion.site/kb-warranty",
+      "blocks": [
+        {
+          "type": "heading_1",
+          "content": "Warranty Policy"
+        },
+        {
+          "type": "heading_2",
+          "content": "Warranty Period"
+        },
+        {
+          "type": "paragraph",
+          "content": "All products come with a 12-month warranty from the date of purchase. The warranty covers manufacturing defects but does not cover damage caused by misuse, improper storage, or normal wear and tear."
+        },
+        {
+          "type": "heading_2",
+          "content": "What's Covered"
+        },
+        {
+          "type": "bulleted_list",
+          "content": [
+            "Manufacturing defects in packaging (cracked bottles, broken pumps, defective seals)",
+            "Product contamination due to manufacturing error",
+            "Incorrect product shipped (wrong item or wrong variant)"
+          ]
+        },
+        {
+          "type": "heading_2",
+          "content": "What's Not Covered"
+        },
+        {
+          "type": "bulleted_list",
+          "content": [
+            "Damage during shipping (covered by shipping insurance — see refund policy)",
+            "Allergic reactions or skin irritation (see medical compliance FAQ)",
+            "Damage from improper use or storage",
+            "Products purchased from unauthorized resellers"
+          ]
+        },
+        {
+          "type": "heading_2",
+          "content": "Warranty Claim Process"
+        },
+        {
+          "type": "paragraph",
+          "content": "1. Customer contacts support with order number and description of the defect\n2. Agent retrieves order details from Shopify to verify purchase date and product\n3. If within warranty period and claim is valid, escalate to human review (P3)\n4. Human reviewer determines: replacement, refund, or denial\n5. If replacement approved, human reviewer processes replacement order in Shopify"
+        },
+        {
+          "type": "callout",
+          "content": "IMPORTANT: AI agents must NOT process warranty replacements autonomously. All warranty claims require human review. If a defect involves product safety (e.g., contamination), escalate as P2."
+        }
+      ]
+    },
+    {
+      "page_id": "kb-product-usage-guide",
+      "title": "Product Usage Guide",
+      "category": "Product Information",
+      "tags": ["usage", "guide", "instructions", "patch-test"],
+      "status": "published",
+      "last_edited_time": "2026-06-01T11:00:00Z",
+      "url": "https://mock-notion-workspace.notion.site/kb-product-usage-guide",
+      "blocks": [
+        {
+          "type": "heading_1",
+          "content": "Product Usage Guide"
+        },
+        {
+          "type": "callout",
+          "content": "MEDICAL COMPLIANCE: All usage guidance must include a patch test recommendation. Agents must never make medical claims, guarantee results, or recommend off-label usage. See policies/medical-compliance.md."
+        },
+        {
+          "type": "heading_2",
+          "content": "Patch Test (Mandatory First Step)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Before first use of any product, perform a patch test:\n1. Apply a small amount of product to your inner forearm.\n2. Wait 24 hours.\n3. If no irritation (redness, itching, burning, swelling) occurs, the product is generally suitable for your skin.\n4. If irritation occurs, discontinue use and consult a healthcare professional."
+        },
+        {
+          "type": "heading_2",
+          "content": "Vitamin C Serum (SKU: VC-001)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Usage: Apply 3-5 drops to clean, dry skin in the morning. Gently pat into face and neck. Follow with moisturizer and SPF.\n\nFrequency: Once daily (morning).\n\nImportant: Always use SPF during the day when using Vitamin C products. Store in a cool, dark place. Discontinue use if irritation occurs."
+        },
+        {
+          "type": "heading_2",
+          "content": "Hydrating Moisturizer (SKU: HM-002)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Usage: Apply a pea-sized amount to clean skin morning and night. Gently massage into face and neck until absorbed.\n\nFrequency: Twice daily (morning and evening)."
+        },
+        {
+          "type": "heading_2",
+          "content": "SPF 50 Sunscreen (SKU: SP-003)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Usage: Apply generously as the last step in your morning skincare routine. Reapply every 2 hours when exposed to sunlight.\n\nFrequency: Once daily (morning), reapply as needed."
+        },
+        {
+          "type": "heading_2",
+          "content": "Night Repair Cream (SKU: CR-004)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Usage: Apply a small amount to clean skin in the evening. Gently massage into face and neck.\n\nFrequency: Once daily (evening)."
+        },
+        {
+          "type": "heading_2",
+          "content": "Important Reminders"
+        },
+        {
+          "type": "bulleted_list",
+          "content": [
+            "Always perform a patch test before first use",
+            "Discontinue use if irritation, redness, or discomfort occurs",
+            "Consult a healthcare professional for any concerns about product reactions",
+            "Follow the instructions on the product label",
+            "Do not use products on broken or irritated skin",
+            "Avoid direct contact with eyes — rinse thoroughly with water if contact occurs",
+            "Keep products out of reach of children"
+          ]
+        }
+      ]
+    },
+    {
+      "page_id": "kb-medical-compliance-faq",
+      "title": "Medical Compliance FAQ",
+      "category": "Compliance",
+      "tags": ["medical", "compliance", "FAQ", "safety", "adverse-reaction"],
+      "status": "published",
+      "last_edited_time": "2026-06-20T16:00:00Z",
+      "url": "https://mock-notion-workspace.notion.site/kb-medical-compliance-faq",
+      "blocks": [
+        {
+          "type": "heading_1",
+          "content": "Medical Compliance FAQ"
+        },
+        {
+          "type": "callout",
+          "content": "This FAQ supports agents in handling medical and safety-related customer inquiries. All agents must follow the Global Medical Compliance Policy (policies/medical-compliance.md)."
+        },
+        {
+          "type": "heading_2",
+          "content": "Q: A customer reports redness and burning after using a product. What should I do?"
+        },
+        {
+          "type": "paragraph",
+          "content": "A: TRIGGER THE ADVERSE REACTION PROTOCOL IMMEDIATELY:\n\n1. Advise the customer to STOP using the product.\n2. Recommend consulting a healthcare professional or dermatologist.\n3. Do NOT attempt to diagnose the reaction or suggest it is 'normal.'\n4. Do NOT say 'it's just your skin purging' or 'this happens sometimes.'\n5. Escalate to human review with priority P1 and tag MEDICAL_RISK.\n6. Suppress auto-reply — do NOT send automated response.\n7. Log the adverse reaction report for compliance tracking."
+        },
+        {
+          "type": "heading_2",
+          "content": "Q: Can I tell a customer that a product is 'completely safe'?"
+        },
+        {
+          "type": "paragraph",
+          "content": "A: NO. Agents must NEVER use absolute safety language such as 'completely safe,' '100% safe,' 'no side effects,' 'harmless,' or 'safe for everyone.' All products carry some risk. Use: 'generally well-tolerated,' 'formulated for sensitive skin,' or 'patch test recommended.'"
+        },
+        {
+          "type": "heading_2",
+          "content": "Q: Can I tell a customer that our product will 'cure' or 'treat' their condition?"
+        },
+        {
+          "type": "paragraph",
+          "content": "A: NO. Agents must NEVER make medical claims. This includes claims that a product cures, fixes, treats, diagnoses, prevents, or heals any condition. Use hedging language: 'designed for acne-prone skin,' 'formulated to support the skin barrier,' 'may help with the appearance of...'"
+        },
+        {
+          "type": "heading_2",
+          "content": "Q: A customer asks if they can use a product for something not on the label. What should I say?"
+        },
+        {
+          "type": "paragraph",
+          "content": "A: Do NOT recommend off-label usage. Respond with: 'We recommend following the usage instructions on the product label. For other concerns, please consult a qualified professional.' Escalate to human review (P2) if the customer is insistent."
+        },
+        {
+          "type": "heading_2",
+          "content": "Q: Can I guarantee that a customer will see results?"
+        },
+        {
+          "type": "paragraph",
+          "content": "A: NO. Agents must NEVER guarantee results. Do not use language like 'guaranteed to work,' 'you will see results,' or '100% effective.' Use: 'many customers report,' 'formulated to help with,' 'individual results may vary.'"
+        },
+        {
+          "type": "heading_2",
+          "content": "Q: Can I use before/after photos in responses or marketing content?"
+        },
+        {
+          "type": "paragraph",
+          "content": "A: Only with the following conditions:\n1. Images are genuine and unaltered.\n2. The disclaimer 'Individual results may vary. Results not guaranteed.' is included.\n3. Compliance team has approved the imagery.\n4. For advertising, platform-specific before/after rules are followed (see policies/advertising-claims.md)."
+        },
+        {
+          "type": "heading_2",
+          "content": "Q: A customer mentions they have a diagnosed skin condition (e.g., eczema, psoriasis, rosacea). How should I respond?"
+        },
+        {
+          "type": "paragraph",
+          "content": "A: Escalate to human review (P2). Do NOT attempt to advise on diagnosed medical conditions. Respond with: 'Thank you for sharing that. We want to make sure you get the best advice — I'm escalating your inquiry to our team who can provide more personalized guidance.' Do NOT recommend products for the specific condition."
+        },
+        {
+          "type": "heading_2",
+          "content": "Q: What phrases should I always include when guiding product usage?"
+        },
+        {
+          "type": "paragraph",
+          "content": "A: Always include the patch test recommendation: 'We recommend performing a patch test before first use. Apply a small amount to your inner arm and wait 24 hours. If irritation occurs, discontinue use and consult a healthcare professional.'"
+        },
+        {
+          "type": "heading_2",
+          "content": "Compliance Checklist for Every Response"
+        },
+        {
+          "type": "bulleted_list",
+          "content": [
+            "No medical claims (cure/fix/treat/diagnose/prevent)",
+            "No guaranteed results",
+            "No 'completely safe' language",
+            "No off-label usage recommendations",
+            "Patch test recommendation included",
+            "Adverse reaction protocol followed if applicable",
+            "Required disclaimers included for advertising content"
+          ]
+        }
+      ]
+    }
+  ]
+}

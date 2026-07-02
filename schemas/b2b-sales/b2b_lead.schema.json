@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins.example/schemas/b2b-sales/b2b_lead.schema.json",
+  "title": "B2B Lead",
+  "description": "A B2B sales lead",
+  "type": "object",
+  "required": [
+    "lead_id",
+    "company",
+    "contact",
+    "buyer_type",
+    "moq",
+    "pricing_tier",
+    "lead_score",
+    "recommendation"
+  ],
+  "properties": {
+    "lead_id": {
+      "type": "string",
+      "description": "Unique identifier for the lead"
+    },
+    "company": {
+      "type": "string",
+      "description": "Company name"
+    },
+    "contact": {
+      "type": "object",
+      "description": "Contact person information",
+      "required": [
+        "name",
+        "email"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "buyer_type": {
+      "type": "string",
+      "enum": [
+        "retailer",
+        "distributor",
+        "wholesaler",
+        "enterprise",
+        "agency",
+        "other"
+      ],
+      "description": "Type of buyer"
+    },
+    "moq": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Minimum order quantity"
+    },
+    "pricing_tier": {
+      "type": "string",
+      "enum": [
+        "tier_1",
+        "tier_2",
+        "tier_3",
+        "custom"
+      ],
+      "description": "Pricing tier for the lead"
+    },
+    "lead_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Lead score (0-100)"
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": [
+        "proceed",
+        "proceed_with_caution",
+        "do_not_proceed",
+        "needs_more_research"
+      ],
+      "description": "Recommendation for the lead"
+    }
+  }
+}
