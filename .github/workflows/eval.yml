@@ -138,8 +138,6 @@ jobs:
 
       - name: Run Agent Batch Runner (mock — proves pipeline integrity)
         run: |
-          # Full pipeline: golden set → mock agent → eval → regression.
-          # Mock adapter is deterministic in CI and does not require live credentials.
           python agent-evaluation/runner/run_agent_batch.py \
             --agent customer-support \
             --adapter mock \
@@ -185,23 +183,29 @@ jobs:
         if: always()
         run: |
           mkdir -p reports
-          echo "## Evaluation Report" > reports/regression_report.md
-          echo "- Date: $(date -u)" >> reports/regression_report.md
-          echo "- Commit: ${{ github.sha }}" >> reports/regression_report.md
+          {
+            echo "## Evaluation Report"
+            echo "- Date: $(date -u)"
+            echo "- Commit: ${{ github.sha }}"
+          } > reports/regression_report.md
+
           RESULT_FILE="customer-support/reports/eval_results.json"
           if [ -f "$RESULT_FILE" ]; then
-            python -c "
-          import json
-          with open('$RESULT_FILE') as f:
-              d = json.load(f)
-          print(f'- Total cases: {d.get(\"total_cases\", \"?\")}')
-          print(f'- Passed: {d.get(\"passed\", \"?\")}')
-          print(f'- Failed: {d.get(\"failed\", \"?\")}')
-          print(f'- Pending: {d.get(\"pending\", 0)}')
-          print(f'- Hard constraint failures: {d.get(\"hard_constraint_failures\", 0)}')
-          print(f'- Schema failures: {d.get(\"schema_failures\", 0)}')
-          print(f'- Verdict: {d.get(\"verdict\", \"?\")}')
-          " >> reports/regression_report.md
+            python - "$RESULT_FILE" >> reports/regression_report.md <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as f:
+    d = json.load(f)
+
+print(f"- Total cases: {d.get('total_cases', '?')}")
+print(f"- Passed: {d.get('passed', '?')}")
+print(f"- Failed: {d.get('failed', '?')}")
+print(f"- Pending: {d.get('pending', 0)}")
+print(f"- Hard constraint failures: {d.get('hard_constraint_failures', 0)}")
+print(f"- Schema failures: {d.get('schema_failures', 0)}")
+print(f"- Verdict: {d.get('verdict', '?')}")
+PY
           fi
 
       - name: Upload evaluation report
