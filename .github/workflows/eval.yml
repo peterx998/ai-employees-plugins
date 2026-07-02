@@ -188,13 +188,7 @@ jobs:
           echo "- Commit: ${{ github.sha }}" >> reports/regression_report.md
           RESULT_FILE="customer-support/reports/eval_results.json"
           if [ -f "$RESULT_FILE" ]; then
-            python -c "
-import json
-with open('$RESULT_FILE') as f:
-    d = json.load(f)
-for key in ['total_cases','passed','failed','pending','hard_constraint_failures','schema_failures','verdict']:
-    print(f'- {key.replace(\"_\",\" \").title()}: {d.get(key,\"?\")}')
-" >> reports/regression_report.md
+            python -c 'import json; d=json.load(open("'"$RESULT_FILE"'")); print(f"- Total cases: {d.get(\"total_cases\",\"?\")}\n- Passed: {d.get(\"passed\",\"?\")}\n- Failed: {d.get(\"failed\",\"?\")}\n- Pending: {d.get(\"pending\",0)}\n- Hard constraint failures: {d.get(\"hard_constraint_failures\",0)}\n- Schema failures: {d.get(\"schema_failures\",0)}\n- Verdict: {d.get(\"verdict\",\"?\")}")' >> reports/regression_report.md
           fi
 
       - name: Upload evaluation report
