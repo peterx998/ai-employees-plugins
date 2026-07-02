@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "gmail": {
+      "type": "http",
+      "url": "https://gmail.googleapis.com/"
+    },
+    "shopify": {
+      "type": "http",
+      "url": "https://your-store.myshopify.com/admin/api/2024-01/graphql.json"
+    },
+    "notion": {
+      "type": "http",
+      "url": "https://api.notion.com/v1/"
+    }
+  }
+}

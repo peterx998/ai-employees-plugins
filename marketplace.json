@@ -1,0 +1,42 @@
+{
+  "name": "ai-employees-plugins",
+  "description": "Enterprise AI employee plugins for cross-border e-commerce — customer support, influencer outreach, ad creative, Shopify growth, B2B sales, and agent evaluation.",
+  "plugins": [
+    {
+      "name": "customer-support",
+      "displayName": "Customer Support Agent",
+      "source": "./customer-support",
+      "description": "Triage tickets, draft responses, escalate risks, identify knowledge base gaps."
+    },
+    {
+      "name": "influencer-outreach",
+      "displayName": "Influencer Outreach Agent",
+      "source": "./influencer-outreach",
+      "description": "Research creators, draft icebreakers, classify replies, manage usage rights."
+    },
+    {
+      "name": "ad-creative",
+      "displayName": "Ad Creative Agent",
+      "source": "./ad-creative",
+      "description": "Analyze videos, segment UGC, score hooks, review compliance."
+    },
+    {
+      "name": "shopify-growth",
+      "displayName": "Shopify Growth Agent",
+      "source": "./shopify-growth",
+      "description": "Optimize product pages, audit SEO, analyze user behavior, generate FAQ."
+    },
+    {
+      "name": "b2b-sales",
+      "displayName": "B2B Sales Agent",
+      "source": "./b2b-sales",
+      "description": "Qualify leads, draft quotes, follow up, escalate high-value opportunities."
+    },
+    {
+      "name": "agent-evaluation",
+      "displayName": "Agent Evaluation Framework",
+      "source": "./agent-evaluation",
+      "description": "Golden set testing, regression tests, grayscale release, error review."
+    }
+  ]
+}

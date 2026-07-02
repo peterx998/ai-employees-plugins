@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "shotstack": {
+      "type": "http",
+      "url": "https://api.shotstack.io/v1/"
+    },
+    "meta-ads": {
+      "type": "http",
+      "url": "https://graph.facebook.com/v19.0/"
+    },
+    "tiktok-ads": {
+      "type": "http",
+      "url": "https://business-api.tiktok.com/open_api/"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "shopify": {
+      "type": "http",
+      "url": "https://your-store.myshopify.com/admin/api/2024-01/graphql.json"
+    },
+    "google-analytics": {
+      "type": "http",
+      "url": "https://analyticsdata.googleapis.com/"
+    },
+    "google-search-console": {
+      "type": "http",
+      "url": "https://www.googleapis.com/webmasters/v3/"
+    },
+    "clarity": {
+      "type": "http",
+      "url": "https://www.clarity.ms/api/"
+    }
+  }
+}

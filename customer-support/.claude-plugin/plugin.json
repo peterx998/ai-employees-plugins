@@ -1,0 +1,8 @@
+{
+  "name": "customer-support",
+  "version": "1.0.0",
+  "description": "Customer support AI employee \u2014 triage tickets, draft responses, escalate risks, identify KB gaps for cross-border e-commerce.",
+  "author": {
+    "name": "AI Employees"
+  }
+}

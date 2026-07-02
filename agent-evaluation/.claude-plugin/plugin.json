@@ -1,0 +1,8 @@
+{
+  "name": "agent-evaluation",
+  "version": "1.0.0",
+  "description": "Agent evaluation framework \u2014 Golden Set testing, regression tests, grayscale release management, and error sample review for production-grade AI employee systems.",
+  "author": {
+    "name": "AI Employees"
+  }
+}
