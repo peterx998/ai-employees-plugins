@@ -1,0 +1,12 @@
+{
+  "review_id": "HR-78b475b7",
+  "tool_name": "gmail.create_draft",
+  "arguments": {
+    "to": "[REDACTED_EMAIL]"
+  },
+  "case_id": "CI-TEST",
+  "reason": "gmail.create_draft requires human review (priority P3)",
+  "status": "pending",
+  "submitted_at": "2026-07-03T03:37:30.763232+00:00",
+  "reviewed_at": null
+}

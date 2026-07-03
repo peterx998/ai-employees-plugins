@@ -1,0 +1,13 @@
+{
+  "review_id": "HR-cfadc87b",
+  "tool_name": "gmail.create_draft",
+  "arguments": {
+    "to": "test_value",
+    "subject": "test_value"
+  },
+  "case_id": "unknown",
+  "reason": "gmail.create_draft requires human review (priority P4)",
+  "status": "pending",
+  "submitted_at": "2026-07-03T03:37:30.932896+00:00",
+  "reviewed_at": null
+}

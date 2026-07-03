@@ -5,6 +5,12 @@ on:
     branches: [main, master]
   push:
     branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      adapter:
+        description: 'Adapter to use (mock, hermes, codex, hermes-dry-run)'
+        required: false
+        default: 'mock'
 
 jobs:
   validate-and-eval:
@@ -20,6 +26,7 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml jsonschema
 
+      # ─── 1. Schema & Contract Validation ───
       - name: Validate schema consistency
         run: python3 scripts/ci_validate_schema.py
 
@@ -34,10 +41,8 @@ jobs:
           done
           if [ $ERRORS -gt 0 ]; then exit 1; fi
 
-      # ─── Pipeline Integrity Test (mock adapter) ───
-      # Uses mock adapter to prove the full pipeline works end-to-end:
-      # generate → schema validate → hard constraints → evaluate → regression compare
-      # This is NOT agent capability testing — it proves the harness itself is sound.
+      # ─── 2. Pipeline Integrity Test (mock adapter) ───
+      # Proves the full pipeline works: generate → schema → hard constraints → eval → regression
       - name: Pipeline integrity test (mock adapter — full generate + eval + regression)
         run: |
           python3 agent-evaluation/runner/run_agent_batch.py \
@@ -46,84 +51,61 @@ jobs:
             --output-dir customer-support/evals/actual_outputs/current \
             --eval-output customer-support/reports/eval_results.json
 
-      # ─── CI Gate Check ───
-      # Reads eval_results.json and verifies verdict == PASS
-      - name: CI Gate check
+      # ─── 3. CI Gate Check ───
+      - name: CI Gate check (single-turn triage)
         run: python3 scripts/ci_gate_check.py
 
-      # ─── Permission Gateway Smoke Test ───
-      # Verifies that the runtime permission enforcement layer works correctly:
-      # P1 deny write, send_email always deny, PII redaction, audit logging
+      # ─── 4. Permission Gateway Smoke Test ───
       - name: Permission gateway smoke test
         run: |
           python3 -c "
           import sys; sys.path.insert(0, '.')
-          from connectors.runtime import PermissionGateway, AuditLogger, Redactor
-          from connectors.runtime.permission_gateway import PermissionResult
-
-          # P1 context: all write tools must be denied
+          from connectors.runtime import PermissionGateway, Redactor
           gw = PermissionGateway(case_context={'priority':'P1','category':'medical-risk','case_id':'CI-TEST'})
-          assert not gw.check('gmail.send_email', {}, 'cs', 'triage').allowed, 'send_email must ALWAYS be denied'
-          assert not gw.check('gmail.create_draft', {}, 'cs', 'triage').allowed, 'P1 create_draft must be denied'
-          assert gw.check('kb.search_policies', {'query':'test'}, 'cs', 'triage').allowed, 'P1 read must be allowed'
-
-          # P3 context: create_draft requires human review (not auto-allowed)
+          assert not gw.check('gmail.send_email', {}, 'cs', 'triage').allowed
+          assert not gw.check('gmail.create_draft', {}, 'cs', 'triage').allowed
+          assert gw.check('kb.search_policies', {'query':'test'}, 'cs', 'triage').allowed
           gw3 = PermissionGateway(case_context={'priority':'P3','category':'refund-return','case_id':'CI-TEST'})
           r = gw3.check('gmail.create_draft', {'to':'a@b.com'}, 'cs', 'triage')
-          assert not r.allowed, 'create_draft must require human review'
-          assert r.requires_human_review, 'create_draft must set human_review flag'
-
-          # Redaction
+          assert not r.allowed and r.requires_human_review
           red = Redactor()
           assert '[REDACTED_EMAIL]' in red.redact('contact john@example.com')
           assert '[REDACTED_ORDER]' in red.redact('order DRP-1001')
-
           print('Permission gateway: ALL CHECKS PASSED')
           "
 
-      # ─── Multi-turn Conversation Validation ───
-      # Validates that multi-turn golden set loads correctly and state-diff evaluator works
-      - name: Multi-turn conversation validation
-        run: |
-          python3 -c "
-          import sys; sys.path.insert(0, 'agent-evaluation/runner')
-          from multiturn_runner import MultiTurnRunner
-          from state_diff_evaluator import StateDiffEvaluator
+      # ─── 5. Tool Trace Evaluation ───
+      # Runs ToolTraceEvaluator with compliant traces + negative violation test
+      - name: Tool trace evaluation (compliant + violation detection)
+        run: python3 scripts/ci_tool_trace_check.py
 
-          mr = MultiTurnRunner(
-              'customer-support/evals/multiturn/conversations_v1.yaml',
-              'customer-support/evals/multiturn/initial_state.json'
-          )
-          assert len(mr.conversations) >= 10, f'Expected >=10 conversations, got {len(mr.conversations)}'
+      # ─── 6. Multi-turn Conversation + State Diff ───
+      # Runs 10 multi-turn conversations, evaluates state diff, blocks on critical mismatch
+      - name: Multi-turn conversation + state diff evaluation
+        run: python3 scripts/ci_multiturn_check.py
 
-          ev = StateDiffEvaluator('customer-support/evals/multiturn/expected_final_state.json')
-          assert len(ev.expected_states) >= 10, f'Expected >=10 expected states, got {len(ev.expected_states)}'
-
-          print(f'Multi-turn: {len(mr.conversations)} conversations, {len(ev.expected_states)} expected states loaded')
-          print('Multi-turn validation: PASSED')
-          "
-
-      # ─── Tool Trace Evaluator Validation ───
-      # Validates that expected tool traces load and evaluator can score
-      - name: Tool trace evaluator validation
-        run: |
-          python3 -c "
-          import sys; sys.path.insert(0, 'agent-evaluation/runner')
-          from tool_trace_evaluator import ToolTraceEvaluator
-          ev = ToolTraceEvaluator()
-          assert len(ev.traces) >= 10, f'Expected >=10 traces, got {len(ev.traces)}'
-          print(f'Tool traces: {len(ev.traces)} expected traces loaded')
-          print('Tool trace validation: PASSED')
-          "
-
-      # ─── Findings Report ───
-      # Generate structured findings from all pipeline stages
+      # ─── 7. Findings Report ───
       - name: Generate evaluation report
         if: always()
         run: |
           python3 scripts/findings_report.py \
             --agent customer-support \
             --output reports/findings.json
+
+      # ─── 8. Real Adapter Test (manual trigger only) ───
+      # When triggered via workflow_dispatch with adapter=hermes or codex,
+      # runs real agent evaluation. Mock is default for automated CI.
+      - name: Real adapter test (if triggered manually)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.adapter != 'mock'
+        run: |
+          echo "Running real adapter: ${{ github.event.inputs.adapter }}"
+          python3 agent-evaluation/runner/run_agent_batch.py \
+            --agent customer-support \
+            --adapter ${{ github.event.inputs.adapter }} \
+            --output-dir customer-support/evals/actual_outputs/current \
+            --eval-output customer-support/reports/eval_results_real.json \
+            --skip-regression || true
+          echo "Real adapter test completed (results in eval_results_real.json)"
 
       # ─── Upload Artifacts ───
       - name: Upload report

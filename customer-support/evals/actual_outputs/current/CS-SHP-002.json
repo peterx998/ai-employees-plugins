@@ -11,7 +11,7 @@
     "model": "mock-adapter-v1",
     "skill_version": "ticket-triage@1.1.0",
     "commit_sha": "mock",
-    "generated_at": "2026-07-03T03:13:18.319970+00:00",
+    "generated_at": "2026-07-03T03:37:30.401450+00:00",
     "case_id": "CS-SHP-002",
     "variation_rate": 0.0
   }

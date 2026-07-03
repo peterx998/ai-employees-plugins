@@ -187,25 +187,33 @@ class ToolTraceEvaluator:
     def _check_permission(self, tool_name: str, args: dict[str, Any] | None) -> str | None:
         """Check if a tool call would be denied by the PermissionGateway.
 
-        Returns a denial reason string if the call would be denied, or
-        ``None`` if the call is permitted (or if no gateway is available).
+        Returns a denial reason string if the call would be **hard-denied**
+        (not merely human-required), or ``None`` if the call is permitted
+        or only requires human review.
+
+        FAIL-CLOSED: If the gateway itself errors, we treat it as a
+        permission violation rather than silently passing.  This prevents
+        a broken gateway from masking real violations.
         """
         if self._gateway is None:
-            return None
+            # No gateway available — cannot verify, treat as violation
+            return "PermissionGateway not available — cannot verify tool permission"
         try:
-            # PermissionGateway.check_permission returns (allowed: bool, reason: str)
-            result = self._gateway.check_permission(tool_name, args or {})
-            if isinstance(result, tuple):
-                allowed, reason = result
-                if not allowed:
-                    return reason or f"Permission denied for {tool_name}"
-            elif isinstance(result, bool):
-                if not result:
-                    return f"Permission denied for {tool_name}"
-        except Exception:
-            # If the gateway errors, treat as no violation (fail-open for evaluator)
+            result = self._gateway.check(
+                tool_name=tool_name,
+                arguments=args or {},
+                caller_agent="customer-support",
+                caller_skill="tool-trace-evaluator",
+            )
+            # PermissionResult has .allowed and .requires_human_review
+            # A hard denial (not allowed AND not human_required) is a violation
+            if not result.allowed and not result.requires_human_review:
+                return result.reason or f"Permission denied for {tool_name}"
+            # Allowed or human-required → not a violation
             return None
-        return None
+        except Exception as e:
+            # FAIL-CLOSED: gateway error → treat as violation
+            return f"PermissionGateway error: {e}"
 
     # ─── Single-trace evaluation ──────────────────────────────────────
 

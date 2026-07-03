@@ -149,8 +149,15 @@ _MEDICAL_SIGNALS = [
 ]
 
 _LEGAL_SIGNALS = [
-    "sue", "lawsuit", "lawyer", "attorney", "legal action",
+    "lawsuit", "lawyer", "attorney", "legal action",
     "legal team", "contacted my lawyer",
+    # "sue" matched as a whole word only (regex \bsue\b) to avoid
+    # matching substrings like "issue", "refuse", "pursue"
+]
+
+# Patterns that require word-boundary matching to avoid false positives
+_LEGAL_WORD_BOUNDARY_PATTERNS = [
+    r"\bsue\b", r"\bsues\b", r"\bsued\b", r"\bsuing\b",
 ]
 
 _REGULATORY_SIGNALS = [
@@ -242,11 +249,16 @@ class MultiTurnRunner:
 
         Returns a list of signal categories found.
         """
+        import re
+
         msg_lower = message.lower()
         signals: list[str] = []
         if any(s in msg_lower for s in _MEDICAL_SIGNALS):
             signals.append("medical")
+        # Legal: check both substring patterns and word-boundary patterns
         if any(s in msg_lower for s in _LEGAL_SIGNALS):
+            signals.append("legal")
+        elif any(re.search(p, msg_lower) for p in _LEGAL_WORD_BOUNDARY_PATTERNS):
             signals.append("legal")
         if any(s in msg_lower for s in _REGULATORY_SIGNALS):
             signals.append("regulatory")
@@ -289,7 +301,7 @@ class MultiTurnRunner:
             query = args.get("query", "").lower()
             if "medical" in query or "bleeding" in query or "burn" in query:
                 state.policy_referenced = "medical-emergency-protocol"
-            elif "legal" in query or "sue" in query or "lawyer" in query:
+            elif "legal" in query or "lawyer" in query or "lawsuit" in query:
                 state.policy_referenced = "legal-threat-escalation"
             elif "fda" in query or "regulatory" in query:
                 state.policy_referenced = "fda-complaint-escalation"
@@ -342,7 +354,7 @@ class MultiTurnRunner:
         if "medical" in all_signals or "medical" in scenario:
             if "fda" in all_signals or "fda" in scenario:
                 state.ticket_category = "compliance"
-            elif "legal" in all_signals or "sue" in scenario:
+            elif "legal" in all_signals:
                 state.ticket_category = "compliance"
             else:
                 state.ticket_category = "medical-risk"
