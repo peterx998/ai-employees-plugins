@@ -1,0 +1,173 @@
+# docs/status.yaml — Single source of truth for project component status.
+# README.md, ROADMAP.md, and ARCHITECTURE.md should reference this file
+# rather than maintaining independent status claims.
+# Status values: DONE, PARTIAL, NOT_STARTED, BLOCKED
+# Last updated: 2026-07-03
+
+project:
+  version: "v0.2-beta"
+  codename: "Contract Alignment + Real Eval"
+
+components:
+  # ─── Plugin SOP Depth ───
+  customer_support_sop:
+    status: DONE
+    detail: "ticket-triage SKILL.md at sample-grade: Role, Trigger, Inputs, Decision Framework, Tool Usage, Output Contract, Risk Boundaries, Examples"
+    files: ["customer-support/skills/ticket-triage/SKILL.md"]
+
+  influencer_outreach_sop:
+    status: PARTIAL
+    detail: "creator-research has fit-score framework; other skills still template-level"
+    files: ["influencer-outreach/skills/creator-research/SKILL.md"]
+
+  ad_creative_sop:
+    status: NOT_STARTED
+    detail: "SKILL.md files are template-level Input/Process/Output"
+
+  shopify_growth_sop:
+    status: NOT_STARTED
+    detail: "SKILL.md files are template-level"
+
+  b2b_sales_sop:
+    status: NOT_STARTED
+    detail: "SKILL.md files are template-level"
+
+  # ─── Evaluation Framework ───
+  golden_set_single_turn:
+    status: DONE
+    detail: "50 single-turn triage cases covering 8 categories"
+    files: ["customer-support/evals/golden_set_v1.yaml"]
+
+  golden_set_multiturn:
+    status: PARTIAL
+    detail: "10 multi-turn conversation cases created, runner and state-diff evaluator implemented; not yet integrated into CI"
+    files: ["customer-support/evals/multiturn/conversations_v1.yaml"]
+
+  unified_evaluator:
+    status: DONE
+    detail: "JSON Schema validation + P1/P2 hard constraints + weighted rubric + unified EvalSummary output"
+    files: ["agent-evaluation/runner/evaluator.py"]
+
+  regression_comparison:
+    status: DONE
+    detail: "compare_regression.py reads unified EvalSummary (overall_score/case_results/hard_constraint_passed) with old-format fallback"
+    files: ["scripts/compare_regression.py"]
+
+  tool_trace_evaluation:
+    status: PARTIAL
+    detail: "ToolTraceEvaluator implemented with 10 expected traces; not yet integrated into main evaluator pipeline"
+    files: ["agent-evaluation/runner/tool_trace_evaluator.py", "customer-support/evals/tool_traces/expected_tool_traces.yaml"]
+
+  state_diff_evaluation:
+    status: PARTIAL
+    detail: "StateDiffEvaluator implemented; not yet integrated into CI"
+    files: ["agent-evaluation/runner/state_diff_evaluator.py"]
+
+  # ─── Runtime / Execution Harness ───
+  permission_gateway:
+    status: DONE
+    detail: "PermissionGateway enforces P1 write-deny, send_email always-deny, create_draft human-required, PII redaction, audit logging"
+    files: ["connectors/runtime/permission_gateway.py", "connectors/runtime/tool_registry.py"]
+
+  audit_logger:
+    status: DONE
+    detail: "AuditLogger writes tool_calls.jsonl and permission_violations.jsonl"
+    files: ["connectors/runtime/audit_logger.py"]
+
+  pii_redaction:
+    status: DONE
+    detail: "Redactor handles email, phone, order numbers, credit cards, IP addresses"
+    files: ["connectors/runtime/redaction.py"]
+
+  human_review_gateway:
+    status: DONE
+    detail: "HumanReviewGateway manages review queue with submit/approve/reject"
+    files: ["connectors/runtime/human_review_gateway.py"]
+
+  mock_mcp_servers:
+    status: DONE
+    detail: "Mock MCP servers for Gmail, Shopify, KB, Human Review — stub implementations for boundary testing"
+    files: ["connectors/runtime/gmail_mcp_server.py"]
+
+  real_mcp_servers:
+    status: NOT_STARTED
+    detail: "No real API integration yet — mock servers only"
+
+  # ─── CI / Gate ───
+  ci_workflow:
+    status: DONE
+    detail: "eval.yml runs schema validation + pipeline integrity test (mock) + gate check + findings report"
+    files: [".github/workflows/eval.yml"]
+
+  ci_regression_gate:
+    status: DONE
+    detail: "run_agent_batch.py Phase 3 runs regression comparison; BLOCK_MERGE exits non-zero"
+
+  ci_tool_trace_gate:
+    status: NOT_STARTED
+    detail: "ToolTraceEvaluator not yet wired into CI workflow"
+
+  ci_multiturn_gate:
+    status: NOT_STARTED
+    detail: "Multi-turn runner not yet wired into CI workflow"
+
+  # ─── Autoresearch ───
+  autoresearch_harness:
+    status: PARTIAL
+    detail: "Evaluation harness works (baseline → experiment → compare → keep/discard); LLM-driven file modification loop NOT implemented — agent must manually modify files"
+    files: ["scripts/run_autoresearch.py"]
+
+  autoresearch_autonomous:
+    status: NOT_STARTED
+    detail: "No LLM-driven hypothesis generation, file modification, or commit loop"
+
+  # ─── Isolation ───
+  worktree_isolation:
+    status: PARTIAL
+    detail: "run_in_treehouse.sh provides basic worktree creation; no lease lock, no run_id artifact binding"
+    files: ["scripts/run_in_treehouse.sh"]
+
+  # ─── Adapters ───
+  mock_adapter:
+    status: DONE
+    detail: "Pipeline integrity testing — uses golden set expected, NOT real agent evaluation"
+
+  codex_adapter:
+    status: PARTIAL
+    detail: "Adapter exists but not tested with real Codex CLI in CI"
+
+  hermes_adapter:
+    status: DONE
+    detail: "Fail-closed: CLI failure returns error result, no silent dry-run fallback. Dry-run only via explicit --adapter hermes-dry-run"
+
+  # ─── Observability ───
+  findings_report:
+    status: DONE
+    detail: "Structured findings with auto-fix/ask-user classification"
+    files: ["scripts/findings_report.py"]
+
+  tool_call_logging:
+    status: DONE
+    detail: "tool_calls.jsonl and permission_violations.jsonl written by AuditLogger"
+    files: ["connectors/runtime/audit_logger.py"]
+
+  agent_run_logging:
+    status: NOT_STARTED
+    detail: "No agent_run.jsonl with latency/cost/trace_id metrics"
+
+  # ─── Documentation ───
+  readme:
+    status: DONE
+    detail: "Bilingual (Chinese + English) README with architecture overview"
+
+  architecture_doc:
+    status: DONE
+    detail: "L0-L9 layered architecture documented"
+
+  roadmap:
+    status: PARTIAL
+    detail: "Status claims need sync with actual implementation — this file is the fix"
+
+  policies:
+    status: DONE
+    detail: "5 global policies: tool-permissions, escalation, data-handling, human-review, compliance"

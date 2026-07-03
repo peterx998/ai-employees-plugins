@@ -23,11 +23,15 @@
 - Autoresearch 实验循环 harness (git diff 检测 / 成本控制 / 实验日志)
 - Apache-2.0 + NOTICE + ARCHITECTURE.md + ROADMAP.md
 
-**尚未完成**:
-- 真实 Agent runtime 调用 (batch runner 已就绪，但 CI 仍使用手写 baseline)
-- 真实 MCP server adapter (.mcp.example.json / .mcp.mock.json 已就绪，但无运行时实现)
+**尚未完成** (详见 [STATUS.md](STATUS.md) 和 [docs/status.yaml](docs/status.yaml)):
+
+- 真实 Agent runtime 调用 (batch runner 已就绪，但 CI 仍使用 mock adapter)
+- 真实 MCP server adapter (mock stub 已就绪，但无真实 API 集成)
+- Runtime permission gateway (核心模块已实现，尚未集成到 CI 主流程)
+- Tool trajectory evaluation (评估器已实现，尚未接入 CI)
+- Multi-turn conversation golden set (10 条已创建，尚未接入 CI)
 - 多插件生产深度 (仅 customer-support 达到样板级)
-- CI 回归对比门禁 (compare_regression.py 已就绪，但 CI 尚未强制 degraded=block)
+- Autoresearch 自主循环 (eval harness 就绪，LLM 驱动修改循环未实现)
 
 | 来源 | 贡献 | 适配层 |
 |------|------|--------|
@@ -259,11 +263,15 @@ An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github
 - Autoresearch experiment loop harness (git diff detection / cost control / experiment logs)
 - Apache-2.0 + NOTICE + ARCHITECTURE.md + ROADMAP.md
 
-**Not yet done**:
-- Real Agent runtime calls (batch runner ready, but CI still uses hand-authored baseline)
-- Real MCP server adapter (.mcp.example.json / .mcp.mock.json ready, no runtime impl)
+**Not yet done** (see [STATUS.md](STATUS.md) and [docs/status.yaml](docs/status.yaml)):
+
+- Real Agent runtime calls (batch runner ready, but CI still uses mock adapter)
+- Real MCP server adapter (mock stubs ready, no real API integration)
+- Runtime permission gateway (core modules implemented, not yet integrated into CI pipeline)
+- Tool trajectory evaluation (evaluator implemented, not yet wired into CI)
+- Multi-turn conversation golden set (10 cases created, not yet in CI)
 - Multi-plugin production depth (only customer-support at sample level)
-- CI regression comparison gate (compare_regression.py ready, but CI does not yet enforce degraded=block)
+- Autoresearch autonomous loop (eval harness ready, LLM-driven modification loop not implemented)
 
 | Source | Contribution | Layer |
 |--------|-------------|-------|

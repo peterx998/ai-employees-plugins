@@ -1,0 +1,14 @@
+{
+  "review_id": "HR-34b21cd5",
+  "tool_name": "gmail.create_draft",
+  "arguments": {
+    "to": "[REDACTED_EMAIL]",
+    "subject": "s",
+    "body": "b"
+  },
+  "case_id": "CS-REF-001",
+  "reason": "gmail.create_draft requires human review (priority P3)",
+  "status": "pending",
+  "submitted_at": "2026-07-03T03:01:46.772508+00:00",
+  "reviewed_at": null
+}

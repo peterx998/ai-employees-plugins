@@ -39,9 +39,14 @@ Goal: Make customer-support a real, testable, fail-closeable evaluation loop.
 - [x] Deep validator (validate-contracts.py + validate-evals.py)
 - [x] MCP template cleanup (remove placeholders from .mcp.json)
 - [x] Agent Batch Runner (mock/codex/hermes adapters + run_agent_batch.py)
-- [x] Runtime MCP servers (gmail, shopify, kb, human_review)
+- [x] Runtime MCP server stubs (gmail, shopify, kb, human_review — mock only, not real API)
+- [ ] Real MCP server adapter (no real API integration yet)
+- [ ] Runtime permission gateway (in progress — tool_registry, permission_gateway, audit_logger, redaction, human_review_gateway)
 - [x] P2 hard constraints + enhanced regression comparison
 - [x] actual_outputs metadata upgrade (_meta on all baselines)
+- [x] Validation theatre fixes: unified EvalSummary, fail-closed Hermes, no expected fallback, P2 legal check scoped to customer-facing text
+- [ ] Tool trajectory evaluation (ToolTraceEvaluator implemented, not yet integrated into CI)
+- [ ] Multi-turn conversation golden set (10 cases + runner + state-diff evaluator, not yet in CI)
 
 ## v0.3 — Evaluation Framework CI (planned)
 

@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins/schemas/common/tool_call.schema.json",
+  "title": "Tool Call Record",
+  "description": "A structured record of a tool invocation through the Runtime Permission Gateway. Each call is checked against the permission matrix, logged for audit, and optionally redacted for PII before execution.",
+  "type": "object",
+  "required": ["tool_name", "arguments", "caller_agent", "caller_skill", "case_id", "timestamp", "status"],
+  "properties": {
+    "tool_name": {
+      "type": "string",
+      "description": "Fully-qualified tool name (e.g. gmail.search_threads, shopify.read_customer)",
+      "minLength": 1,
+      "examples": ["gmail.search_threads", "gmail.create_draft", "shopify.read_customer"]
+    },
+    "arguments": {
+      "type": "object",
+      "description": "Arguments passed to the tool. PII fields should already be redacted at this point if the gateway applied redaction.",
+      "properties": {},
+      "additionalProperties": true
+    },
+    "caller_agent": {
+      "type": "string",
+      "description": "Identifier of the agent that initiated the tool call",
+      "minLength": 1,
+      "examples": ["customer-support-agent", "triage-agent"]
+    },
+    "caller_skill": {
+      "type": "string",
+      "description": "Identifier of the skill that initiated the tool call",
+      "minLength": 1,
+      "examples": ["ticket-triage", "draft-response", "kb-search"]
+    },
+    "case_id": {
+      "type": "string",
+      "description": "Unique identifier for the support case associated with this tool call",
+      "minLength": 1,
+      "examples": ["CS-MED-001", "CS-RET-042"]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of the permission check, timezone-aware (UTC)",
+      "examples": ["2025-01-15T10:30:00+00:00"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["allowed", "denied", "error"],
+      "description": "Result of the permission check: allowed = tool may execute, denied = blocked by gateway, error = unexpected error during check"
+    },
+    "denial_reason": {
+      "type": "string",
+      "description": "Human-readable reason for denial (present only when status is denied or error)",
+      "examples": [
+        "send_email is always denied — no override allowed",
+        "P1 cases deny all write tools",
+        "shopify.update_page requires human action"
+      ]
+    },
+    "result_summary": {
+      "type": "string",
+      "description": "Optional summary of the tool execution result (for allowed calls that were actually executed)"
+    },
+    "latency_ms": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Latency of the permission check in milliseconds",
+      "examples": [0.45, 1.2, 5.0]
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "tool_name": "gmail.search_threads",
+      "arguments": {"query": "order #DRP-1234"},
+      "caller_agent": "customer-support-agent",
+      "caller_skill": "kb-search",
+      "case_id": "CS-RET-042",
+      "timestamp": "2025-01-15T10:30:00+00:00",
+      "status": "allowed",
+      "latency_ms": 0.52
+    },
+    {
+      "tool_name": "gmail.send_email",
+      "arguments": {"to": "customer@example.com", "subject": "Re: Order issue", "body": "Your refund has been processed."},
+      "caller_agent": "customer-support-agent",
+      "caller_skill": "draft-response",
+      "case_id": "CS-MED-001",
+      "timestamp": "2025-01-15T11:00:00+00:00",
+      "status": "denied",
+      "denial_reason": "send_email is always denied — no override allowed",
+      "latency_ms": 0.31
+    },
+    {
+      "tool_name": "gmail.create_draft",
+      "arguments": {"to": "customer@example.com", "subject": "Re: Order issue", "body": "Draft response for review."},
+      "caller_agent": "customer-support-agent",
+      "caller_skill": "draft-response",
+      "case_id": "CS-RET-042",
+      "timestamp": "2025-01-15T11:15:00+00:00",
+      "status": "allowed",
+      "result_summary": "Draft created and submitted for human review",
+      "latency_ms": 1.1
+    }
+  ]
+}

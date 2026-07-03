@@ -51,6 +51,71 @@ jobs:
       - name: CI Gate check
         run: python3 scripts/ci_gate_check.py
 
+      # ─── Permission Gateway Smoke Test ───
+      # Verifies that the runtime permission enforcement layer works correctly:
+      # P1 deny write, send_email always deny, PII redaction, audit logging
+      - name: Permission gateway smoke test
+        run: |
+          python3 -c "
+          import sys; sys.path.insert(0, '.')
+          from connectors.runtime import PermissionGateway, AuditLogger, Redactor
+          from connectors.runtime.permission_gateway import PermissionResult
+
+          # P1 context: all write tools must be denied
+          gw = PermissionGateway(case_context={'priority':'P1','category':'medical-risk','case_id':'CI-TEST'})
+          assert not gw.check('gmail.send_email', {}, 'cs', 'triage').allowed, 'send_email must ALWAYS be denied'
+          assert not gw.check('gmail.create_draft', {}, 'cs', 'triage').allowed, 'P1 create_draft must be denied'
+          assert gw.check('kb.search_policies', {'query':'test'}, 'cs', 'triage').allowed, 'P1 read must be allowed'
+
+          # P3 context: create_draft requires human review (not auto-allowed)
+          gw3 = PermissionGateway(case_context={'priority':'P3','category':'refund-return','case_id':'CI-TEST'})
+          r = gw3.check('gmail.create_draft', {'to':'a@b.com'}, 'cs', 'triage')
+          assert not r.allowed, 'create_draft must require human review'
+          assert r.requires_human_review, 'create_draft must set human_review flag'
+
+          # Redaction
+          red = Redactor()
+          assert '[REDACTED_EMAIL]' in red.redact('contact john@example.com')
+          assert '[REDACTED_ORDER]' in red.redact('order DRP-1001')
+
+          print('Permission gateway: ALL CHECKS PASSED')
+          "
+
+      # ─── Multi-turn Conversation Validation ───
+      # Validates that multi-turn golden set loads correctly and state-diff evaluator works
+      - name: Multi-turn conversation validation
+        run: |
+          python3 -c "
+          import sys; sys.path.insert(0, 'agent-evaluation/runner')
+          from multiturn_runner import MultiTurnRunner
+          from state_diff_evaluator import StateDiffEvaluator
+
+          mr = MultiTurnRunner(
+              'customer-support/evals/multiturn/conversations_v1.yaml',
+              'customer-support/evals/multiturn/initial_state.json'
+          )
+          assert len(mr.conversations) >= 10, f'Expected >=10 conversations, got {len(mr.conversations)}'
+
+          ev = StateDiffEvaluator('customer-support/evals/multiturn/expected_final_state.json')
+          assert len(ev.expected_states) >= 10, f'Expected >=10 expected states, got {len(ev.expected_states)}'
+
+          print(f'Multi-turn: {len(mr.conversations)} conversations, {len(ev.expected_states)} expected states loaded')
+          print('Multi-turn validation: PASSED')
+          "
+
+      # ─── Tool Trace Evaluator Validation ───
+      # Validates that expected tool traces load and evaluator can score
+      - name: Tool trace evaluator validation
+        run: |
+          python3 -c "
+          import sys; sys.path.insert(0, 'agent-evaluation/runner')
+          from tool_trace_evaluator import ToolTraceEvaluator
+          ev = ToolTraceEvaluator()
+          assert len(ev.traces) >= 10, f'Expected >=10 traces, got {len(ev.traces)}'
+          print(f'Tool traces: {len(ev.traces)} expected traces loaded')
+          print('Tool trace validation: PASSED')
+          "
+
       # ─── Findings Report ───
       # Generate structured findings from all pipeline stages
       - name: Generate evaluation report

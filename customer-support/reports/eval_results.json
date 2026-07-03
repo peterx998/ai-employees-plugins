@@ -1,6 +1,6 @@
 {
   "agent": "customer-support",
-  "timestamp": "2026-07-03T02:16:06.794872+00:00",
+  "timestamp": "2026-07-03T03:13:18.420292+00:00",
   "total_cases": 50,
   "judged": 50,
   "pending": 0,
@@ -1824,5 +1824,6 @@
     "schema_valid": 0.1,
     "forbidden_check": 0.05,
     "field_completeness": 0.05
-  }
+  },
+  "tool_trace": null
 }

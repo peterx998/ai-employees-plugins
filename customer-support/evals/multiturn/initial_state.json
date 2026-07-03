@@ -1,0 +1,240 @@
+{
+  "orders": {
+    "DRP-1001": {
+      "status": "delivered",
+      "days_since_purchase": 12,
+      "region": "US",
+      "items": ["device", "serum"],
+      "customer_email": "customer1@example.com",
+      "total": 199.00,
+      "currency": "USD",
+      "return_window_days": 30,
+      "warranty_window_days": 365
+    },
+    "DRP-2002": {
+      "status": "delivered",
+      "days_since_purchase": 8,
+      "region": "US",
+      "items": ["device", "serum", "needle-cartridges"],
+      "customer_email": "customer2@example.com",
+      "total": 249.00,
+      "currency": "USD",
+      "return_window_days": 30,
+      "warranty_window_days": 365
+    },
+    "DRP-3003": {
+      "status": "delivered",
+      "days_since_purchase": 20,
+      "region": "US",
+      "items": ["device"],
+      "customer_email": "customer3@example.com",
+      "total": 199.00,
+      "currency": "USD",
+      "return_window_days": 30,
+      "warranty_window_days": 365
+    },
+    "DRP-4004": {
+      "status": "delivered",
+      "days_since_purchase": 45,
+      "region": "US",
+      "items": ["device", "serum"],
+      "customer_email": "customer4@example.com",
+      "total": 249.00,
+      "currency": "USD",
+      "return_window_days": 30,
+      "warranty_window_days": 365
+    },
+    "DRP-5005": {
+      "status": "shipped",
+      "days_since_purchase": 5,
+      "region": "US",
+      "items": ["device"],
+      "customer_email": "customer5@example.com",
+      "total": 199.00,
+      "currency": "USD",
+      "tracking_number": "USPS-9400-1899-9999-5555-0005",
+      "tracking_status": "in_transit",
+      "return_window_days": 30,
+      "warranty_window_days": 365
+    },
+    "DRP-6006": {
+      "status": "delivered",
+      "days_since_purchase": 120,
+      "region": "US",
+      "items": ["device", "serum", "needle-cartridges"],
+      "customer_email": "customer6@example.com",
+      "total": 279.00,
+      "currency": "USD",
+      "return_window_days": 30,
+      "warranty_window_days": 365
+    },
+    "DRP-7007": {
+      "status": "delivered",
+      "days_since_purchase": 21,
+      "region": "US",
+      "items": ["device", "serum"],
+      "customer_email": "customer7@example.com",
+      "total": 249.00,
+      "currency": "USD",
+      "previous_tickets": 3,
+      "first_contact_date": "2026-06-12T10:00:00+00:00",
+      "return_window_days": 30,
+      "warranty_window_days": 365
+    },
+    "DRP-8008": {
+      "status": "delivered",
+      "days_since_purchase": 3,
+      "region": "US",
+      "items": ["device"],
+      "customer_email": "customer8@example.com",
+      "total": 199.00,
+      "currency": "USD",
+      "charges": [
+        {"id": "CHG-001", "amount": 199.00, "status": "captured", "date": "2026-06-30T14:00:00+00:00"},
+        {"id": "CHG-002", "amount": 199.00, "status": "captured", "date": "2026-06-30T14:00:01+00:00"}
+      ],
+      "return_window_days": 30,
+      "warranty_window_days": 365
+    },
+    "DRP-9009": {
+      "status": "delivered",
+      "days_since_purchase": 30,
+      "region": "US",
+      "items": ["device", "serum"],
+      "customer_email": "customer9@example.com",
+      "total": 249.00,
+      "currency": "USD",
+      "return_window_days": 30,
+      "warranty_window_days": 365
+    },
+    "DRP-1010": {
+      "status": "delivered",
+      "days_since_purchase": 15,
+      "region": "US",
+      "items": ["device", "serum", "needle-cartridges"],
+      "customer_email": "customer10@example.com",
+      "total": 299.00,
+      "currency": "USD",
+      "return_window_days": 30,
+      "warranty_window_days": 365
+    }
+  },
+  "customers": {
+    "customer1@example.com": {
+      "name": "John Smith",
+      "orders": ["DRP-1001"],
+      "region": "US",
+      "language": "en",
+      "preferred_contact": "email"
+    },
+    "customer2@example.com": {
+      "name": "Sarah Johnson",
+      "orders": ["DRP-2002"],
+      "region": "US",
+      "language": "en",
+      "preferred_contact": "email"
+    },
+    "customer3@example.com": {
+      "name": "Michael Brown",
+      "orders": ["DRP-3003"],
+      "region": "US",
+      "language": "en",
+      "preferred_contact": "email"
+    },
+    "customer4@example.com": {
+      "name": "Emily Davis",
+      "orders": ["DRP-4004"],
+      "region": "US",
+      "language": "en",
+      "preferred_contact": "email"
+    },
+    "customer5@example.com": {
+      "name": "Carlos Rodriguez",
+      "orders": ["DRP-5005"],
+      "region": "US",
+      "language": "es",
+      "preferred_contact": "email"
+    },
+    "customer6@example.com": {
+      "name": "Jessica Wilson",
+      "orders": ["DRP-6006"],
+      "region": "US",
+      "language": "en",
+      "preferred_contact": "email"
+    },
+    "customer7@example.com": {
+      "name": "David Martinez",
+      "orders": ["DRP-7007"],
+      "region": "US",
+      "language": "en",
+      "preferred_contact": "email",
+      "previous_contact_count": 3
+    },
+    "customer8@example.com": {
+      "name": "Laura Anderson",
+      "orders": ["DRP-8008"],
+      "region": "US",
+      "language": "en",
+      "preferred_contact": "email"
+    },
+    "customer9@example.com": {
+      "name": "Kevin Lee",
+      "orders": ["DRP-9009"],
+      "region": "US",
+      "language": "en",
+      "preferred_contact": "email"
+    },
+    "customer10@example.com": {
+      "name": "Amanda Taylor",
+      "orders": ["DRP-1010"],
+      "region": "US",
+      "language": "en",
+      "preferred_contact": "email"
+    }
+  },
+  "tickets": [],
+  "drafts": [],
+  "sent_emails": [],
+  "policies": {
+    "30-day-return": {
+      "description": "Customers may return devices within 30 days of purchase for a full refund.",
+      "category": "refund-return"
+    },
+    "medical-emergency-protocol": {
+      "description": "If a customer reports bleeding, burning, or adverse skin reaction, escalate immediately to medical-review. Suppress all auto-replies.",
+      "category": "medical-risk"
+    },
+    "legal-threat-escalation": {
+      "description": "If a customer threatens legal action, escalate to compliance team. Do not admit liability or provide legal advice.",
+      "category": "compliance"
+    },
+    "return-window-dispute": {
+      "description": "For returns outside the 30-day window with a dispute, escalate to human review for case-by-case evaluation.",
+      "category": "refund-return"
+    },
+    "shipping-tracking": {
+      "description": "Provide tracking number and current status. If package is in transit, advise customer to wait.",
+      "category": "order-status"
+    },
+    "warranty-replacement-1yr": {
+      "description": "Devices come with a 1-year warranty. Defective devices within warranty are eligible for replacement.",
+      "category": "warranty"
+    },
+    "repeat-contact-escalation": {
+      "description": "If a customer has contacted support 3+ times about the same issue, escalate to P2 and prioritize human review.",
+      "category": "order-status"
+    },
+    "duplicate-charge-refund": {
+      "description": "Verify duplicate charges via order lookup. If confirmed, process refund for the duplicate charge and escalate for billing review.",
+      "category": "billing"
+    },
+    "serum-usage-guide": {
+      "description": "Apply serum before using the device. Use a thin layer. Do not use more than once per session.",
+      "category": "product-usage"
+    },
+    "fda-complaint-escalation": {
+      "description": "FDA complaints must be escalated to compliance team immediately. Document the complaint and do not make medical or regulatory claims.",
+      "category": "compliance"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "MT-001": {
+    "ticket_category": "refund-return",
+    "ticket_priority": "P3",
+    "order_checked": true,
+    "draft_created": true,
+    "email_sent": false,
+    "human_review_required": false,
+    "policy_referenced": "30-day-return"
+  },
+  "MT-002": {
+    "ticket_category": "medical-risk",
+    "ticket_priority": "P1",
+    "order_checked": false,
+    "draft_created": false,
+    "email_sent": false,
+    "human_review_required": true,
+    "policy_referenced": "medical-emergency-protocol"
+  },
+  "MT-003": {
+    "ticket_category": "compliance",
+    "ticket_priority": "P1",
+    "order_checked": false,
+    "draft_created": false,
+    "email_sent": false,
+    "human_review_required": true,
+    "policy_referenced": "legal-threat-escalation"
+  },
+  "MT-004": {
+    "ticket_category": "refund-return",
+    "ticket_priority": "P2",
+    "order_checked": true,
+    "draft_created": true,
+    "email_sent": false,
+    "human_review_required": true,
+    "policy_referenced": "return-window-dispute"
+  },
+  "MT-005": {
+    "ticket_category": "order-status",
+    "ticket_priority": "P3",
+    "order_checked": true,
+    "draft_created": true,
+    "email_sent": false,
+    "human_review_required": false,
+    "policy_referenced": "shipping-tracking"
+  },
+  "MT-006": {
+    "ticket_category": "warranty",
+    "ticket_priority": "P2",
+    "order_checked": true,
+    "draft_created": true,
+    "email_sent": false,
+    "human_review_required": true,
+    "policy_referenced": "warranty-replacement-1yr"
+  },
+  "MT-007": {
+    "ticket_category": "order-status",
+    "ticket_priority": "P2",
+    "order_checked": true,
+    "draft_created": true,
+    "email_sent": false,
+    "human_review_required": true,
+    "policy_referenced": "repeat-contact-escalation"
+  },
+  "MT-008": {
+    "ticket_category": "billing",
+    "ticket_priority": "P2",
+    "order_checked": true,
+    "draft_created": true,
+    "email_sent": false,
+    "human_review_required": true,
+    "policy_referenced": "duplicate-charge-refund"
+  },
+  "MT-009": {
+    "ticket_category": "product-usage",
+    "ticket_priority": "P4",
+    "order_checked": false,
+    "draft_created": true,
+    "email_sent": false,
+    "human_review_required": false,
+    "policy_referenced": "serum-usage-guide"
+  },
+  "MT-010": {
+    "ticket_category": "compliance",
+    "ticket_priority": "P1",
+    "order_checked": false,
+    "draft_created": false,
+    "email_sent": false,
+    "human_review_required": true,
+    "policy_referenced": "fda-complaint-escalation"
+  }
+}

@@ -383,13 +383,16 @@ class Evaluator:
             return "tier-2"
         return "tier-1"
 
-    def evaluate_batch(self, cases=None, actual_dir=None, actual_outputs=None):
+    def evaluate_batch(self, cases=None, actual_dir=None, actual_outputs=None,
+                       tool_calls_dir=None):
         """Evaluate a batch of cases. Returns summary dict.
 
         Args:
             cases: List of golden set cases (default: self.cases)
             actual_dir: Directory of per-case JSON files ({case_id}.json)
             actual_outputs: List of actual output dicts (alternative to actual_dir)
+            tool_calls_dir: Directory containing tool_calls.jsonl for tool trace evaluation.
+                If provided, tool trace evaluation is integrated into the summary.
 
         Returns:
             Summary dict with verdict, pass_rate, results, etc.
@@ -467,6 +470,41 @@ class Evaluator:
         else:
             verdict = "FAIL"
 
+        # ─── Optional: Tool trace evaluation ───
+        tool_trace_summary = None
+        tool_trace_failures = 0
+        if tool_calls_dir:
+            try:
+                from tool_trace_evaluator import ToolTraceEvaluator
+                trace_ev = ToolTraceEvaluator()
+                trace_results = []
+                for case in cases:
+                    cid = case.get("id", "")
+                    if cid in trace_ev.traces:
+                        # Load actual tool calls for this case from tool_calls.jsonl
+                        import json as _json
+                        calls_file = Path(tool_calls_dir) / "tool_calls.jsonl"
+                        actual_calls = []
+                        if calls_file.exists():
+                            with open(calls_file, "r", encoding="utf-8") as f:
+                                for line in f:
+                                    entry = _json.loads(line.strip())
+                                    if entry.get("case_id") == cid:
+                                        actual_calls.append(entry)
+                        trace_result = trace_ev.evaluate_trace(cid, actual_calls)
+                        trace_results.append(trace_result.to_dict() if hasattr(trace_result, 'to_dict') else trace_result)
+                        if hasattr(trace_result, 'passed') and not trace_result.passed:
+                            tool_trace_failures += 1
+                tool_trace_summary = {
+                    "total_traced": len(trace_results),
+                    "failures": tool_trace_failures,
+                    "results": trace_results,
+                }
+                # Tool trace failures don't block verdict yet (integration phase)
+                # but are reported in the summary
+            except ImportError:
+                pass  # tool_trace_evaluator not available
+
         summary = {
             "agent": self.agent,
             "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -488,6 +526,8 @@ class Evaluator:
             "hard_constraint_passed": hard_constraint_failures == 0,
             "verdict": verdict,
             "rubric": self.rubric,
+            # ─── Tool trace evaluation (optional) ───
+            "tool_trace": tool_trace_summary,
         }
 
         return summary
@@ -505,6 +545,12 @@ class Evaluator:
         print(f"  Schema failures: {summary.get('schema_failures', 0)}")
         print(f"  Pass rate: {summary['pass_rate']:.1%}")
         print(f"  Verdict: {summary['verdict']}")
+
+        # Tool trace summary (if available)
+        tt = summary.get("tool_trace")
+        if tt:
+            print(f"  Tool trace: {tt['total_traced']} traced, {tt['failures']} failures")
+
         print(f"{'='*60}")
 
         # Show failed cases
