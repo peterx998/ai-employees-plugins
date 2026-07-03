@@ -16,12 +16,16 @@
 ### 当前状态 (v0.2-beta)
 
 **已具备**:
-- customer-support 统一 taxonomy / schema / golden set (50 条) / CI 评测门禁
-- 统一 evaluator (JSON Schema 校验 + P1 hard constraint + weighted rubric)
-- Agent batch runner (mock / codex / hermes 可插拔 adapter)
+- customer-support 统一 taxonomy / schema / golden set (50 条 single-turn + 10 条 multi-turn) / CI 评测门禁
+- 统一 evaluator (JSON Schema 校验 + P1/P2 hard constraint + weighted rubric + 统一 EvalSummary)
+- Agent batch runner (mock / codex / hermes 可插拔 adapter，hermes fail-closed)
+- Runtime permission gateway (P1 写操作禁止 / send_email 永久禁止 / PII 自动脱敏 / 审计日志)
+- Tool trajectory evaluation (10 条预期工具轨迹 + 工具选择/权限/顺序评估)
+- Multi-turn conversation golden set (10 条多轮对话 + 状态差异评估器)
+- Regression comparison gate (CI 强制 degraded=block)
 - 5 个全局策略 + 7 个连接器契约文档
 - Autoresearch 实验循环 harness (git diff 检测 / 成本控制 / 实验日志)
-- Apache-2.0 + NOTICE + ARCHITECTURE.md + ROADMAP.md
+- Apache-2.0 + NOTICE + ARCHITECTURE.md + ROADMAP.md + STATUS.md
 
 **尚未完成** (详见 [STATUS.md](STATUS.md) 和 [docs/status.yaml](docs/status.yaml)):
 
@@ -256,12 +260,16 @@ An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github
 ### Current Status (v0.2-beta)
 
 **Available**:
-- customer-support unified taxonomy / schema / golden set (50 cases) / CI eval gate
-- Unified evaluator (JSON Schema validation + P1 hard constraint + weighted rubric)
-- Agent batch runner (mock / codex / hermes pluggable adapter)
+- customer-support unified taxonomy / schema / golden set (50 single-turn + 10 multi-turn cases) / CI eval gate
+- Unified evaluator (JSON Schema validation + P1/P2 hard constraint + weighted rubric + unified EvalSummary)
+- Agent batch runner (mock / codex / hermes pluggable adapter, hermes fail-closed)
+- Runtime permission gateway (P1 write-deny / send_email always-deny / PII auto-redaction / audit logging)
+- Tool trajectory evaluation (10 expected tool traces + tool selection/permission/order scoring)
+- Multi-turn conversation golden set (10 multi-turn cases + state diff evaluator)
+- Regression comparison gate (CI enforces degraded=block)
 - 5 global policies + 7 connector contract docs
 - Autoresearch experiment loop harness (git diff detection / cost control / experiment logs)
-- Apache-2.0 + NOTICE + ARCHITECTURE.md + ROADMAP.md
+- Apache-2.0 + NOTICE + ARCHITECTURE.md + ROADMAP.md + STATUS.md
 
 **Not yet done** (see [STATUS.md](STATUS.md) and [docs/status.yaml](docs/status.yaml)):
 
