@@ -2,12 +2,14 @@
 
 ## Overview
 
-AI Employees Plugins combines two architectural paradigms:
+AI Employees Plugins combines four architectural paradigms:
 
 1. **[knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins)** — Role capability encapsulation (plugin manifest → skills → commands → connectors)
 2. **[karpathy/autoresearch](https://github.com/karpathy/autoresearch)** — Autonomous experiment loop (modify → evaluate → keep/discard → log → repeat)
+3. **[kunchenguid/no-mistakes](https://github.com/kunchenguid/no-mistakes)** — Quality gate pipeline (intent → findings → auto-fix / ask-user → PR body)
+4. **[kunchenguid/treehouse](https://github.com/kunchenguid/treehouse)** — Worktree isolation (leased worktree → disposable experiment → safe prune)
 
-Together they create a system where enterprise AI agents don't just execute SOPs — they **continuously improve SOPs within safe boundaries**.
+Together they create a system where enterprise AI agents don't just execute SOPs — they **continuously improve SOPs within safe boundaries, with structured quality gates and isolated execution environments**.
 
 ## Layered Architecture
 

@@ -29,14 +29,16 @@
 - 多插件生产深度 (仅 customer-support 达到样板级)
 - CI 回归对比门禁 (compare_regression.py 已就绪，但 CI 尚未强制 degraded=block)
 
-| 来源 | 贡献 |
-|------|------|
-| `anthropics/knowledge-work-plugins` | 完整继承其四层架构：plugin manifest → skills → commands → connectors/MCP |
-| `karpathy/autoresearch` | 自主实验闭环范式：modify → evaluate → keep/discard → log → repeat |
-| Codex CLI | SKILL.md `user_invocable: true` 双工具兼容格式 |
-| Hermes Agent | `/skill <name>` 加载 + `~/.hermes/skills/` 自动发现 |
-| 跨境电商业务场景 | 6 大岗位的 SOP、策略、合规边界、升级规则实战沉淀 |
-| Agent 评测体系 | Golden Set + 回归测试 + 灰度发布 + 错误复盘，从 Demo 到生产级 |
+| 来源 | 贡献 | 适配层 |
+|------|------|--------|
+| `anthropics/knowledge-work-plugins` | 岗位能力封装范式：plugin manifest → skills → commands → connectors | L3 插件封装层 |
+| `karpathy/autoresearch` | 自主实验闭环范式：modify → evaluate → keep/discard → log → repeat | L3.5 Autoresearch Loop |
+| `kunchenguid/no-mistakes` | 提交前质量闸门：intent → findings → auto-fix / ask-user → PR body | L3.7 Gate 层 |
+| `kunchenguid/treehouse` | 多 Agent 隔离运行：leased worktree → disposable experiment → safe prune | L3.8 Isolation 层 |
+| Codex CLI | SKILL.md `user_invocable: true` 双工具兼容格式 | L5 运行时适配 |
+| Hermes Agent | `/skill <name>` 加载 + `~/.hermes/skills/` 自动发现 | L5 运行时适配 |
+| 跨境电商业务场景 | 6 大岗位的 SOP、策略、合规边界、升级规则实战沉淀 | L1-L2 岗位流程 |
+| Agent 评测体系 | Golden Set + 回归测试 + 灰度发布 + 错误复盘 + 结构化 findings | L7-L9 评测/发布 |
 
 ---
 
@@ -225,6 +227,8 @@ Apache License 2.0 — 详见 [LICENSE](LICENSE) 和 [NOTICE](NOTICE)
 - **[agent-engineering-framework](https://github.com/peterx998/agent-engineering-framework)** — Agent 工程完整框架：Karpathy LLM Wiki 模式 + ADPS 33 模式 + 8 层治理栈 + FDE 交付机制，系统性理解 Agent 工程的入口
 - **[anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins)** — 本项目的上游架构来源，Anthropic 官方开源的岗位级 Claude 插件库
 - **[karpathy/autoresearch](https://github.com/karpathy/autoresearch)** — 自主实验闭环范式来源，Karpathy 的 Agent 自主研究项目，启发本项目的 Autoresearch Loop 层
+- **[kunchenguid/no-mistakes](https://github.com/kunchenguid/no-mistakes)** — 质量闸门范式来源，提交前 AI 驱动验证流水线，启发本项目的 Gate 层 (agent_gate.py / findings / auto-fix)
+- **[kunchenguid/treehouse](https://github.com/kunchenguid/treehouse)** — 隔离环境范式来源，Git worktree 池管理，启发本项目的 Isolation 层 (run_in_treehouse.sh / safe prune)
 
 ---
 
@@ -261,14 +265,16 @@ An adaptation of Anthropic's open-source [knowledge-work-plugins](https://github
 - Multi-plugin production depth (only customer-support at sample level)
 - CI regression comparison gate (compare_regression.py ready, but CI does not yet enforce degraded=block)
 
-| Source | Contribution |
-|--------|-------------|
-| `anthropics/knowledge-work-plugins` | Full inheritance of its four-layer architecture: plugin manifest → skills → commands → connectors/MCP |
-| `karpathy/autoresearch` | Autonomous experiment loop paradigm: modify → evaluate → keep/discard → log → repeat |
-| Codex CLI | SKILL.md `user_invocable: true` dual-tool compatible format |
-| Hermes Agent | `/skill <name>` loading + `~/.hermes/skills/` auto-discovery |
-| Cross-border e-commerce | Hands-on SOPs, strategies, compliance boundaries, and escalation rules across 6 roles |
-| Agent evaluation system | Golden Set + Regression Testing + Grayscale Release + Error RCA, taking agents from demo to production |
+| Source | Contribution | Layer |
+|--------|-------------|-------|
+| `anthropics/knowledge-work-plugins` | Role capability encapsulation: plugin manifest → skills → commands → connectors | L3 Plugin |
+| `karpathy/autoresearch` | Autonomous experiment loop: modify → evaluate → keep/discard → log → repeat | L3.5 Autoresearch |
+| `kunchenguid/no-mistakes` | Pre-push quality gate: intent → findings → auto-fix / ask-user → PR body | L3.7 Gate |
+| `kunchenguid/treehouse` | Multi-agent isolation: leased worktree → disposable experiment → safe prune | L3.8 Isolation |
+| Codex CLI | SKILL.md `user_invocable: true` dual-tool compatible format | L5 Runtime |
+| Hermes Agent | `/skill <name>` loading + `~/.hermes/skills/` auto-discovery | L5 Runtime |
+| Cross-border e-commerce | Hands-on SOPs, strategies, compliance boundaries across 6 roles | L1-L2 Roles |
+| Agent evaluation system | Golden Set + Regression + Grayscale + Error Review + structured findings | L7-L9 Eval/Release |
 
 ---
 
@@ -452,3 +458,5 @@ Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE)
 - **[agent-engineering-framework](https://github.com/peterx998/agent-engineering-framework)** — Complete Agent Engineering Framework: Karpathy LLM Wiki pattern + ADPS 33 patterns + 8-layer governance stack + FDE delivery mechanism. The entry point for systematically understanding Agent engineering.
 - **[anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins)** — The upstream architecture source for this project. Anthropic's official open-source role-level Claude plugin library.
 - **[karpathy/autoresearch](https://github.com/karpathy/autoresearch)** — The autonomous experiment loop paradigm source. Karpathy's agent self-research project that inspired this project's Autoresearch Loop layer.
+- **[kunchenguid/no-mistakes](https://github.com/kunchenguid/no-mistakes)** — The quality gate paradigm source. Pre-push AI-driven validation pipeline that inspired this project's Gate layer (agent_gate.py / findings / auto-fix).
+- **[kunchenguid/treehouse](https://github.com/kunchenguid/treehouse)** — The isolation environment paradigm source. Git worktree pool management that inspired this project's Isolation layer (run_in_treehouse.sh / safe prune).
