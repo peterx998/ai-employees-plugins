@@ -49,6 +49,7 @@ class HermesAdapter:
         self.model = model
         self.api_url = api_url
         self.skill_path = skill_path
+        self._dry_run_mode = False  # Only set True by factory for hermes-dry-run
 
         # Check what mode we're in
         self.use_api = bool(api_url)
@@ -57,21 +58,23 @@ class HermesAdapter:
                   file=sys.stderr)
             self.use_api = False
 
-        if not self.use_api:
+        if not self.use_api and not self._dry_run_mode:
             self._check_hermes_installed()
 
     def _check_hermes_installed(self):
-        """Verify hermes CLI is available."""
+        """Verify hermes CLI is available. Fail-closed — no silent fallback."""
         try:
             result = subprocess.run(
                 ["hermes", "--version"],
                 capture_output=True, text=True, timeout=10
             )
             if result.returncode != 0:
-                print(f"WARNING: hermes --version returned {result.returncode}",
+                print(f"WARNING: hermes --version returned {result.returncode}. "
+                      f"Real agent evaluation will fail — use --adapter hermes-dry-run for pipeline testing.",
                       file=sys.stderr)
         except FileNotFoundError:
-            print("WARNING: hermes CLI not found. Will use dry-run mode.",
+            print("WARNING: hermes CLI not found. Real agent evaluation will fail-closed. "
+                  "Use --adapter mock or --adapter hermes-dry-run for pipeline testing.",
                   file=sys.stderr)
 
     def run_case(self, case):
@@ -85,6 +88,22 @@ class HermesAdapter:
         """
         cid = case.get("id", "unknown")
         skill_name = case.get("skill", "ticket-triage")
+
+        # Explicit dry-run mode (only via --adapter hermes-dry-run)
+        if self._dry_run_mode:
+            output = self._dry_run(case, cid, skill_name)
+            output["_meta"] = {
+                "generated_by": "hermes-dry-run",
+                "model": "dry-run (NOT real agent)",
+                "skill_version": f"{skill_name}@1.1.0",
+                "commit_sha": self._get_commit_sha(),
+                "generated_at": datetime.now(timezone.utc).isoformat(),
+                "elapsed_seconds": 0.0,
+                "case_id": cid,
+                "mode": "dry-run",
+                "warning": "NOT real agent evaluation — uses golden set expected values",
+            }
+            return output
 
         if self.use_api:
             return self._run_via_api(case, cid, skill_name)
@@ -145,7 +164,11 @@ class HermesAdapter:
     def _run_via_cli(self, case, cid, skill_name):
         """Run via `hermes run` CLI command.
 
-        Falls back to dry-run if hermes CLI is not available.
+        FAIL-CLOSED: If hermes CLI is not available or fails, returns an error
+        result. This prevents false positives where expected-based dry-run
+        output passes evaluation without real agent capability.
+
+        For dry-run testing, use --adapter hermes-dry-run explicitly.
         """
         prompt = self._build_prompt(case)
         skill_context = self._load_skill_context(skill_name)
@@ -175,19 +198,27 @@ class HermesAdapter:
             if result.returncode == 0:
                 output = self._parse_output(result.stdout, cid)
             else:
-                # Hermes CLI failed — use dry-run (generate from expected as fallback)
-                output = self._dry_run(case, cid, skill_name)
+                # FAIL-CLOSED: Hermes CLI failed — return error, NOT dry-run
+                return self._error_result(
+                    cid,
+                    f"Hermes CLI failed (exit {result.returncode}): {result.stderr[:200]}",
+                    elapsed,
+                )
 
         except FileNotFoundError:
-            # Hermes CLI not installed — dry-run
+            # FAIL-CLOSED: Hermes CLI not installed — return error, NOT dry-run
             elapsed = time.time() - start_time
-            output = self._dry_run(case, cid, skill_name)
+            return self._error_result(
+                cid,
+                "Hermes CLI not found — install hermes or use --adapter hermes-dry-run for testing",
+                elapsed,
+            )
         except subprocess.TimeoutExpired:
             elapsed = self.timeout
-            output = self._error_result(cid, f"CLI timeout after {self.timeout}s", elapsed)
+            return self._error_result(cid, f"CLI timeout after {self.timeout}s", elapsed)
         except Exception as e:
             elapsed = time.time() - start_time
-            output = self._error_result(cid, f"Exception: {str(e)[:200]}", elapsed)
+            return self._error_result(cid, f"Exception: {str(e)[:200]}", elapsed)
 
         output["_meta"] = {
             "generated_by": "hermes",
@@ -205,8 +236,12 @@ class HermesAdapter:
     def _dry_run(self, case, cid, skill_name):
         """Generate output from golden set expected values (dry-run mode).
 
-        Used when Hermes CLI is not available — produces template output
-        that matches golden set expectations. This is NOT real agent evaluation.
+        WARNING: This produces output from golden set expected values.
+        It is NOT real agent evaluation. It must NEVER be called as a
+        silent fallback — only via explicit --adapter hermes-dry-run.
+
+        The output is marked with generated_by="hermes-dry-run" so that
+        any downstream consumer can detect it is not a real agent result.
         """
         expected = case.get("expected", {})
         cat = expected.get("category", "refund-return")
@@ -214,8 +249,8 @@ class HermesAdapter:
         hcr = expected.get("human_review_required", False)
 
         # Route inference (matching evaluator logic)
-        if pri == "P1" or cat == "medical-risk":
-            route = "medical-review"
+        if pri == "P1":
+            route = "medical-review" if cat == "medical-risk" else "escalation"
         elif pri == "P2":
             route = "escalation" if cat == "compliance" else "tier-2"
         else:
@@ -224,7 +259,7 @@ class HermesAdapter:
         # Risk flags based on priority
         if pri == "P1":
             risk_flags = [{"type": "medical", "severity": "critical",
-                          "description": f"P1 medical escalation — dry-run for {cid}"}]
+                          "description": f"P1 escalation — dry-run for {cid}"}]
         elif pri == "P2":
             risk_flags = [{"type": cat.replace("-", " "),
                           "severity": "high",
@@ -232,8 +267,8 @@ class HermesAdapter:
         else:
             risk_flags = []
 
-        # Response: empty for P1 medical
-        response = "" if (pri == "P1" and cat == "medical-risk") else (
+        # Response: empty for ALL P1 (unified policy — conservative)
+        response = "" if pri == "P1" else (
             "Thank you for contacting us. We have received your inquiry."
         )
 
@@ -366,6 +401,8 @@ def main():
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--model", help="Model override")
     parser.add_argument("--api-url", help="Hermes API URL (e.g. http://localhost:8787/v1)")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="Use dry-run mode (NOT real agent evaluation — uses golden set expected)")
     args = parser.parse_args()
 
     if args.case == "-" or not args.case:
@@ -378,6 +415,8 @@ def main():
         agent=args.agent, timeout=args.timeout,
         model=args.model, api_url=args.api_url,
     )
+    if args.dry_run:
+        adapter._dry_run_mode = True
     result = adapter.run_case(case)
     print(json.dumps(result, indent=2, ensure_ascii=False))
 

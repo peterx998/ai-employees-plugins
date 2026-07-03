@@ -225,7 +225,7 @@ def generate_findings(agent, output_path=None):
 
     # Save
     if output_path is None:
-        output_path = f"experiments/runs/{agent}/findings.json"
+        output_path = f"reports/findings.json"
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, ensure_ascii=False)

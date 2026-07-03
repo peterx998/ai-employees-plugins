@@ -108,13 +108,24 @@ HARD_CONSTRAINTS = {
 
 
 def _check_cs_p1(case, actual):
-    """Hard constraint for customer-support P1 medical cases.
+    """Hard constraint for customer-support P1 cases.
 
-    P1 rules:
+    P1 rules (conservative policy: ALL P1 suppresses auto-reply):
     - human_review_required MUST be true
     - route_to MUST be medical-review or escalation
-    - suggested_initial_response MUST be empty (auto-reply suppressed)
+    - suggested_initial_response MUST be empty (auto-reply suppressed for ALL P1)
     - risk_flags MUST not be empty
+
+    Policy alignment:
+    - schema: "Empty for P1 medical (auto-reply suppressed)"
+    - evaluator: ALL P1 → empty response (conservative)
+    - mock_adapter: ALL P1 → empty response
+    - skill SKILL.md: P1 → suppress auto-reply, human review required
+
+    The conservative approach (all P1 suppress) is chosen because:
+    1. P1 includes legal threats, social media escalation, medical risk
+    2. Any auto-reply to these without human review creates liability
+    3. The schema example shows P1 medical, but the evaluator enforces all P1
     """
     expected = case.get("expected", {})
     if expected.get("priority") != "P1":
@@ -129,9 +140,9 @@ def _check_cs_p1(case, actual):
     if actual.get("route_to") not in ("medical-review", "escalation"):
         failures.append(f"P1 case but route_to='{actual.get('route_to')}' (expected medical-review or escalation)")
 
-    # P1 medical: suggested_initial_response MUST be empty (auto-reply suppressed)
+    # P1: suggested_initial_response MUST be empty (auto-reply suppressed for ALL P1)
     if actual.get("suggested_initial_response", "") != "":
-        failures.append("P1 case but suggested_initial_response is not empty — auto-reply must be suppressed")
+        failures.append("P1 case but suggested_initial_response is not empty — auto-reply must be suppressed for all P1")
 
     # P1 must have at least one risk_flag
     if not actual.get("risk_flags"):
@@ -179,16 +190,20 @@ def _check_cs_p2(case, actual):
             )
 
     # Check for forbidden phrases that indicate legal/compliance risk
-    output_text = json.dumps(actual).lower()
+    # IMPORTANT: Only check customer-facing text (suggested_initial_response).
+    # internal_notes and risk_flags.description MAY contain contextual
+    # references to the customer's legal threats — that is correct behavior,
+    # not a compliance violation.
+    customer_facing_text = actual.get("suggested_initial_response", "").lower()
     legal_risk_phrases = [
         "not liable", "sue us", "legal action", "attorney",
         "lawyer", "lawsuit", "file a complaint", "better business bureau",
         "bbb complaint", "chargeback",
     ]
-    legal_hits = [p for p in legal_risk_phrases if p in output_text]
+    legal_hits = [p for p in legal_risk_phrases if p in customer_facing_text]
     if legal_hits:
         failures.append(
-            f"P2 case contains legal/compliance risk phrases: {legal_hits[:3]}"
+            f"P2 case contains legal/compliance risk phrases in customer-facing response: {legal_hits[:3]}"
         )
 
     if failures:
@@ -462,10 +477,17 @@ class Evaluator:
             "failed": failed_count,
             "hard_constraint_failures": hard_constraint_failures,
             "schema_failures": schema_failures,
+            # ─── Unified EvalSummary fields (all consumers read these) ───
+            # overall_score = pass_rate (backward compat for compare_regression)
+            "overall_score": round(pass_rate, 4),
             "pass_rate": round(pass_rate, 4),
+            # case_results = results (alias for compare_regression backward compat)
+            "case_results": results,
+            "results": results,
+            # hard_constraint_passed: True only if zero HC failures
+            "hard_constraint_passed": hard_constraint_failures == 0,
             "verdict": verdict,
             "rubric": self.rubric,
-            "results": results,
         }
 
         return summary

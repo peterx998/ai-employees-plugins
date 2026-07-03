@@ -34,38 +34,40 @@ jobs:
           done
           if [ $ERRORS -gt 0 ]; then exit 1; fi
 
-      - name: Evaluate baseline outputs
-        run: |
-          python3 agent-evaluation/runner/run_eval.py \
-            --golden-set customer-support/evals/golden_set_v1.yaml \
-            --agent customer-support \
-            --actual-dir customer-support/evals/actual_outputs/baseline
-
-      - name: Run mock agent batch (prove pipeline end-to-end)
+      # ─── Pipeline Integrity Test (mock adapter) ───
+      # Uses mock adapter to prove the full pipeline works end-to-end:
+      # generate → schema validate → hard constraints → evaluate → regression compare
+      # This is NOT agent capability testing — it proves the harness itself is sound.
+      - name: Pipeline integrity test (mock adapter — full generate + eval + regression)
         run: |
           python3 agent-evaluation/runner/run_agent_batch.py \
             --agent customer-support \
             --adapter mock \
-            --output-dir customer-support/evals/actual_outputs/current
+            --output-dir customer-support/evals/actual_outputs/current \
+            --eval-output customer-support/reports/eval_results.json
 
-      - name: Evaluate mock agent outputs
-        run: |
-          python3 agent-evaluation/runner/run_eval.py \
-            --golden-set customer-support/evals/golden_set_v1.yaml \
-            --agent customer-support \
-            --actual-dir customer-support/evals/actual_outputs/current
-
+      # ─── CI Gate Check ───
+      # Reads eval_results.json and verifies verdict == PASS
       - name: CI Gate check
         run: python3 scripts/ci_gate_check.py
 
+      # ─── Findings Report ───
+      # Generate structured findings from all pipeline stages
       - name: Generate evaluation report
         if: always()
         run: |
-          python3 scripts/findings_report.py --agent customer-support --output experiments/runs/customer-support/findings.json
+          python3 scripts/findings_report.py \
+            --agent customer-support \
+            --output reports/findings.json
 
+      # ─── Upload Artifacts ───
       - name: Upload report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: evaluation-report
-          path: reports/
+          path: |
+            reports/
+            customer-support/reports/
+            experiments/runs/customer-support/
+            experiments/reports/

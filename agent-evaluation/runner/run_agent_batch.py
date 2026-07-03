@@ -85,7 +85,7 @@ def main():
     )
     parser.add_argument("--agent", default="customer-support", help="Agent name")
     parser.add_argument("--golden-set", default=None, help="Path to golden_set_v1.yaml")
-    parser.add_argument("--adapter", default="mock", choices=["mock", "codex", "hermes"], help="Agent adapter")
+    parser.add_argument("--adapter", default="mock", choices=["mock", "codex", "hermes", "hermes-dry-run"], help="Agent adapter")
     parser.add_argument("--timeout", type=int, default=180, help="Per-case timeout in seconds")
     parser.add_argument("--model", help="Model override")
     parser.add_argument("--api-url", help="Hermes API URL")

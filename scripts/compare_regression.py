@@ -73,10 +73,31 @@ def compare_scorecards(baseline, candidate):
     4. Forbidden phrase new hits
     5. Overall score change
 
+    Supports unified EvalSummary schema:
+      overall_score, pass_rate, case_results/results,
+      hard_constraint_passed, hard_constraint_failures, verdict
+
     Returns detailed comparison dict with enhanced regression dimensions.
     """
-    baseline_cases = {c["case_id"]: c for c in baseline.get("case_results", [])}
-    candidate_cases = {c["case_id"]: c for c in candidate.get("case_results", [])}
+    # ─── Unified field access (supports old + new EvalSummary) ───
+    def get_cases(scorecard):
+        """Get case results from either case_results (new) or results (new) key."""
+        return scorecard.get("case_results") or scorecard.get("results") or []
+
+    def get_score(scorecard):
+        """Get overall score from overall_score (new) or pass_rate (new)."""
+        return scorecard.get("overall_score", scorecard.get("pass_rate", 0))
+
+    def get_hc_passed(scorecard):
+        """Get hard constraint pass status (boolean)."""
+        # New format: hard_constraint_passed (bool)
+        if "hard_constraint_passed" in scorecard:
+            return scorecard["hard_constraint_passed"]
+        # Old format: hard_constraint_failures == 0
+        return scorecard.get("hard_constraint_failures", 0) == 0
+
+    baseline_cases = {c["case_id"]: c for c in get_cases(baseline) if "case_id" in c}
+    candidate_cases = {c["case_id"]: c for c in get_cases(candidate) if "case_id" in c}
 
     degraded = []
     improved = []
@@ -172,10 +193,10 @@ def compare_scorecards(baseline, candidate):
         "baseline_version": baseline.get("timestamp", "unknown"),
         "candidate_version": candidate.get("timestamp", "unknown"),
         "total_cases": len(all_case_ids),
-        "baseline_score": baseline.get("overall_score", 0),
-        "candidate_score": candidate.get("overall_score", 0),
-        "baseline_hard_constraint": baseline.get("hard_constraint_passed", False),
-        "candidate_hard_constraint": candidate.get("hard_constraint_passed", False),
+        "baseline_score": get_score(baseline),
+        "candidate_score": get_score(candidate),
+        "baseline_hard_constraint": get_hc_passed(baseline),
+        "candidate_hard_constraint": get_hc_passed(candidate),
         # Core degradation
         "degraded_count": len(degraded),
         "improved_count": len(improved),
@@ -278,7 +299,7 @@ def generate_report(comparison):
             reasons.append(f"{comparison['forbidden_regression_count']} forbidden phrase regression(s)")
         report += "Block reasons: " + ", ".join(reasons) + ".\n"
         report += "Fix the regressions before merging.\n"
-        report += f"Run `python scripts/run_eval.py --agent {comparison['agent']}` to re-evaluate.\n"
+        report += f"Run `python agent-evaluation/runner/run_agent_batch.py --agent {comparison['agent']} --adapter mock` to re-evaluate.\n"
 
     return report
 
@@ -318,7 +339,7 @@ def main():
 
     # Generate report
     report = generate_report(comparison)
-    output_path = args.output or "experiments/reports/regression-report.md"
+    output_path = args.output or "reports/regression-report.md"
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
 
     with open(output_path, "w", encoding="utf-8") as f:

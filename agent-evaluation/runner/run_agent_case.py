@@ -71,15 +71,27 @@ def create_adapter(adapter_name, agent, **kwargs):
             model=kwargs.get("model"),
         )
     elif adapter_name == "hermes":
+        # Real Hermes adapter — fail-closed, no dry-run fallback
         return HermesAdapter(
             agent=agent,
             timeout=kwargs.get("timeout", 180),
             model=kwargs.get("model"),
             api_url=kwargs.get("api_url"),
         )
+    elif adapter_name == "hermes-dry-run":
+        # Explicit dry-run — uses golden set expected, NOT real agent evaluation
+        # Must be explicitly requested, never used as silent fallback
+        adapter = HermesAdapter(
+            agent=agent,
+            timeout=kwargs.get("timeout", 180),
+            model=kwargs.get("model"),
+            api_url=kwargs.get("api_url"),
+        )
+        adapter._dry_run_mode = True
+        return adapter
     else:
         print(f"ERROR: Unknown adapter: {adapter_name}", file=sys.stderr)
-        print(f"  Available: mock, codex, hermes", file=sys.stderr)
+        print(f"  Available: mock, codex, hermes, hermes-dry-run", file=sys.stderr)
         sys.exit(2)
 
 
@@ -163,7 +175,7 @@ def main():
     parser.add_argument("--all", action="store_true",
                        help="Run all cases in the golden set")
     parser.add_argument("--adapter", default="mock",
-                       choices=["mock", "codex", "hermes"],
+                       choices=["mock", "codex", "hermes", "hermes-dry-run"],
                        help="Agent adapter to use (default: mock)")
     parser.add_argument("--output-dir", default=None,
                        help="Output directory for JSON files (default: <agent>/evals/actual_outputs/current/)")

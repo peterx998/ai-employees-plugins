@@ -19,7 +19,14 @@ from evaluator import Evaluator
 
 def run_evaluation(agent_name, golden_set_path=None, output_path=None,
                    agent_output_path=None, actual_dir=None, fail_on_no_output=True):
-    """Backward-compatible wrapper. Delegates to Evaluator."""
+    """Backward-compatible wrapper. Delegates to Evaluator.
+
+    IMPORTANT: This function NEVER uses golden set expected values as actual
+    outputs. If no actual outputs are available, it returns FAIL.
+    The old `fail_on_no_output=False` behavior (using expected as actual)
+    was a validation theatre vulnerability — it made tests pass without
+    real agent evaluation.
+    """
 
     ev = Evaluator(
         agent=agent_name,
@@ -47,17 +54,24 @@ def run_evaluation(agent_name, golden_set_path=None, output_path=None,
                 actual_outputs.append(None)
 
         if all(a is None for a in actual_outputs):
-            if fail_on_no_output:
-                print(f"ERROR: No actual outputs in {actual_dir}", file=sys.stderr)
-                sys.exit(1)
-            # Non-CI mode: use expected as baseline (for autoresearch only)
-            actual_outputs = [c.get("expected", {}) for c in ev.cases]
+            # NO expected fallback — return FAIL instead
+            print(f"ERROR: No actual outputs found in {actual_dir}", file=sys.stderr)
+            return {
+                "overall_score": 0,
+                "hard_constraint_passed": False,
+                "verdict": "FAIL",
+                "error": "No actual outputs — evaluation cannot proceed without real agent outputs",
+            }
 
     if actual_outputs is None:
-        if fail_on_no_output:
-            print("ERROR: No actual outputs provided.", file=sys.stderr)
-            sys.exit(1)
-        actual_outputs = [c.get("expected", {}) for c in ev.cases]
+        # NO expected fallback — return FAIL instead
+        print("ERROR: No actual outputs provided.", file=sys.stderr)
+        return {
+            "overall_score": 0,
+            "hard_constraint_passed": False,
+            "verdict": "FAIL",
+            "error": "No actual outputs — evaluation cannot proceed without real agent outputs",
+        }
 
     summary = ev.evaluate_batch(cases=ev.cases, actual_outputs=actual_outputs)
 

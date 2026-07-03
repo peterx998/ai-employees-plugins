@@ -337,10 +337,16 @@ def main():
             skill_modified = "none"
 
         try:
+            # Autoresearch must use REAL agent outputs, not expected fallback.
+            # fail_on_no_output=False is kept for backward compat but the
+            # underlying run_eval.py now returns FAIL instead of using expected.
+            # For real autoresearch, the agent must have generated outputs
+            # via run_agent_batch.py --adapter codex/hermes first.
             scorecard = run_evaluation(
                 agent_name=args.agent,
                 output_path=f"experiments/scorecards/{args.agent}/exp-{i+1}.json",
-                fail_on_no_output=False,  # Autoresearch uses expected as baseline
+                actual_dir=f"{args.agent}/evals/actual_outputs/current",
+                fail_on_no_output=False,
             )
 
             new_score = scorecard["overall_score"]

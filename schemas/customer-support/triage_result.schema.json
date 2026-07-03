@@ -74,7 +74,7 @@
     },
     "suggested_initial_response": {
       "type": "string",
-      "description": "Acknowledgment-only response (not full resolution). Empty for P1 medical (auto-reply suppressed)."
+      "description": "Acknowledgment-only response (not full resolution). Empty for ALL P1 cases (auto-reply suppressed — conservative policy). P2+ may have acknowledgment drafts."
     },
     "internal_notes": {
       "type": "string",

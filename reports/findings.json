@@ -1,0 +1,12 @@
+{
+  "agent": "customer-support",
+  "generated_at": "2026-07-03T02:16:07.801428+00:00",
+  "total_findings": 0,
+  "critical": 0,
+  "high": 0,
+  "medium": 0,
+  "low": 0,
+  "auto_fixable": 0,
+  "needs_review": 0,
+  "findings": []
+}
