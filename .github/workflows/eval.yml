@@ -58,16 +58,10 @@ jobs:
       - name: CI Gate check
         run: python3 scripts/ci_gate_check.py
 
-      - name: Generate report
+      - name: Generate evaluation report
         if: always()
         run: |
-          mkdir -p reports
-          echo "## Evaluation Report" > reports/report.md
-          echo "- Date: $(date -u)" >> reports/report.md
-          echo "- Commit: ${{ github.sha }}" >> reports/report.md
-          if [ -f "customer-support/reports/eval_results.json" ]; then
-            python3 scripts/ci_gate_check.py >> reports/report.md
-          fi
+          python3 scripts/findings_report.py --agent customer-support --output experiments/runs/customer-support/findings.json
 
       - name: Upload report
         if: always()

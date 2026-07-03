@@ -41,7 +41,24 @@ L3.5  Autoresearch Loop (karpathy/autoresearch adapted)
         ├── *-results.tsv             → Per-agent experiment log (untracked)
         ├── scorecards/               → JSON scorecards per experiment
         ├── reports/                  → Regression + session reports
+        ├── runs/                     → Isolated run directory (active/archived/failed)
         └── sessions/                 → Human review summaries
+        ↓
+L3.7  Gate Layer (kunchenguid/no-mistakes adapted)
+    ├── scripts/agent_gate.py         → Local pre-push quality pipeline
+    │   intent → contract → schema → eval → mock-batch → findings → pr-body
+    ├── scripts/findings_report.py    → Structured findings from all stages
+    ├── scripts/generate_pr_body.py   → Auto-generated PR body from gate results
+    ├── schemas/common/finding.schema.json → Finding schema (severity/action)
+    └── experiments/runs/             → Per-agent gate run artifacts
+        ├── findings.json             → Structured findings output
+        └── pr_body.md               → Generated PR body
+        ↓
+L3.8  Isolation Layer (kunchenguid/treehouse adapted)
+    ├── scripts/run_in_treehouse.sh   → Worktree-based isolation
+    │   acquire worktree → run command → return/prune
+    ├── experiments/runs/disposable/  → Symlinks to treehouse worktrees
+    └── Safe prune: only idle/clean/merged worktrees removed
         ↓
 L4  Shared Infrastructure (READ-ONLY for agents)
     ├── schemas/                      → Cross-plugin business entity models

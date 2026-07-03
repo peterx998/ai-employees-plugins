@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ai-employees-plugins/schemas/common/finding.schema.json",
+  "title": "Pipeline Finding",
+  "description": "A structured finding from the AI Employee Gate pipeline. Each finding has a severity, a recommended action (auto-fix, ask-user, or no-op), and enough context for an AI agent to act on it.",
+  "type": "object",
+  "required": ["stage", "severity", "action", "message"],
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["intent", "contract", "schema", "eval-baseline", "mock-batch", "eval-current", "regression", "findings", "pr-body"],
+      "description": "Which pipeline stage produced this finding"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["error", "warning", "info"],
+      "description": "error = blocks merge, warning = needs review, info = informative"
+    },
+    "action": {
+      "type": "string",
+      "enum": ["auto-fix", "ask-user", "no-op"],
+      "description": "auto-fix = AI agent can safely apply the fix, ask-user = requires human decision, no-op = informational only"
+    },
+    "file": {
+      "type": "string",
+      "description": "Path to the file that needs fixing (if applicable)"
+    },
+    "line": {
+      "type": "integer",
+      "description": "Line number (if applicable)"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable description of the finding"
+    },
+    "detail": {
+      "type": "string",
+      "description": "Additional detail, diff text, or error output"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "Business risk level of this finding"
+    },
+    "suggested_fix": {
+      "type": "string",
+      "description": "Suggested fix for auto-fix findings"
+    },
+    "related_case": {
+      "type": "string",
+      "description": "Related golden set case ID (if applicable)"
+    }
+  },
+  "examples": [
+    {
+      "stage": "contract",
+      "severity": "error",
+      "action": "auto-fix",
+      "file": "schemas/customer-support/triage_result.schema.json",
+      "line": 23,
+      "message": "priority enum mismatch: schema has low/medium/high/urgent, taxonomy has P1/P2/P3/P4",
+      "risk_level": "medium",
+      "suggested_fix": "Change schema priority enum to [\"P1\", \"P2\", \"P3\", \"P4\"]"
+    },
+    {
+      "stage": "eval-current",
+      "severity": "error",
+      "action": "ask-user",
+      "file": "customer-support/skills/ticket-triage/SKILL.md",
+      "message": "P1 medical case CS-MED-001 has non-empty suggested_initial_response — auto-reply not suppressed",
+      "risk_level": "critical",
+      "related_case": "CS-MED-001"
+    },
+    {
+      "stage": "contract",
+      "severity": "warning",
+      "action": "ask-user",
+      "file": "policies/medical-compliance.md",
+      "message": "Policy file changed — requires human review",
+      "risk_level": "high"
+    }
+  ]
+}
