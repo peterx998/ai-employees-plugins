@@ -137,7 +137,7 @@ echo ""
   git pull origin master 2>/dev/null || true
 
   echo "=== Command Output ==="
-  eval "$COMMAND"
+  exec $COMMAND
 )
 
 EXIT_CODE=$?
