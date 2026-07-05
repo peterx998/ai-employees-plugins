@@ -14,7 +14,7 @@ Instead, report it privately to the repository maintainers. We take security ser
 
 ## Security Considerations
 
-This project contains markdown and JSON configuration files only — no executable code, no server runtime, no dependency chain. Security risks are limited to:
+This project contains plugin configurations (markdown, JSON, YAML schemas) and supporting Python/shell scripts for local quality gates and CI. Security risks include:
 
 - Malicious MCP server URLs in `.mcp.json` files — review before connecting
 - Prompt injection in SKILL.md files — validate contributed content

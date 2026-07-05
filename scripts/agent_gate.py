@@ -34,6 +34,7 @@ Exit codes:
 import argparse
 import json
 import os
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -84,7 +85,7 @@ def run_stage(command, capture=True, timeout=120):
     start = datetime.now(timezone.utc)
     try:
         result = subprocess.run(
-            command, shell=True,
+            shlex.split(command), shell=False,
             capture_output=capture, text=True, timeout=timeout,
             cwd=os.getcwd(),
         )
